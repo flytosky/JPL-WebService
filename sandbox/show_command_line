@@ -1,4 +1,4 @@
-#! /home/sflops/local/packages/octave/bin/octave -qf
+#! /usr/local/bin/octave -qf
 printf ("%s", program_name ());
 arg_list = argv ();
 for i = 1:nargin

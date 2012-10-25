@@ -1,4 +1,4 @@
-#! /home/sflops/local/packages/octave/bin/octave -qf
+#! /usr/local/bin/octave -qf
 x=[0,.11,.15,.18,.25,.32,.35,.39,.42,.44,.48,.50];
 y = [0 , 1 , 3 , 5 , 12 , 10 , 9 , 7 , 5 , 3 , 7 , 10];
 figure(1)
