@@ -5,3 +5,4 @@ app.config.from_pyfile('../settings.cfg')
 
 import nn.views
 import nn.services
+import nn.src
