@@ -14,7 +14,7 @@ def ls():
 
     # status and message
     success = True
-    message = ""
+    message = "ok"
 
     # get query
     query = request.args.get('query', '*')
