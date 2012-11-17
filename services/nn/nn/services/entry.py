@@ -6,6 +6,7 @@ from flask import jsonify, request, url_for, make_response
 from werkzeug import secure_filename
 
 from nn import app
+from nn.src import circle
 
 @app.route('/nn/ls', methods=["GET"])
 def ls():
@@ -39,14 +40,16 @@ def area():
 
     # status and message
     success = True
-    message = "No error"
+    message = "no error"
 
     # get radius
     r = request.args.get('r', '*')
 
     try:
       r = float(r)
-      a = math.pi * r * r
+      ### a = math.pi * r * r
+      c1 = circle.circle(r)
+      a = c1.area()
     except ValueError, e:
         success = False
         message = str(e)
@@ -57,6 +60,35 @@ def area():
         'message': message,
         'r': r,
         'area': a,
+    })
+
+
+@app.route('/nn/perimeter', methods=["GET"])
+def perimeter():
+    """calculate perimeter of circle"""
+
+    # status and message
+    success = True
+    message = "no error"
+
+    # get radius
+    r = request.args.get('r', '*')
+
+    try:
+      r = float(r)
+      ### p = 2 * math.pi * r
+      c1 = circle.circle(r)
+      p = c1.perimeter()
+    except ValueError, e:
+        success = False
+        message = str(e)
+        p = 'undefied'
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'r': r,
+        'perimeter': p,
     })
 
 
