@@ -40,7 +40,7 @@ def area():
 
     # status and message
     success = True
-    message = "no error"
+    message = "ok"
 
     # get radius
     r = request.args.get('r', '*')
@@ -69,7 +69,7 @@ def perimeter():
 
     # status and message
     success = True
-    message = "no error"
+    message = "ok"
 
     # get radius
     r = request.args.get('r', '*')
