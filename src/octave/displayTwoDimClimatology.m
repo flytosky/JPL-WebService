@@ -1,12 +1,12 @@
-function status = displayTwoDimClimatology(dataFile, figFile)
+function status = displayTwoDimClimatology(dataFile, figFile, varName, statTime, stopTime)
 
-%fn = '/home/zhai/cmip5/ukmo/hadgem2-a/ts_Amon_HadGEM2-A_amip_r1i1p1_197809-200811.nc';
-fd = netcdf(dataFile, 'r');
+fd = netcdf(dataFile{1}, 'r');
 
-ts = fd{'ts'}(:);
+var = fd{varName}(:);
 lon = fd{'lon'}(:);
 lat = fd{'lat'}(:);
 
-ts_clim = squeeze(simpleClimatology(ts,1));
-h = displayTwoDimData(lon, lat, ts_clim');
+var_clim = squeeze(simpleClimatology(var,1));
+h = displayTwoDimData(lon, lat, var_clim');
+title(h, [varName ', climatology']);
 print(gcf, figFile, '-djpeg');
