@@ -1,0 +1,22 @@
+Software infrastructure and algorithms to 
+facilitate co-location of observation and model data
+Lei Pan, Seungwon Lee, Gary Block, Robert Morris, Jui-lin Li, and Duane Waliser 
+
+Jet Propulsion Laboratory, California Institute of Technology
+
+Observation data (e.g., from the A-Train satellite constellation) and model data 
+(e.g., from ECMWF analysis) live in their own respective grid spaces, have 
+different sampling characteristics, and use different formats and structures 
+in archiving. This deters synergistic usage of these datasets, e.g., to use 
+one instrument to calibrate another, or to conduct model data assimilation 
+using observation. In response to the challenge, we have built a software tool 
+to facilitate the co-location of A-Train and ECMWF data. That is, to interpolate 
+from a source data grid onto that of a target. This tool is written in Python 
+with C extension, has RESTful web interfaces in the frontend, and uses 
+parallel computing for high performance in the backend. In this presentation, 
+we will focus on the computer science aspects of this tool, namely the 
+architectural design, the infrastructure of the web services, the approach 
+to parallelization, and the key algorithms being used for, e.g., 
+linear-scaling nearest neighbor search among different grids. Some use cases 
+and their scientific significance will also be discussed briefly.
+
