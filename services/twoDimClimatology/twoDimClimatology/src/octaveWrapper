@@ -1,0 +1,22 @@
+#!/usr/local/bin/octave -q
+
+if (nargin != 1)
+  display('Usage: Please input model!')
+  exit;
+endif
+
+arg_list = argv();
+### printf ("%s", program_name());
+display(program_name());
+
+switch lower(arg_list{1})
+  case 'ukmo',
+    display('model: ukmo');
+    dataFile = '/home/zhai/cmip5/ukmo/hadgem2-a/ts_Amon_HadGEM2-A_amip_r1i1p1_197809-200811.nc';
+    figFile = 'ukmo_ts.jpeg';
+    ### pwd
+    displayTwoDimClimatology(dataFile, figFile);
+  otherwise,
+    ### path();
+    error(['Model : ' arg_list{1} ' not available!']);
+end
