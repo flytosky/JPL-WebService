@@ -11,9 +11,10 @@ class call_twoDimClimatology:
         self.outputf = outputf
 
     def displayTwoDimClimatology(self):
-        ### print 'current file: ', os.path.realpath(__file__)
+        if os.path.isfile(self.inputf) == False:
+          return 'Error: input data file %s does not exist.' % self.inputf
+
         ### print 'current dir: ', os.getcwd()
-        ### command = '/home/svc/cmac/trunk/services/twoDimClimatology/twoDimClimatology/src/octaveWrapper ' + self.model
         command = './octaveWrapper ' + self.model + ' ' + self.inputf + ' ' + self.outputf
         cmd = command.split(' ')
         cmdstring = string.join(cmd, ' ')
