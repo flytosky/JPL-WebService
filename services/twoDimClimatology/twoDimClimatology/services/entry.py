@@ -15,20 +15,24 @@ def display():
     success = True
     message = "ok"
 
-    # get radius
+    # get model, input_file, output_file
     model = request.args.get('model', 'ukmo')
+    data_file = request.args.get('data', '')
+    image_file = request.args.get('image', '')
 
     try:
       # chdir to where the app is
       current_dir = os.getcwd()
+      print 'current_dir: ', current_dir
+      data_file = current_dir + '/' + data_file
+      image_file = current_dir + '/' + image_file
       os.chdir(current_dir+'/twoDimClimatology/src')
-      c1 = call_twoDimClimatology.call_twoDimClimatology(model)
+      c1 = call_twoDimClimatology.call_twoDimClimatology(model, data_file, image_file)
       message = c1.displayTwoDimClimatology()
       # chdir back
       os.chdir(current_dir)
-      print 'current dir: ', os.getcwd()
 
-      url = 'jpg file, fix me!!!'
+      url = 'http://oscar2.jpl.nasa.gov:8888/' + image_file
     except ValueError, e:
         success = False
         message = str(e)
