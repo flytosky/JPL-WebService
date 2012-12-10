@@ -1,4 +1,5 @@
 import httplib2, urllib
+import urllib2
 try:
     import simplejson as json
 except Exception, e:
@@ -24,6 +25,18 @@ try:
 
   obj = json.loads(content)
   print 'returned content: ', obj
+
+  url = obj['url']
+  print 'url: ', url
+
+  # download the resulting image
+  request = urllib2.Request(url=url)
+  response = urllib2.urlopen(request).read()
+  imageFile = url.split('/')[-1]
+  print 'imageFile: ', imageFile
+  f = open(imageFile, 'w')
+  f.write(response)
+  f.close()
 
 except httplib2.HttpLib2Error, e:
   # the Base Exception for all exceptions raised by httplib2.
