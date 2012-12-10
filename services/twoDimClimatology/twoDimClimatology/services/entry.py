@@ -24,15 +24,18 @@ def display():
       # chdir to where the app is
       current_dir = os.getcwd()
       print 'current_dir: ', current_dir
-      data_file = current_dir + '/' + data_file
-      image_file = current_dir + '/' + image_file
+      data_file = current_dir + '/twoDimClimatology/' + data_file
+      image_file1 = current_dir + '/twoDimClimatology/' + image_file
       os.chdir(current_dir+'/twoDimClimatology/src')
-      c1 = call_twoDimClimatology.call_twoDimClimatology(model, data_file, image_file)
+      c1 = call_twoDimClimatology.call_twoDimClimatology(model, data_file, image_file1)
       message = c1.displayTwoDimClimatology()
       # chdir back
       os.chdir(current_dir)
 
-      url = 'http://oscar2.jpl.nasa.gov:8888/' + image_file
+      if message.find('Error') >= 0:
+        success = False
+
+      url = 'http://oscar2.jpl.nasa.gov:8088' + image_file
     except ValueError, e:
         success = False
         message = str(e)
