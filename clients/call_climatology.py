@@ -7,12 +7,12 @@ from urllib import urlencode
 from urllib2 import HTTPError
 
 model = 'ukmo'
-data = '/static/'
-image = '/static/'
-parameters = {'model':radius}
+data = '/static/ts_Amon_HadGEM2-A_amip_r1i1p1_197809-200811.nc'
+image = '/static/ukmo_ts.jpeg'
+parameters = {'model':model, 'data': data, 'image': image}
 urlparams = urlencode(parameters)
 print 'urlparams: ', urlparams
-url = 'http://lpanl.homeip.net:8888/' + 'invest/area?' + urlparams
+url = 'http://oscar2.jpl.nasa.gov:8088/' + 'twoDimClimatology/display?' + urlparams
 print 'url: ', url
 headers = {"Content-type": "multipart/form-data"}
 try:
@@ -23,10 +23,8 @@ try:
   ### print 'content: ', content
 
   obj = json.loads(content)
-  print obj
+  print 'returned content: ', obj
 
-  area = obj['area']
-  print 'area: ', area
 except httplib2.HttpLib2Error, e:
   # the Base Exception for all exceptions raised by httplib2.
   msg = 'Unable to call "%s" due to %s: %s' % (url, type(e), str(e))
