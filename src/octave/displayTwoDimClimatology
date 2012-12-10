@@ -1,4 +1,5 @@
-#!/usr/local/bin/octave -qf
+#! /usr/local/bin/octave -qf
+pkg load all
 
 disp("hello");
 fn = '/home/zhai/cmip5/ukmo/hadgem2-a/ts_Amon_HadGEM2-A_amip_r1i1p1_197809-200811.nc';
@@ -9,5 +10,6 @@ lon = fd{'lon'}(:);
 lat = fd{'lat'}(:);
 
 ts_clim = squeeze(simpleClimatology(ts,1));
+### disp(ts_clim);
 
 displayTwoDimData(lon, lat, ts_clim);
