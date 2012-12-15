@@ -10,8 +10,8 @@ plot,pressure
 print,pressure
 plot,iwc(2,*)
 plot,iwc(2,*),tit='hi',charsize=2,xtit='no. meas',ytit='IWC'
-;;; map_set,/cont
-;;; map_set,0,180,/cont
+map_set,/cont
+map_set,0,180,/cont
 plots,longitude,latitude
 set_plot,'ps'
 
