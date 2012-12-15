@@ -1,5 +1,6 @@
 
-restore,'/nas/lacie/perun/CloudSat_only/CLFR_CloudSat_2008-05.idl-save'
+;;; restore,'/nas/lacie/perun/CloudSat_only/CLFR_CloudSat_2008-05.idl-save'
+cmrestore,'CLFR_CloudSat_2008-05.idl-save'
 
 np=42
 nlng=144
