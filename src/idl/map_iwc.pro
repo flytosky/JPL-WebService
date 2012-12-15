@@ -44,7 +44,8 @@ FOR imon=0, n_mon-1 do begin
     endelse
     print,'processing '+fname
     if (strlen(fname) gt 6) then begin
-    restore,fname
+    ;;; restore,fname
+    cmrestore,fname
 
   ; rephase the longitude
     longitude(WHERE(longitude LT 0.0)) = 360.0 + longitude(WHERE(longitude LT 0.0))
@@ -88,11 +89,13 @@ for i=0,nlng-1 do begin
 endfor
 endfor
 
-save, file='test.sav', glat, glng, IWCavg, CFR, pressure
+;;; save, file='test.sav', glat, glng, IWCavg, CFR, pressure
+cmsave, file='test.sav', glat, glng, IWCavg, CFR, pressure
 
 plt:
 
-restore,'test.sav'
+;;; restore,'test.sav'
+cmrestore,'test.sav'
 
  k=2
  want=reform(IWCavg(k,*,*)) 
