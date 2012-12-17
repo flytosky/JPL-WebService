@@ -1,7 +1,7 @@
 #!/usr/local/bin/octave -q
 
 arg_list = argv();
-printf ("%s", program_name());
+printf ("%s:\n", program_name());
 
 narg = length(arg_list);
 
@@ -10,6 +10,9 @@ if narg < 2
 end
 modelName = lower(arg_list{1});
 varName = lower(arg_list{2});
+
+startTime = struct('year', 1980, 'month', 1);
+stopTime = struct('year', 2004, 'month', 12);
 
 if narg > 2
   startTimeStr = arg_list{3};
@@ -20,6 +23,11 @@ if narg > 3
   stopTimeStr = arg_list{4};
   stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
 end
+
+printf("%s", arg_list{1})
+printf("%s", arg_list{2})
+printf("%s", arg_list{3})
+printf("%s", arg_list{4})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'

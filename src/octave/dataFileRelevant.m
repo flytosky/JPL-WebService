@@ -15,5 +15,7 @@ function flag = dataFileRelevant(fn, startTime, stopTime);
 % Revision history:
 %   2012/12/03:	Initial version, cz
 %
-[startTime_data, stopTime_data] = parseStartAndStopDate(fn);
+[startTime_data, stopTime_data] = getStartAndStopDates(fn);
+printf('start year = %f\n, month = %f\n', startTime_data.year, startTime_data.month);
+printf('stop year = %f\n, month = %f\n', stopTime_data.year, stopTime_data.month);
 flag = temporalRangeOverlap(startTime_data, stopTime_data, startTime, stopTime);
