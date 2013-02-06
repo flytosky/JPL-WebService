@@ -1,0 +1,77 @@
+/*
+*Name: Client Side Image Manipulation Gallery
+*Description: jQuery used to initialize and bind Processing.js Histogram methods to images targeted by CSS attributes.
+*Author: Alex Smith, Alexander.Smith@jpl.nasa.gov, Jet Propulsion Laboratory
+*Version: 0.9.0
+*Date: 11/23/2011
+*Instructions: README
+*/
+###########
+#Manifest:#
+###########
+*modular.html - an example implementation
+*js/jquery-1.6.1.js - jquery
+*js/processing-1.3.0.js - processing.js
+*js/modular/histogram.js - jQuery used to initialize and bind Processing.js Histogram methods to images targeted by CSS attributes.
+*js/processing/histeq_modular.pde - Processing.js script for histeq
+*js/processing/stretch_modular.pde - Processing.js script for stretch
+*css/modular.css - Stylesheet for the widget
+*img/loading.gif - loading spinner
+*img/modular/modular_histogram_icon.png - icon sprite
+#####################################################
+
+########
+HOW-TO:#
+########
+1. in your HTML <head>:
+<!-- MAKE SURE TO INCLUDE ALL THESE SCRIPTS BELOW, AND THE MAKE SURE TO MIGRATE THE IMAGE DIRECTORY: IMG/MODULAR RELATIVE TO THESE DIR'S -->
+<!-- YOU WILL ALSO NEED TO MIGRATE THE JS/PROCESSING FOLDER TO WHEREVER THIS APP LIVES -->
+<link href="css/modular.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.6.1.js"></script>
+<script type="text/javascript" src="js/processing-1.3.0.js"></script>
+<script type="text/javascript" src="js/modular/histogram.js"></script>
+
+2. In your HTML <body>:
+
+<body>
+<!-- ANYWHERE ON THE PAGE YOU CAN ADD A SPECIFIC CLASS TO AN IMG ELEMENT WHICH WILL WRAP THE IMAGE WITH OPTIONS TO USE THE HISTOGRAM METHODS -->
+<!--  ADD THE DESIGNATED CLASS NAME, ID, or IMG ELEMENT INTO JS/MODULAR/HISTOGRAM.JS ~LINE 13: var pjs_target = '.histogram_target';
+<!-- Example: In your HTML you have: <img src="image.jpg" class="histogram_target" /> and each image needing histograms applied with the class "histogram_target" would get targeted for histogram addition by var pjs_target = '.histogram_target';
+<img class="histogram_target" src="/img/260px-EN003_Enceladus_Mosaic.jpg" />
+<img class="histogram_target" src="/img/saturn_rings_01.jpg" />
+<img class="histogram_target" src="/img/TempelbypassFeb2011.jpg" />
+<img class="histogram_target" src="/img/test.png" />
+<img class="histogram_target" src="/img/test2.png" />
+<img class="histogram_target" src="/img/test3.gif" />
+
+</body>
+
+3. Edit js/histogram.js line 11,13:
+/**********MODIFY THE FOLLOWING 2 VARIABLES***************/
+//in_place renders the processing sketch directly over the image being manipulated. Alternately we can set to false and use greyboxes centered in the middle of the screen.
+var in_place = true; 
+//pjs_target is the CSS Class, ID, or IMG element reference. More info below variable...
+var pjs_target = '.histogram_target';
+/*MAKE SURE TO ADD YOUR TARGET in var pjs_target, which gets passed into onImageClick()
+onImageClick(String) needs a target pointing to a CSS Class, ID, or IMG element reference in the image element in the DOM. 
+Example: <img src="image.jpg" class="histogram_target" /> and each image with the class "histogram_target"
+would get targeted for histogram addition by the javascript method onImageClick('.histogram_target');*/
+/*************************END MODIFY**********************/
+
+4. GOTCHAS
+css.modular.css:line 104
+/*YOU WILL PROBABLY HAVE TO CHANGE THE URLS BELOW UNLESS YOU'RE ACCESSING THE CSS VIA AN ABSOLUTE PATH*/
+.hist_stretch_button{
+	background: url(../img/modular/modular_histogram_icon.png) no-repeat top left;
+}
+.hist_eq_button{
+background: url(../img/modular/modular_histogram_icon.png) no-repeat -30px top;
+}
+
+modular.html:line 16
+<!-- YOU MAY HAVE TO UPDATE the img src below "/img/loading.gif" once you migrate -->
+<div id="loading"><img src="/img/loading.gif" alt="Loading" /></div>
+
+You may run into trouble with relative image paths in <img> elements. If you do just use an absolute URL path: http://www.example.com/img/image.jpg OR /img/image.jpg.
+
+Processing.js also will not modify images cross-domain. Proxy the images with PHP or something else if you need cross-domain images.

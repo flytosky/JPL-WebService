@@ -1,0 +1,231 @@
+/*
+*Name: Client Side Image Manipulation Gallery
+*Description: jQuery used to initialize and bind Processing.js Histogram methods to images targeted by CSS attributes.
+*Author: Alex Smith, Alexander.Smith@jpl.nasa.gov, Jet Propulsion Laboratory
+*Version: 0.9.0
+*Date: 11/23/2011
+*Instructions: README
+*/
+/**********MODIFY THE FOLLOWING 2 VARIABLES***************/
+//in_place renders the processing sketch directly over the image being manipulated. Alternately we can set to false and use greyboxes centered in the middle of the screen.
+var in_place = true; 
+//pjs_target is the CSS Class, ID, or IMG element reference. More info below variable...
+var pjs_target = '.histogram_target';
+/*MAKE SURE TO ADD YOUR TARGET in var pjs_target, which gets passed into onImageClick()
+onImageClick(String) needs a target pointing to a CSS Class, ID, or IMG element reference in the image element in the DOM. 
+Example: <img src="image.jpg" class="histogram_target" /> and each image with the class "histogram_target"
+would get targeted for histogram addition by the javascript method onImageClick('.histogram_target');*/
+/*************************END MODIFY**********************/
+
+//done with modification. Now all the jQuery magic happens
+jQuery.noConflict();
+//no conflict with existing jQuery
+jQuery(document).ready(function(){
+	var pjs_stretch = new pjsStretch();
+	//conditional, Processing.js doesnt play nice with IE<9.0. Degrades gracefully, none of the IE8 users will have any idea they're missing out on the fun.
+	if(jQuery.browser.msie && jQuery.browser.version >= 9.0){
+		pjs_stretch.Init(pjs_target);
+	}
+	//else browser is not ie9...
+	else if(!jQuery.browser.msie){
+			pjs_stretch.Init(pjs_target);
+	}
+});
+
+//initialize methods
+var pjsStretch = function(){
+	//jQuery.extend(onImageClick,Init,addGreybox,hideCanvas,onImageClick,imagesLoaded,makeHistEq,makeHistStretch,addGreybox,hideCanvas,showLoading,hideLoading);
+	
+	this.Init = function(css_target){
+		
+		onImageClick(css_target);
+		addGreybox();
+		hideCanvas();
+		};
+	
+};
+var onImageClick = function(the_target){
+	//wrap the images with buttons
+	jQuery(the_target).each(function(i,x){
+		jQuery(this).load(function(){
+		var w = jQuery(this).width();
+		var h = jQuery(this).height();
+		
+		if(w > 0 && h > 0){
+		jQuery(this).wrap('<div class="imagewrap" style="width:'+w+'px;height:'+h+'px;" />');
+		
+		jQuery(this).parent('.imagewrap').append('<div class="image_additional"><div class="hist_eq_button"></div><div class="hist_stretch_button"></div><div class="histogram_title"></div></div>');
+		
+		 jQuery('.hist_eq_button,.hist_stretch_button').hover(function(){
+				switch(jQuery(this).attr('class')){
+				case 'hist_eq_button':
+					jQuery(this).siblings('.histogram_title').html('HistEq');
+					break;
+				case 'hist_stretch_button':
+					jQuery(this).siblings('.histogram_title').html('Stretch');
+					break;
+					
+				}
+			 },
+		 function(){
+
+			 });
+		}
+		if(i == jQuery(the_target).length-1){
+			imagesLoaded();
+		}
+		});
+		
+		});
+
+	//greybox close is live clicked
+	jQuery('.greybox_close').live('click',function(){
+		hideCanvas();
+		});
+}
+var imagesLoaded = function(){
+
+	//imagewrap is hovered, show the options
+	jQuery('.imagewrap').hover(function(){
+		
+		jQuery('.image_additional',this).stop().animate({'margin-top':'-30px'},300);
+	},
+	function(){
+		jQuery('.image_additional',this).stop().animate({'margin-top':'0px'},300);
+	});
+	//end
+	//live callbacks for all the buttons
+	//right now its limited to hist_eq and stretch. could be more for zoom, export, details, etc...
+	jQuery('.hist_eq_button,.hist_stretch_button').live('click',function(){
+				switch(jQuery(this).attr('class')){
+					case 'hist_eq_button':
+						makeHistEq(jQuery(this).parents('.image_additional').siblings('img'),jQuery(this).parents('.image_additional').siblings('img').attr('src'));
+					break;
+					case 'hist_stretch_button':
+						makeHistStretch(jQuery(this).parents('.image_additional').siblings('img'),jQuery(this).parents('.image_additional').siblings('img').attr('src'));
+					break;
+				}
+				
+				});	
+}
+
+//brings the canvas into front for either histeq or stretch
+var makeHistEq = function(imgobject,image_src){
+	var imgleft = jQuery(imgobject).offset().left;
+	var imgtop = jQuery(imgobject).offset().top;
+	showLoading();
+	//modularImage(string),width(int),height(int) is what gets sent over to Processing.js 
+	var modularImage = image_src;
+	var height = Math.floor(jQuery(this).height());
+	var width = Math.floor(jQuery(this).width());
+	if(in_place){
+		var ldpx = imgleft + (jQuery(imgobject).width()/2-jQuery('#loading').width());
+		var ldpy = imgtop + (jQuery(imgobject).height()/2-jQuery('#loading').height());
+		jQuery('#loading').css({'left':ldpx+'px','top':ldpy+'px','position':'absolute','padding':'10px'});
+	}
+	var mysketch = Processing.getInstanceById('pjs_histeq');
+	mysketch.setDimensions(jQuery(imgobject).width(),jQuery(imgobject).height());
+	mysketch.setup();
+	mysketch.redrawimage(modularImage,width,height);
+	//now lets show the greybox
+	if(!in_place) jQuery('#greybox').show();
+	if(in_place) jQuery('#canvas_gb_histeq').addClass('mod_inplace');
+	//center the canvas in the middle of the screen.
+	var cw = jQuery('#canvas_gb_histeq').width();
+	var ch = jQuery('#canvas_gb_histeq').height();
+	var ml = in_place ? imgleft : (jQuery(window).width() - jQuery('#canvas_gb_histeq').width()) / 2;
+	var mt = in_place ? imgtop : (jQuery(window).height() - jQuery('#canvas_gb_histeq').height()) / 2;
+	if(in_place){jQuery('#canvas_gb_histeq').css('position','absolute');}
+	//moved the following into the sketch...
+	var setI = setInterval(function(){
+		var chk = mysketch.check_is_done();
+		if(chk){ 
+			jQuery('#canvas_gb_histeq').css({'top':mt+'px','left':ml+'px'}).show();
+			clearInterval(setI);
+			mysketch.resetLoad();
+		}
+	},10);
+	
+}
+
+var makeHistStretch = function(imgobject,image_src){
+	var imgleft = jQuery(imgobject).offset().left;
+	var imgtop = jQuery(imgobject).offset().top;
+	//modularImage(string),width(int),height(int) is what gets sent over to Processing.js 
+	var modularImage = image_src;
+	var height = Math.floor(jQuery(this).height());
+	var width = Math.floor(jQuery(this).width());
+	if(in_place){
+		var ldpx = imgleft + (jQuery(imgobject).width()/2-jQuery('#loading').width());
+		var ldpy = imgtop + (jQuery(imgobject).height()/2-jQuery('#loading').height());
+		jQuery('#loading').css({'left':ldpx+'px','top':ldpy+'px','position':'absolute','padding':'10px'});
+	}
+	showLoading();
+	var mysketch = Processing.getInstanceById('pjs_stretch');
+	mysketch.setDimensions(jQuery(imgobject).width(),jQuery(imgobject).height());
+	mysketch.setup();
+	mysketch.redrawimage(modularImage,width,height);
+	
+	//now lets show the greybox
+	if(!in_place) jQuery('#greybox').show();
+	if(in_place) jQuery('#canvas_gb_stretch').addClass('mod_inplace');
+	//center the canvas in the middle of the screen.
+	var cw = jQuery('#canvas_gb_stretch').width();
+	var ch = jQuery('#canvas_gb_stretch').height();
+	var ml = in_place ? imgleft : (jQuery(window).width() - jQuery('#canvas_gb_stretch').width()) / 2;
+	var mt = in_place ? imgtop : (jQuery(window).height() - jQuery('#canvas_gb_stretch').height()) / 2;
+	if(in_place){jQuery('#canvas_gb_stretch').css('position','absolute');}
+	//moved the following into the sketch...
+	var setI = setInterval(function(){
+		var chk = mysketch.check_is_done();
+		if(chk){ 
+			jQuery('#canvas_gb_stretch').css({'top':mt+'px','left':ml+'px'}).show();
+			clearInterval(setI);
+			mysketch.resetLoad();
+		}
+	},10);
+	
+	
+}
+//greybox jquery
+var addGreybox = function(){
+	var gb_div = jQuery('<div id="greybox" />');
+	var loading_div = jQuery('<div id="loading"><img src="/wiio/img/loading.gif" alt="Loading" /></div>');
+	var histeq_div = jQuery('<div class="canvas_gb" id="canvas_gb_histeq" />');
+	histeq_div.append('<div class="greybox_close">X</div>')
+	.append('<div class="title">Histogram Equalization</div>')
+	.append('<canvas id="pjs_histeq" data-processing-sources="/wiio/js/processing/histeq_modular.pde"></canvas>');
+	//.append('<canvas id="pjs_histeq" data-processing-sources="js/processing/histeq_modular.pde"></canvas>');
+	var stretch_div = jQuery('<div class="canvas_gb" id="canvas_gb_stretch" />');
+	stretch_div.append('<div class="greybox_close">X</div>')
+	.append('<div class="title">Contrast Stretch</div>')
+	.append('<canvas id="pjs_stretch" data-processing-sources="/wiio/js/processing/stretch_modular.pde"></canvas>');
+	//.append('<canvas id="pjs_stretch" data-processing-sources="js/processing/stretch_modular.pde"></canvas>');
+	jQuery('body').append(gb_div)
+	.append(loading_div)
+	.append(histeq_div)
+	.append(stretch_div);
+}
+var hideCanvas = function(){
+	jQuery('#greybox').hide();
+	jQuery('.canvas_gb').hide();
+}
+//loading spinner
+var showLoading = function(){
+	var lw = jQuery('#loading').width();
+	var ml = (jQuery(window).width()-lw)/2;
+	var mt = (jQuery(window).height()-jQuery('#loading').height())/2;
+	if(!in_place){
+		jQuery('#loading').css({'margin':mt+'px 0 0 '+ml+'px'});
+	}
+	jQuery('#loading').show();
+	jQuery('#greybox').css('z-index','22');
+};
+var hideLoading = function(){
+	jQuery('#loading').hide();
+	jQuery('#greybox').css('z-index','20');
+};//end greybox jquery
+
+
+	
+

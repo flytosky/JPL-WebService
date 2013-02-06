@@ -1,0 +1,14 @@
+#awsMenu .entry {
+font-weight: bold;
+}
+#awsMenu .entry .sub_entry {
+margin-left: 1em;
+font-weight: normal;
+}
+
+#awsUpdateByCP {
+color: blue;
+}
+#awsUpdateByTSC {
+color: blue;
+}

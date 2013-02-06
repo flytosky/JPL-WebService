@@ -1,0 +1,4 @@
+(*) ./css: jpl template css dir
+(*) ./images: jpl template image dir
+(*) ./includes: jpl template includes dir
+

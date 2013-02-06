@@ -1,0 +1,110 @@
+@CHARSET "UTF-8";
+body,html{
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	font-family: Helvetica, Arial, Sans-serif;
+	font-weight: 100;
+	}
+#greybox{
+	top: 0;
+	left:0;
+	z-index:20;
+	position:fixed;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity: 0.9;
+}
+#loading{
+	position:fixed;
+	z-index: 23;
+	padding: 50px;
+	background: #fff;
+	border: 5px solid #333;
+	display:none;
+}
+/*this is for the in_place version*/
+.mod_inplace{
+	border: none !important;
+	padding: 0 !important;
+	background: none !important;
+	border-radius: 0px !important;
+	}
+.mod_inplace .title{
+	display:none;
+	}
+.mod_inplace .greybox_close{
+	margin: 0 0 0 -40px !important;
+	z-index:22;
+	position:relative;
+	}
+#canvas_gb_stretch, #canvas_gb_histeq{
+	z-index: 21;
+	position: fixed;
+	margin: auto;
+	border-radius: 20px;
+	padding: 20px;
+	background: #fff;
+	border: 5px solid #ccc;
+	
+}
+
+canvas:focus{
+	outline: 0;
+	}
+.title{
+	float:left;
+	position:absolute;
+	margin-top: -20px;
+	}
+.greybox_close{
+	float:right;
+	margin: -32px -32px 0 0;
+	background: red;
+	color: #fff;
+	border-radius: 20px;
+	border: 2px solid #fff;
+	box-shadow: 1px 1px 1px #ccc;
+	padding: 5px 6px;
+	cursor:pointer;
+	}
+.imagewrap{
+float:left;
+overflow:hidden;
+}
+.image_additional{
+width: 100%;
+height: 30px;
+background: -moz-linear-gradient(left,  rgba(0,0,0,0) 32%, rgba(0,0,0,0.01) 33%, rgba(0,0,0,0.65) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(32%,rgba(0,0,0,0)), color-stop(33%,rgba(0,0,0,0.01)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left,  rgba(0,0,0,0) 32%,rgba(0,0,0,0.01) 33%,rgba(0,0,0,0.65) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left,  rgba(0,0,0,0) 32%,rgba(0,0,0,0.01) 33%,rgba(0,0,0,0.65) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left,  rgba(0,0,0,0) 32%,rgba(0,0,0,0.01) 33%,rgba(0,0,0,0.65) 100%); /* IE10+ */
+background: linear-gradient(left,  rgba(0,0,0,0) 32%,rgba(0,0,0,0.01) 33%,rgba(0,0,0,0.65) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=1 ); /* IE6-9 */
+position:relative;
+color: #fff;
+}
+.histogram_title{
+float:right;
+font-size: 20px;
+font-weight:100;
+text-align:right;
+padding: 4px 4px 0 0;
+}
+.hist_eq_button,.hist_stretch_button{
+float:right;
+width: 30px;
+height:30px;
+cursor:pointer;
+}
+
+
+/*YOU WILL PROBABLY HAVE TO CHANGE THE URLS BELOW UNLESS YOU'RE ACCESSING THE CSS VIA AN ABSOLUTE PATH*/
+.hist_stretch_button{
+	background: url(../img/modular/modular_histogram_icon.png) no-repeat top left;
+}
+.hist_eq_button{
+background: url(../img/modular/modular_histogram_icon.png) no-repeat -30px top;
+}

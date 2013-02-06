@@ -1,0 +1,35 @@
+<!--
+From http://www.herongyang.com/encoding/Base64-Goetz-JavaScript-Implementation-Test.html
+-->
+<html>
+<!-- JavaScript_Base64_Test.html
+   Copyright (c) 2007 by Dr. Herong Yang, http://www.herongyang.com/
+-->
+<head>
+<title>JavaScript Base64 Test</title>
+<script type="text/javascript" src="heller.js"></script>
+</head>
+<body>
+<pre>
+<script type="text/javascript">
+document.write('\nTest 1:\n');
+test("A", "QQ==");
+
+document.write('\nTest 2:\n');
+test("AB", "QUI=");
+
+document.write('\nTest 3:\n');
+test("ABC", "QUJD");
+
+function test(theInput, theExpected) {
+        theEncoded = base64.encode(theInput,false,false);
+        theDecoded = base64.decode(theEncoded,1,false,true);
+        document.write('   Input   : '+theInput+'\n');
+        document.write('   Encoded : '+theEncoded+'\n');
+        document.write('   Expected: '+theExpected+'\n');
+        document.write('   Decoded : '+theDecoded+'\n');
+}
+</script>
+</pre>
+</body>
+</html>
