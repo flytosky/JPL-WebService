@@ -23,10 +23,11 @@ else
 end
 imagesc(lon, -lat, twoDimData');colorbar;
 hold on;
+plot(ha, coastLongAndLat(:,2)-360, -coastLongAndLat(:,1), 'k-');
 plot(ha, coastLongAndLat(:,2), -coastLongAndLat(:,1), 'k-');
 plot(ha, coastLongAndLat(:,2)+360, -coastLongAndLat(:,1), 'k-');
 set(ha, 'fontsize', 13);
-set(ha, 'yTickLabel', num2str(-get(gca, 'yTick')'));
+set(ha, 'yTickLabel', num2strNoNegZero(-get(gca, 'yTick')'));
 if ~xlabelOff
   xlabel(ha, 'longitude(deg)');
 end

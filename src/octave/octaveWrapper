@@ -24,10 +24,31 @@ if narg > 3
   stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
 end
 
+lonRange = [0, 360];
+
+if narg > 4
+  lonRange = str2num(arg_list{5});
+end
+
+latRange = 90*[-1,1];
+
+if narg > 5
+  latRange = str2num(arg_list{6});
+end
+
+monthIdx = 1:12;
+
+if narg > 6
+  monthIdx = str2num(arg_list{7});
+end
+
 printf("%s", arg_list{1})
 printf("%s", arg_list{2})
 printf("%s", arg_list{3})
 printf("%s", arg_list{4})
+printf("%s", arg_list{5})
+printf("%s", arg_list{6})
+printf("%s", arg_list{7})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -52,6 +73,6 @@ for ii = 1:nDataFiles
   end
 end
 
-figFile = [modelName '_' varName '.jpeg'];
-displayTwoDimClimatology(dataFileFullPath, figFile, varName, startTime, stopTime);
+figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.jpeg'];
+displayTwoDimClimatologyGen(dataFileFullPath, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx);
 title([varName ' climatology for ' modelName]);
