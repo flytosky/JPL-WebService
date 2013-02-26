@@ -417,47 +417,69 @@
 
 <tr>
 <td>data source:</td><td><select name=id>
-<option>GISS-E2H</option>
-<option>GFDL-CM3</option>
-<option>NCAR-CAM5</option>
-<option>UKMO-HadGEM2</option>
-<option>CCCMA-CGCM3.1</option>
-<option>NASA-Obs4MIP</option> </select></td>
+<option>CCCMA/CANESM2</option>
+<option>GFDL/CM3</option>
+<option>GISS/E2-R</option>
+<option>NCAR/CAM5</option>
+<option>UKMO/HadGEM2-ES</option>
+<option>NASA/obs4MIPs</option> </select></td>
 <td>variable name:</td><td><select name=id>
 <option>Surface Temperature</option>
 <option>Total Cloud Fraction</option>
-<option>Precipitation at Surface</option> </select></td>
+<option>Precipitation</option> </select></td>
 </tr>
 
 <tr>
-<td>start year:</td><td><input id="t0" value="2012"/></td>
-<td>end year:</td><td><input id="t1" value="2013"/></td>
+<td>start year-month:</td><td><input id="t0" value="2011-03"/></td>
+<td>end year-month:</td><td><input id="t1" value="2012-11"/></td>
 </tr>
 
 <tr>
-<td colspan="2"><input type="radio" name="group1" value="use month" checked>use month</td>
-<td colspan="2"><input type="radio" name="group1" value="use season">use season</td>
-</tr>
-
-<tr>
-<td>month range:</td><td>
-<input id="mon" value="03-04"/>
-</td>
-<td>season:</td><td><select name=id>
+<td>select months:</td>
+<td><select name=id>
+<option>select none</option>
+<option>select all</option>
 <option>Summer:Jun-Jul-Aug</option>
 <option>Autumn:Sep-Oct-Nov</option>
 <option>Winter:Dec-Jan-Feb</option>
-<option>Spring:Mar-Apr-May</option> </select></td>
+<option>Spring:Mar-Apr-May</option> </select>
+</td>
+<td>
+</td>
+<td>
 </tr>
 
 <tr>
-<td>lat1(deg):</td><td><input id="lat1" value="-90"/></td>
-<td>lat2(deg):</td><td><input id="lat2" value="90"/></td>
+<td>
+<input type="checkbox" name="option1" value="Jan"> Jan<br>
+<input type="checkbox" name="option1" value="Feb"> Feb<br>
+<input type="checkbox" name="option1" value="Mar"> Mar<br>
+</td>
+<td>
+<input type="checkbox" name="option1" value="Apr"> Apr<br>
+<input type="checkbox" name="option1" value="May"> May<br>
+<input type="checkbox" name="option1" value="Jun"> Jun<br>
+</td>
+<td>
+<input type="checkbox" name="option1" value="Jul"> Jul<br>
+<input type="checkbox" name="option1" value="Aug"> Aug<br>
+<input type="checkbox" name="option1" value="Sep"> Sep<br>
+</td>
+<td>
+<input type="checkbox" name="option1" value="Oct"> Oct<br>
+<input type="checkbox" name="option1" value="Nov"> Nov<br>
+<input type="checkbox" name="option1" value="Dec"> Dec<br>
+</td>
 </tr>
 
 <tr>
-<td>lon1(deg):</td><td><input id="lon1" value="-360"/></td>
-<td>lon2(deg):</td><td><input id="lon2" value="360"/></td>
+<td>start lat (deg):</td><td><input id="lat1" value="-90"/></td>
+<td>end lat (deg):</td><td><input id="lat2" value="90"/></td>
+</tr>
+
+<tr>
+<td>start lon (deg):</td><td><input id="lon1" value="-360"/></td>
+<td>end lon (deg):</td><td><input id="lon2" value="360"/></td>
 </tr>
 
 <tr>
