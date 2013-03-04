@@ -44,13 +44,13 @@ def display():
       # instantiate the app. class
       c1 = call_twoDimMap.call_twoDimMap(model, var, startT, endT, lon1, lon2, lat1, lat2, months, output_dir)
       # call the app. function
-      message = c1.displayTwoDimMap()
+      (message, imgFileName) = c1.displayTwoDimMap()
       # chdir back
       os.chdir(current_dir)
 
-      url = 'http://cmacws.jpl.nasa.gov:8088/twoDimMap/static/' + tag
+      url = 'http://cmacws.jpl.nasa.gov:8089/static/' + tag + '/' + imgFileName
 
-      if message.find('Error') >= 0:
+      if len(message) == 0 or message.find('Error') >= 0:
         success = False
         url = ''
 
