@@ -35,10 +35,22 @@ class call_twoDimMap:
           proc=subprocess.Popen(cmd, cwd='.', stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
           # wait for the process to finish
           stdout_value, stderr_value = proc.communicate()
-          print 'stdout_value: ', stdout_value
-          print 'stderr_value: ', stderr_value
+          ### print 'stdout_value: ', stdout_value
+          ### print 'stderr_value: ', stderr_value
 
-          return stdout_value
+          fst = 'figFile: '
+          l1 = len(fst)
+          print 'l1: ', l1
+          image_filename = ''
+
+          lines = stdout_value.split('\n')
+          for line in lines:
+            ### print '*****: ', line
+            if line.find('figFile: ') >= 0:
+              print '***** line: ', line
+              image_filename = line[l1:]
+
+          return (stdout_value, image_filename)
         except OSError, e:
           return 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
 
