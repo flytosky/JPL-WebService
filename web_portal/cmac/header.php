@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>OSCAR</title>
+<title>CMAC Services</title>
 <link href="css/main.css" rel="stylesheet" type="text/css" />
 <link href="css/print.css" rel="stylesheet" type="text/css" media="print"/>
 <link href="css_oscar/style.css" rel="stylesheet" type="text/css"/>
