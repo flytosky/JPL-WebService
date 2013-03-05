@@ -41,6 +41,7 @@ Convert variable units (e.g. convert cloud water content from the density unit (
 <li>
 Check data format.
 <p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8083/">CMIP5 Checker Service</a>.
 </p>
 <p>
@@ -57,6 +58,7 @@ Check data format.
 <li>
 Format data.
 <p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8081/">CMIP5 Formatter Service</a>.
 </p>
 </li>
@@ -70,12 +72,15 @@ Format data.
 <li>
 Apply mathematical operations (e.g. apply algebraic, logical, and calculus operations).
 <p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimMap.html">2D Variable Map Service</a>.
 </p>
 <p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimTimeSeries.html">2D Variable Time Series Service</a>.
 </p>
 <p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
 </p>
 </li>
