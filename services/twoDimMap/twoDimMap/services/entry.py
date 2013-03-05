@@ -33,7 +33,8 @@ def display():
       # get where the input file and output file are
       current_dir = os.getcwd()
       print 'current_dir: ', current_dir
-      tag = md5.new(model+startT+endT+lon1+lat1).hexdigest()
+      seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+months
+      tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/twoDimMap/static/' + tag
       print 'output_dir: ', output_dir
       if not os.path.exists(output_dir):
