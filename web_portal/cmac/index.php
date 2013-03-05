@@ -18,25 +18,47 @@ This web portal provides a user access to a scientific system that we developed 
 
 <ul>
 <li>
-Change data format (e.g. change a HDF file to a NetCDF file);
+Change data format (e.g. change a HDF file to a NetCDF file).
 </li>
 <li>
-Subset data conditionally by time, space, and variable (e.g. select tropical summer water vapor data);
+Subset data conditionally by time, space, and variable (e.g. select tropical summer water vapor data).
 </li>
 <li>
-Concatenate data from multiple files (e.g. collect precipitation rate from year 2000 to 2005);
+Concatenate data from multiple files (e.g. collect precipitation rate from year 2000 to 2005).
 </li>
 <li>
-Change horizontal and vertical coordinates (e.g. change height to pressure level);
+Change horizontal and vertical coordinates (e.g. change height to pressure level).
 </li>
 <li>
-Average and regrid the temporal and spatial resolution (e.g. monthly 1x1 degree averaged values);
+Average and regrid the temporal and spatial resolution (e.g. monthly 1x1 degree averaged values).
 </li>
 <li>
-Co-locate and interpolate multi-source outputs to match time and locations (e.g. co-locate MODIS footprint data with CloudSat footprint data);
+Co-locate and interpolate multi-source outputs to match time and locations (e.g. co-locate MODIS footprint data with CloudSat footprint data).
 </li>
 <li>
 Convert variable units (e.g. convert cloud water content from the density unit (mg/m3) to the mass fraction unit (mg/kg)).
+</li>
+<li>
+Check data format.
+<p>
+<a href="http://cmacws.jpl.nasa.gov:8083/">CMIP5 Checker Service</a>.
+</p>
+<p>
+<small>
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Dataset_Requirements_v1.pdf">obs4MIPs Dataset Requirements</a>.
+</small>
+</p>
+<p>
+<small>
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Global_Attributes_Requirements.pdf">obs4MIPs Global Attributes Requirements</a>.
+</small>
+</p>
+</li>
+<li>
+Format data.
+<p>
+<a href="http://cmacws.jpl.nasa.gov:8081/">CMIP5 Formatter Service</a>.
+</p>
 </li>
 </ul>
 
@@ -46,19 +68,28 @@ Convert variable units (e.g. convert cloud water content from the density unit (
 
 <ul>
 <li>
-Apply mathematical operations (e.g. apply algebraic, logical, and calculus operations);
+Apply mathematical operations (e.g. apply algebraic, logical, and calculus operations).
+<p>
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimMap.html">2D Variable Map Service</a>.
+</p>
+<p>
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimTimeSeries.html">2D Variable Time Series Service</a>.
+</p>
+<p>
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
+</p>
 </li>
 <li>
-Apply statistical operations (e.g. calculate standard deviation and correlation);
+Apply statistical operations (e.g. calculate standard deviation and correlation).
 </li>
 <li>
-Assess probability density function  (PDF) distributions of the data (e.g. estimate the PDF of total water content in the stratocumulus regions);
+Assess probability density function  (PDF) distributions of the data (e.g. estimate the PDF of total water content in the stratocumulus regions).
 </li>
 <li>
-Analyze cluster distributions of the data (e.g. identify the number of clusters for the cloud classifications or scene classifications);
+Analyze cluster distributions of the data (e.g. identify the number of clusters for the cloud classifications or scene classifications).
 </li>
 <li>
-Sampling multi-variables conditionally based on phenomena and physics (e.g. select cloud water content data in non-convective and non-precipitation conditions);
+Sampling multi-variables conditionally based on phenomena and physics (e.g. select cloud water content data in non-convective and non-precipitation conditions).
 </li>
 <li>
 Sort data by a given variable condition (e.g. sort cloud water path data in order of precipitation rate). 
