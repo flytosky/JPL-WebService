@@ -10,37 +10,72 @@
   <script type="text/javascript">
 
 
-    var myplot = function() {
-        var rv = xmisc.get_series(xMasked, yMasked);
-        if (rv.error != null) {
-            alert(rv.error);
-            return;
-        }
-
-        var options = {
-            xaxis: {
-                min: xMin,
-                max: xMax
-            },
-            yaxis: {
-                min: yMin,
-                max: yMax
-            }
-        };
-
-        var data = [
-            {
-                data: rv.data,
-                clickable: true,
-                lines: { show: false},
-                points: { show: true}
-            }
-        ];
-
-        $.plot($("#content"), data, options);
-    };
-
     var stqResponse = null;
+
+    function reset_months()
+    {
+        document.getElementById('Jan').checked = false;
+        document.getElementById('Feb').checked = false;
+        document.getElementById('Mar').checked = false;
+        document.getElementById('Apr').checked = false;
+        document.getElementById('May').checked = false;
+        document.getElementById('Jun').checked = false;
+        document.getElementById('Jul').checked = false;
+        document.getElementById('Aug').checked = false;
+        document.getElementById('Sep').checked = false;
+        document.getElementById('Oct').checked = false;
+        document.getElementById('Nov').checked = false;
+        document.getElementById('Dec').checked = false;
+    }
+
+    function select_months()
+    {
+      var s1=document.getElementById("months");
+      // alert(s1.selectedIndex);
+      // alert(s1.options[s1.selectedIndex].value);
+      if (s1.selectedIndex == 0) {
+        reset_months();
+      }
+      if (s1.selectedIndex == 1) {
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+        document.getElementById('Dec').checked = true;
+      }
+      if (s1.selectedIndex == 2) {
+        reset_months();
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+      }
+      if (s1.selectedIndex == 3) {
+        reset_months();
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+      }
+      if (s1.selectedIndex == 4) {
+        reset_months();
+        document.getElementById('Dec').checked = true;
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+      }
+      if (s1.selectedIndex == 5) {
+        reset_months();
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+      }
+        
+    }
 
     $(document).ready(function(){
 
@@ -48,6 +83,7 @@
         alert("As you can see, the link no longer took you to jquery.com");
         event.preventDefault();
       });
+
 
       $("#twodvarmap").click(function(event) {
 	stqResponse = null;
@@ -58,20 +94,80 @@
         var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
-        alert(url);
-        alert(lon0);
-        alert(lon1);
-        alert(lat0);
-        alert(lat1);
+        // alert(url);
+        // alert(lon0);
+        // alert(lon1);
+        // alert(lat0);
+        // alert(lat1);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
-        alert(t0);
-        alert(t1);
+        // alert(t0);
+        // alert(t1);
 
         var s1 = document.getElementById('months');
         alert(s1.selectedIndex);
         alert(s1.options[s1.selectedIndex].value);
+
+        // get months checked by client
+        var month_str = "";
+
+        var mm = document.getElementById('Jan');
+        if (mm.checked == true)
+          month_str = month_str.concat(",1");
+        // alert(month_str);
+
+        var mm = document.getElementById('Feb');
+        if (mm.checked == true)
+          month_str = month_str.concat(",2");
+        // alert(month_str);
+
+        var mm = document.getElementById('Mar');
+        if (mm.checked == true)
+          month_str = month_str.concat(",3");
+        // alert(month_str);
+
+        var mm = document.getElementById('Apr');
+        if (mm.checked == true)
+          month_str = month_str.concat(",4");
+
+        var mm = document.getElementById('May');
+        if (mm.checked == true)
+          month_str = month_str.concat(",5");
+
+        var mm = document.getElementById('Jun');
+        if (mm.checked == true)
+          month_str = month_str.concat(",6");
+
+        var mm = document.getElementById('Jul');
+        if (mm.checked == true)
+          month_str = month_str.concat(",7");
+
+        var mm = document.getElementById('Aug');
+        if (mm.checked == true)
+          month_str = month_str.concat(",8");
+
+        var mm = document.getElementById('Sep');
+        if (mm.checked == true)
+          month_str = month_str.concat(",9");
+
+        var mm = document.getElementById('Oct');
+        if (mm.checked == true)
+          month_str = month_str.concat(",10");
+
+        var mm = document.getElementById('Nov');
+        if (mm.checked == true)
+          month_str = month_str.concat(",11");
+
+        var mm = document.getElementById('Dec');
+        if (mm.checked == true)
+          month_str = month_str.concat(",12");
+
+        // remove the leading ','
+        month_str = month_str.substr(1);
+        alert(month_str);
+
+
 
         var t = [t0, t1];
         if (t1.search(/^[0-9]+$/) == 0) {
@@ -192,108 +288,6 @@
       });
 
 
-      $("#xAxis").change(function(event) {
-        //alert(this.value);
-        //$("#content").html(this.value);
-        var url = this.value;
-        $.ajax({
-            type: "GET",
-            url: this.value,
-            //url: url,
-            jsonp: "callback",
-            dataType: "jsonp",
-            //callback: "hihi",
-            data: {output:"json", flatten:""},
-            success: function(data, textStatus, xhr) {
-                //alert("success status: "+textStatus);
-                //alert(data.w10n[2].name);
-                x = data.data;
-                mask_x();
-                myplot();
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert("error status: "+textStatus);
-            },
-            complete: function(xhr, textStatus) {
-                alert("complete status: "+textStatus);
-            }
-        }
-        );
-      });
-
-      $("#yAxis").change(function(event) {
-        $.ajax({
-            type: "GET",
-            url: this.value,
-            jsonp: "callback",
-            dataType: "jsonp",
-            data: {output:"json", flatten:""},
-            success: function(data, textStatus, xhr) {
-                //alert("success status: "+textStatus);
-                //alert(data.w10n[3].name);
-                y = data.data;
-                mask_y();
-                myplot();
-            },
-            //error: function(xhr, textStatus, errorThrown) {
-            //    alert("error status: "+textStatus);
-            //},
-            complete: function(xhr, textStatus) {
-                alert("complete status: "+textStatus);
-            }
-        }
-        );
-      });
-
-      $("#xAllowRange").change(function(event) {
-            if (!x)
-                return true;
-            xAllowRange = this.value.split(/s*[\s,]\s*/, 2);
-            if (xAllowRange.length != 2) {
-                alert("Wrong format for xAllowRange: "+this.value);
-                xAllowRange = null;
-                return false;
-            }
-            mask_x();
-            myplot();
-            return true;
-      });
-
-      $("#yAllowRange").change(function(event) {
-            if (!y)
-                return true;
-            yAllowRange = this.value.split(/s*[\s,]\s*/, 2);
-            if (yAllowRange.length != 2) {
-                alert("Wrong format for yAllowRange: "+this.value);
-                yAllowRange = null;
-                return false;
-            }
-            mask_y();
-            myplot();
-            return true;
-      });
-
-      $("#xRange").change(function(event) {
-            xMin = null;
-            xMax = null;
-            var tmp = this.value.split(/s*[\s,]\s*/, 2);
-            if (tmp.length > 0)
-                xMin = tmp[0];
-            if (tmp.length > 1)
-                xMax = tmp[1];
-            myplot();
-      });
-
-      $("#yRange").change(function(event) {
-            yMin = null;
-            yMax = null;
-            var tmp = this.value.split(/s*[\s,]\s*/, 2);
-            if (tmp.length > 0)
-                yMin = tmp[0];
-            if (tmp.length > 1)
-                yMax = tmp[1];
-            myplot();
-      });
 
     });
     
@@ -334,7 +328,7 @@
 
 <tr>
 <td>select months:</td>
-<td><select name="months" id="months">
+<td><select name="months" id="months" onchange="select_months()">
 <option id="none">select none</option>
 <option id="all">select all</option>
 <option id="summer">Summer:Jun-Jul-Aug</option>
@@ -349,24 +343,24 @@
 
 <tr>
 <td>
-<input type="checkbox" name="option1" value="Jan"> Jan<br>
-<input type="checkbox" name="option1" value="Feb"> Feb<br>
-<input type="checkbox" name="option1" value="Mar"> Mar<br>
+<input type="checkbox" name="option1" id="Jan" value="Jan"> Jan<br>
+<input type="checkbox" name="option1" id="Feb" value="Feb"> Feb<br>
+<input type="checkbox" name="option1" id="Mar" value="Mar"> Mar<br>
 </td>
 <td>
-<input type="checkbox" name="option1" value="Apr"> Apr<br>
-<input type="checkbox" name="option1" value="May"> May<br>
-<input type="checkbox" name="option1" value="Jun"> Jun<br>
+<input type="checkbox" name="option1" id="Apr" value="Apr"> Apr<br>
+<input type="checkbox" name="option1" id="May" value="May"> May<br>
+<input type="checkbox" name="option1" id="Jun" value="Jun"> Jun<br>
 </td>
 <td>
-<input type="checkbox" name="option1" value="Jul"> Jul<br>
-<input type="checkbox" name="option1" value="Aug"> Aug<br>
-<input type="checkbox" name="option1" value="Sep"> Sep<br>
+<input type="checkbox" name="option1" id="Jul" value="Jul"> Jul<br>
+<input type="checkbox" name="option1" id="Aug" value="Aug"> Aug<br>
+<input type="checkbox" name="option1" id="Sep" value="Sep"> Sep<br>
 </td>
 <td>
-<input type="checkbox" name="option1" value="Oct"> Oct<br>
-<input type="checkbox" name="option1" value="Nov"> Nov<br>
-<input type="checkbox" name="option1" value="Dec"> Dec<br>
+<input type="checkbox" name="option1" id="Oct" value="Oct"> Oct<br>
+<input type="checkbox" name="option1" id="Nov" value="Nov"> Nov<br>
+<input type="checkbox" name="option1" id="Dec" value="Dec"> Dec<br>
 </td>
 </tr>
 
@@ -376,7 +370,7 @@
 </tr>
 
 <tr>
-<td>start lon (deg):</td><td><input id="lon0" value="-360"/></td>
+<td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
 
