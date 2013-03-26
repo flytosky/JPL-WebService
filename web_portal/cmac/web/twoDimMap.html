@@ -28,6 +28,16 @@
         document.getElementById('Dec').checked = false;
     }
 
+    function select_data()
+    {
+
+    }
+
+    function select_var()
+    {
+
+    }
+
     function select_months()
     {
       var s1=document.getElementById("months");
@@ -90,6 +100,14 @@
         $("#stqResponse").html("working...");
 
         var url = "http://cmacws.jpl.nasa.gov:8080/cmac/web/"
+
+        var d1 = $("#data").val();
+        d1 = d1.replace("/", "_");
+        alert(d1);
+
+        var v1 = $("#var").val();
+        alert(v1);
+
         var lon0 = $("#lon0").val();
         var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
@@ -106,8 +124,8 @@
         // alert(t1);
 
         var s1 = document.getElementById('months');
-        alert(s1.selectedIndex);
-        alert(s1.options[s1.selectedIndex].value);
+        // alert(s1.selectedIndex);
+        // alert(s1.options[s1.selectedIndex].value);
 
         // get months checked by client
         var month_str = "";
@@ -308,14 +326,15 @@
 </tr>
 
 <tr>
-<td>data source:</td><td><select name=id>
+<td>data source:</td><td><select name="data", id="data">
 <option>CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
 <option>GISS/E2-R</option>
 <option>NCAR/CAM5</option>
 <option>UKMO/HadGEM2-ES</option>
 <option>NASA/obs4MIPs</option> </select></td>
-<td>variable name:</td><td><select name=id>
+
+<td>variable name:</td><td><select name="var", id="var">
 <option>Surface Temperature</option>
 <option>Total Cloud Fraction</option>
 <option>Precipitation</option> </select></td>
