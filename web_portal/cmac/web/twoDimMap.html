@@ -99,33 +99,50 @@
 	stqResponse = null;
         $("#stqResponse").html("working...");
 
-        var url = "http://cmacws.jpl.nasa.gov:8080/cmac/web/"
+        // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+        var url = "http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?";
 
         var d1 = $("#data").val();
-        d1 = d1.replace("/", "_");
-        alert(d1);
+        var model1 = d1.replace("/", "_");
+
+        var arglist = "";
+        arglist = arglist.concat("model=");
+        arglist = arglist.concat(model1);
 
         var v1 = $("#var").val();
-        alert(v1);
+        arglist = arglist.concat("&var=");
+        arglist = arglist.concat("ts");
+
+        var t0 = $("#t0").val();
+        var t1 = $("#t1").val();
+
+        t0 = t0.replace("-", "");
+        t1 = t1.replace("-", "");
+
+        arglist = arglist.concat("&start_time=");
+        arglist = arglist.concat(t0);
+
+        arglist = arglist.concat("&end_time=");
+        arglist = arglist.concat(t1);
 
         var lon0 = $("#lon0").val();
         var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
-        // alert(url);
-        // alert(lon0);
-        // alert(lon1);
-        // alert(lat0);
-        // alert(lat1);
 
-        var t0 = $("#t0").val();
-        var t1 = $("#t1").val();
-        // alert(t0);
-        // alert(t1);
+        arglist = arglist.concat("&lon1=");
+        arglist = arglist.concat(lon0);
+
+        arglist = arglist.concat("&lon2=");
+        arglist = arglist.concat(lon1);
+
+        arglist = arglist.concat("&lat1=");
+        arglist = arglist.concat(lat0);
+
+        arglist = arglist.concat("&lat2=");
+        arglist = arglist.concat(lat1);
 
         var s1 = document.getElementById('months');
-        // alert(s1.selectedIndex);
-        // alert(s1.options[s1.selectedIndex].value);
 
         // get months checked by client
         var month_str = "";
@@ -133,17 +150,14 @@
         var mm = document.getElementById('Jan');
         if (mm.checked == true)
           month_str = month_str.concat(",1");
-        // alert(month_str);
 
         var mm = document.getElementById('Feb');
         if (mm.checked == true)
           month_str = month_str.concat(",2");
-        // alert(month_str);
 
         var mm = document.getElementById('Mar');
         if (mm.checked == true)
           month_str = month_str.concat(",3");
-        // alert(month_str);
 
         var mm = document.getElementById('Apr');
         if (mm.checked == true)
@@ -183,56 +197,38 @@
 
         // remove the leading ','
         month_str = month_str.substr(1);
-        alert(month_str);
+        // alert(month_str);
 
+        arglist = arglist.concat("&months=");
+        arglist = arglist.concat(month_str);
+        alert("arglist: " + arglist);
 
+        // url = url + encodeURIComponent(arglist);
+        url = url + encodeURI(arglist);
+        // url = url + arglist;
+        alert("url: " + url);
 
-        var t = [t0, t1];
-        if (t1.search(/^[0-9]+$/) == 0) {
-            t = [t0, parseInt(t1)];
-        }
-        var lon = [parseFloat(lon0), parseFloat(lon1)]
-        var lat = [parseFloat(lat0), parseFloat(lat1)]
-        var query = {difid:difid, t:t, lon:lon, lat:lat};
-        var text = JSON.stringify(query, null, 4);
-        //alert(text);
-        url = url + "?" + encodeURIComponent(JSON.stringify(query));
-        // alert("url: " + url);
         $.ajax({
             type: "GET",
             url: url,
-            //jsonp: "callback",
-            //dataType: "jsonp",
             dataType: "json",
-            //callback: "hihi",
             data: null,
             success: function(data, textStatus, xhr) {
                 stqResponse = data;
+                alert("data: " + data);
                 if (data.error) {
                     alert(data.error);
                     stqResponse = null;
                     $("#stqResponse").html("<span style='color:red'>error in backend</span>");
                     return;
                 }
-                // clone this member, so that it can be reset late,
-                // because array assignment is by reference.
-                // http://my.opera.com/GreyWyvern/blog/show.dml/1725165
-                var urisClone = data.result.uris.slice(0);
-                var uris = data.result.uris;
-                var prefix = "http://oscar.jpl.nasa.gov";
-                for (var i=0; i<uris.length; i++) {
-                    var w10nNodeMeta = prefix+uris[i]+"/";
-                    uris[i] = "<a href='"+w10nNodeMeta+"?output=html&traverse' target='"+w10nNodeMeta+"'>"+uris[i]+"</a>";
-                }
-                //alert("success status: "+textStatus);
                 var text = JSON.stringify(data, null, 4);
-                //alert(text);
+                alert(text);
                 $("#stqResponse").html("<pre>"+text+"</pre>");
-                // reset uris back to original
-                data.result.uris = urisClone;
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#stqResponse").html("error!");
+                alert("xhr.status: "+xhr.status);
                 alert("error status: "+textStatus);
             },
             complete: function(xhr, textStatus) {
@@ -341,8 +337,8 @@
 </tr>
 
 <tr>
-<td>start year-month:</td><td><input id="t0" value="2011-03"/></td>
-<td>end year-month:</td><td><input id="t1" value="2012-11"/></td>
+<td>start year-month:</td><td><input id="t0" value="1990-01"/></td>
+<td>end year-month:</td><td><input id="t1" value="1995-12"/></td>
 </tr>
 
 <tr>
@@ -384,13 +380,13 @@
 </tr>
 
 <tr>
-<td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
-<td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
+<td>start lat (deg):</td><td><input id="lat0" value="-29"/></td>
+<td>end lat (deg):</td><td><input id="lat1" value="29"/></td>
 </tr>
 
 <tr>
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
-<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
+<td>end lon (deg):</td><td><input id="lon1" value="100"/></td>
 </tr>
 
 <tr>
