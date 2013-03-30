@@ -1,5 +1,5 @@
 import os, hashlib, shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 import md5
 
 from flask import jsonify, request, url_for, make_response
@@ -8,7 +8,53 @@ from werkzeug import secure_filename
 from twoDimMap import app
 from twoDimMap.src import call_twoDimMap
 
+from flask import current_app
+from functools import update_wrapper
+
+
+def crossdomain(origin=None, methods=None, headers=None,
+                max_age=21600, attach_to_all=True,
+                automatic_options=True):
+    if methods is not None:
+        methods = ', '.join(sorted(x.upper() for x in methods))
+    if headers is not None and not isinstance(headers, basestring):
+        headers = ', '.join(x.upper() for x in headers)
+    if not isinstance(origin, basestring):
+        origin = ', '.join(origin)
+    if isinstance(max_age, timedelta):
+        max_age = max_age.total_seconds()
+
+    def get_methods():
+        if methods is not None:
+            return methods
+
+        options_resp = current_app.make_default_options_response()
+        return options_resp.headers['allow']
+
+    def decorator(f):
+        def wrapped_function(*args, **kwargs):
+            if automatic_options and request.method == 'OPTIONS':
+                resp = current_app.make_default_options_response()
+            else:
+                resp = make_response(f(*args, **kwargs))
+            if not attach_to_all and request.method != 'OPTIONS':
+                return resp
+
+            h = resp.headers
+
+            h['Access-Control-Allow-Origin'] = origin
+            h['Access-Control-Allow-Methods'] = get_methods()
+            h['Access-Control-Max-Age'] = str(max_age)
+            if headers is not None:
+                h['Access-Control-Allow-Headers'] = headers
+            return resp
+
+        f.provide_automatic_options = False
+        return update_wrapper(wrapped_function, f)
+    return decorator
+
 @app.route('/twoDimMap/display', methods=["GET"])
+@crossdomain(origin='*')
 def display():
     """Run displayTwoDimMap"""
 
@@ -28,6 +74,16 @@ def display():
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'months: ', months
 
     try:
       # get where the input file and output file are
@@ -58,6 +114,7 @@ def display():
     except ValueError, e:
         success = False
         message = str(e)
+
 
     return jsonify({
         'success': success,
