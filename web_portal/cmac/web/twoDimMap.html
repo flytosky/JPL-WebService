@@ -10,7 +10,7 @@
   <script type="text/javascript">
 
 
-    var stqResponse = null;
+    var Response = null;
 
     function reset_months()
     {
@@ -96,8 +96,9 @@
 
 
       $("#twodvarmap").click(function(event) {
-	stqResponse = null;
-        $("#stqResponse").html("working...");
+	Response = null;
+        $("#Response").html("working...");
+        $("#image").html("");
 
         // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
         var url = "http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?";
@@ -201,12 +202,12 @@
 
         arglist = arglist.concat("&months=");
         arglist = arglist.concat(month_str);
-        alert("arglist: " + arglist);
+        // alert("arglist: " + arglist);
 
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -214,20 +215,24 @@
             dataType: "json",
             data: null,
             success: function(data, textStatus, xhr) {
-                stqResponse = data;
-                alert("data: " + data);
+                Response = data;
+                // alert("data: " + data);
                 if (data.error) {
                     alert(data.error);
-                    stqResponse = null;
-                    $("#stqResponse").html("<span style='color:red'>error in backend</span>");
+                    Response = null;
+                    $("#Response").html("<span style='color:red'>error in backend</span>");
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
-                alert(text);
-                $("#stqResponse").html("<pre>"+text+"</pre>");
+                // alert(text);
+                $("#Response").html("<pre>"+text+"</pre>");
+
+                var html = "<img src='"+data.url+"' width='680'/>";
+                // alert(html);
+                $("#image").html(html);
             },
             error: function(xhr, textStatus, errorThrown) {
-		$("#stqResponse").html("error!");
+		$("#Response").html("error!");
                 alert("xhr.status: "+xhr.status);
                 alert("error status: "+textStatus);
             },
@@ -237,70 +242,6 @@
         });
 
       });
-
-      $("#sam").click(function(event) {
-	samResponse = null;
-        $("#samResponse").html("working ...");
-
-        var url = $("#samEndpoint").val();
-        //alert(url);
-        if (stqResponse == null) {
-            $("#samResponse").html("error!");
-            alert("You must do STQ First!");
-            return false;
-        }
-
-        var lon = stqResponse.query.lon;
-        var lat = stqResponse.query.lat;
-        var geoRegion = {lon:lon, lat:lat};
-
-        var granules = stqResponse.result.uris;
-        if (granules.length == 0) {
-            $("#samResponse").html("error!");
-            alert("error: no granule!");
-            return false;
-        }
-        var query = {georegion:geoRegion, granules:granules};
-        var text = JSON.stringify(query, null, 4);
-        //alert(text);
-        url = url + "?" + encodeURIComponent(JSON.stringify(query));
-        //url = url + "?" + encodeURI(JSON.stringify(query));
-        //url = url + "?" + escape(JSON.stringify(query));
-        //url = url + "?" + JSON.stringify(query).replace('"', '\"');
-        //alert(url);
-        $.ajax({
-            type: "GET",
-            url: url,
-            //jsonp: "callback",
-            //dataType: "jsonp",
-            dataType: "json",
-            //callback: "hihi",
-            //data: {granules:granules, geoRegion:geoRegion},
-            data:null,
-            success: function(data, textStatus, xhr) {
-		samResponse = data;
-                if (data.error) {
-                    alert(data.error);
-                    samResponse = null;
-                    $("#samResponse").html("<span style='color:red'>error in backend</span>");
-                    return;
-                }
-                //alert("success status: "+textStatus);
-                var text = JSON.stringify(data, null, 4);
-                //alert(text);
-                $("#samResponse").html("<pre>"+text+"</pre>");
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                $("#samResponse").html("error!");
-                alert("error status: "+textStatus);
-            },
-            complete: function(xhr, textStatus) {
-                //alert("complete status: "+textStatus);
-            }
-        });
-
-      });
-
 
 
     });
@@ -399,7 +340,8 @@
 
 <p>   
 <h4>2D Var Map Result:</h4>
-<div id="stqResponse">2D Var Map Result Here</div>
+<div id="Response">Text Here</div>
+<div id="image">Image Here</div>
 </p>
 
 </body>
