@@ -9,9 +9,15 @@
   <script type="text/javascript" src="js/xmisc.js"></script>
   <script type="text/javascript">
 
+    window.onload = function() {
+      reset_months();
+      document.getElementById('Jan').checked = true;
+    }
 
     var Response = null;
+    var variable = "";
 
+    // unselect all months in the checkboxes
     function reset_months()
     {
         document.getElementById('Jan').checked = false;
@@ -35,7 +41,20 @@
 
     function select_var()
     {
+      var var_string = $("#var").val();
 
+      if (var_string == "Total Cloud Fraction")
+        variable = "clt";
+      else if (var_string == "Air Temperature")
+        variable = "ta";
+      else if (var_string == "Surface Temperature")
+        variable = "ts";
+      else if (var_string == "Specific Humidity")
+        variable = "hus";
+      else if (var_string == "Precipitation")
+        variable = "pr";
+
+      alert("variable: " + variable)
     }
 
     function select_months()
@@ -97,6 +116,10 @@
 
       $("#twodvarmap").click(function(event) {
 	Response = null;
+        // ***** flag error if no month box is checked
+
+
+
         $("#Response").html("working...");
         $("#image").html("");
 
@@ -112,7 +135,7 @@
 
         var v1 = $("#var").val();
         arglist = arglist.concat("&var=");
-        arglist = arglist.concat("ts");
+        arglist = arglist.concat(variable);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
@@ -207,7 +230,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -264,17 +287,26 @@
 
 <tr>
 <td>data source:</td><td><select name="data", id="data">
-<option>CCCMA/CANESM2</option>
+<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
 <option>GISS/E2-R</option>
 <option>NCAR/CAM5</option>
 <option>UKMO/HadGEM2-ES</option>
-<option>NASA/obs4MIPs</option> </select></td>
+<!-- <option>NASA/obs4MIPs</option>  -->
+<option>NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<option>NASA/AIRS</option>
+<option>NASA/MLS</option>
+<option>NASA/TRMM</option>
+</select></td>
 
-<td>variable name:</td><td><select name="var", id="var">
-<option>Surface Temperature</option>
+<td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
 <option>Total Cloud Fraction</option>
+<option>Air Temperature</option>
+<option>Surface Temperature</option>
+<option>Specific Humidity</option>
 <option>Precipitation</option> </select></td>
+
 </tr>
 
 <tr>
@@ -339,7 +371,7 @@
 </p>
 
 <p>   
-<h4>2D Var Map Result:</h4>
+<h4>2-D Variable Map Result:</h4>
 <div id="Response">Text Here</div>
 <div id="image">Image Here</div>
 </p>
