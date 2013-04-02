@@ -83,6 +83,18 @@ Apply mathematical operations (e.g. apply algebraic, logical, and calculus opera
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
 </p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/threeDimZonalMean.html">3D Variable Zonal Mean Service</a>.
+</p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/threeDimVarAverage.html">3D Variable Average Profile Service</a>.
+</p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/threeDimVarSliceMap.html">3D Variable Slice Map Service</a>.
+</p>
 </li>
 <li>
 Apply statistical operations (e.g. calculate standard deviation and correlation).
