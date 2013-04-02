@@ -107,7 +107,8 @@ def display():
 
       url = 'http://cmacws.jpl.nasa.gov:8089/static/' + tag + '/' + imgFileName
 
-      if len(message) == 0 or message.find('Error') >= 0:
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
 
