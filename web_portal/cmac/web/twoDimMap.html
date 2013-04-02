@@ -9,13 +9,52 @@
   <script type="text/javascript" src="js/xmisc.js"></script>
   <script type="text/javascript">
 
-    window.onload = function() {
-      reset_months();
-      document.getElementById('Jan').checked = true;
-    }
-
     var Response = null;
     var variable = "";
+
+    window.onload = function() {
+      select_all_months();
+      select_var();
+    }
+
+    // select all months in the checkboxes
+    function select_all_months()
+    {
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+        document.getElementById('Dec').checked = true;
+    }
+
+    // see if no month is checked
+    function no_month_check()
+    {
+        if (document.getElementById('Jan').checked == false &&
+           document.getElementById('Feb').checked == false &&
+           document.getElementById('Mar').checked == false &&
+           document.getElementById('Apr').checked == false &&
+           document.getElementById('May').checked == false &&
+           document.getElementById('Jun').checked == false &&
+           document.getElementById('Jul').checked == false &&
+           document.getElementById('Aug').checked == false &&
+           document.getElementById('Sep').checked == false &&
+           document.getElementById('Oct').checked == false &&
+           document.getElementById('Nov').checked == false &&
+           document.getElementById('Dec').checked == false) {
+           // alert("No month check!");
+           return true;
+          }
+        else
+           return false;
+    }
 
     // unselect all months in the checkboxes
     function reset_months()
@@ -54,7 +93,7 @@
       else if (var_string == "Precipitation")
         variable = "pr";
 
-      alert("variable: " + variable)
+      // alert("variable: " + variable)
     }
 
     function select_months()
@@ -62,22 +101,11 @@
       var s1=document.getElementById("months");
       // alert(s1.selectedIndex);
       // alert(s1.options[s1.selectedIndex].value);
-      if (s1.selectedIndex == 0) {
+      if (s1.selectedIndex == 1) {
         reset_months();
       }
-      if (s1.selectedIndex == 1) {
-        document.getElementById('Jan').checked = true;
-        document.getElementById('Feb').checked = true;
-        document.getElementById('Mar').checked = true;
-        document.getElementById('Apr').checked = true;
-        document.getElementById('May').checked = true;
-        document.getElementById('Jun').checked = true;
-        document.getElementById('Jul').checked = true;
-        document.getElementById('Aug').checked = true;
-        document.getElementById('Sep').checked = true;
-        document.getElementById('Oct').checked = true;
-        document.getElementById('Nov').checked = true;
-        document.getElementById('Dec').checked = true;
+      if (s1.selectedIndex == 0) {
+        select_all_months();
       }
       if (s1.selectedIndex == 2) {
         reset_months();
@@ -116,12 +144,15 @@
 
       $("#twodvarmap").click(function(event) {
 	Response = null;
-        // ***** flag error if no month box is checked
+        // flag error if no month box is checked
+        if (no_month_check()) {
+           $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
+           $("#Image").html("");
+           return;
+        }
 
-
-
-        $("#Response").html("working...");
-        $("#image").html("");
+        $("#Response").html("Calculating ...");
+        $("#Image").html("");
 
         // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
         var url = "http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?";
@@ -230,7 +261,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -240,10 +271,12 @@
             success: function(data, textStatus, xhr) {
                 Response = data;
                 // alert("data: " + data);
-                if (data.error) {
-                    alert(data.error);
+                if (data.success == false) {
+                    // alert(data.error);
                     Response = null;
-                    $("#Response").html("<span style='color:red'>error in backend</span>");
+                    var text = JSON.stringify(data, null, 4);
+                    text = "Error in backend: <br>" + text; 
+                    $("#Response").html("<span style='color:red'>" + text + "</span>");
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
@@ -252,12 +285,12 @@
 
                 var html = "<img src='"+data.url+"' width='680'/>";
                 // alert(html);
-                $("#image").html(html);
+                $("#Image").html(html);
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#Response").html("error!");
-                alert("xhr.status: "+xhr.status);
-                alert("error status: "+textStatus);
+                // alert("xhr.status: "+xhr.status);
+                // alert("error status: "+textStatus);
             },
             complete: function(xhr, textStatus) {
                 //alert("complete status: "+textStatus);
@@ -295,30 +328,30 @@
 <!-- <option>NASA/obs4MIPs</option>  -->
 <option>NASA/MODIS</option>
 <option>NASA/AMSRE</option>
-<option>NASA/AIRS</option>
-<option>NASA/MLS</option>
+<!-- <option>NASA/AIRS</option> -->
+<!-- <option>NASA/MLS</option> -->
 <option>NASA/TRMM</option>
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
 <option>Total Cloud Fraction</option>
-<option>Air Temperature</option>
+<!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
-<option>Specific Humidity</option>
+<!-- <option>Specific Humidity</option> -->
 <option>Precipitation</option> </select></td>
 
 </tr>
 
 <tr>
 <td>start year-month:</td><td><input id="t0" value="1990-01"/></td>
-<td>end year-month:</td><td><input id="t1" value="1995-12"/></td>
+<td>end year-month:</td><td><input id="t1" value="2012-12"/></td>
 </tr>
 
 <tr>
 <td>select months:</td>
 <td><select name="months" id="months" onchange="select_months()">
-<option id="none">select none</option>
 <option id="all">select all</option>
+<option id="none">select none</option>
 <option id="summer">Summer:Jun-Jul-Aug</option>
 <option id="autum">Autumn:Sep-Oct-Nov</option>
 <option id="winter">Winter:Dec-Jan-Feb</option>
@@ -353,13 +386,13 @@
 </tr>
 
 <tr>
-<td>start lat (deg):</td><td><input id="lat0" value="-29"/></td>
-<td>end lat (deg):</td><td><input id="lat1" value="29"/></td>
+<td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
+<td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
 </tr>
 
 <tr>
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
-<td>end lon (deg):</td><td><input id="lon1" value="100"/></td>
+<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
 
 <tr>
@@ -373,7 +406,7 @@
 <p>   
 <h4>2-D Variable Map Result:</h4>
 <div id="Response">Text Here</div>
-<div id="image">Image Here</div>
+<div id="Image">Image Here</div>
 </p>
 
 </body>
