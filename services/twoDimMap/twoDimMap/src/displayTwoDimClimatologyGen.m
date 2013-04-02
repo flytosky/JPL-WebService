@@ -82,6 +82,8 @@ for fileI = 1:nFiles
   end
 
   v = fd{varName}(:);
+  v(abs(v - fd{varName}.missing_value) < 1) = NaN; 
+
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
@@ -109,7 +111,12 @@ for fileI = 1:nFiles
   monthlyData(monthIdx1:monthIdx2, :, :) = v(idx2Data_start:idx2Data_stop,latIdx,lonIdx);
 end
 
-var_clim = squeeze(simpleClimatology(monthlyData,1));
+
+% We now determine the relevant months within a year using monthIdx and start month
+
+monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
+
+var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 h = displayTwoDimData(lon, lat, var_clim');
 title(h, [varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 print(gcf, figFile, '-djpeg');
