@@ -17,6 +17,12 @@ class call_twoDimMap:
         self.months = months
         self.output_dir = output_dir
 
+        # temporary fix
+        # This application level knowledge may not belong here
+        if self.model == 'NASA_AMSRE' and self.var == 'ts':
+          self.var = 'tos'
+
+
     def displayTwoDimMap(self):
 
         ### print 'current dir: ', os.getcwd()
@@ -38,6 +44,9 @@ class call_twoDimMap:
           print 'stdout_value: ', stdout_value
           print 'stderr_value: ', stderr_value
 
+          if stderr_value.find('error:') >= 0:
+             return (stderr_value, '')
+
           fst = 'figFile: '
           l1 = len(fst)
           ### print 'l1: ', l1
@@ -53,7 +62,8 @@ class call_twoDimMap:
           print 'image_filename: ', image_filename
           return (stdout_value, image_filename)
         except OSError, e:
-          return 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
+          err_mesg = 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
+          return (err_mesg, '')
 
 
 if __name__ == '__main__':
