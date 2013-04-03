@@ -21,12 +21,18 @@ else
   xlabelOff = cfgParams.xlabelOff;
   ylabelOff = cfgParams.ylabelOff;
 end
-imagesc(lon, -lat, twoDimData');colorbar;
+imagesc(lon, -lat, twoDimData');colorbar('southoutside');
+if ~isempty(find(isnan(twoDimData(:))))
+  cmap = colormap();
+  cmap(1,:) = [1,1,1];
+  colormap(cmap);
+end
+
 hold on;
 plot(ha, coastLongAndLat(:,2)-360, -coastLongAndLat(:,1), 'k-');
 plot(ha, coastLongAndLat(:,2), -coastLongAndLat(:,1), 'k-');
 plot(ha, coastLongAndLat(:,2)+360, -coastLongAndLat(:,1), 'k-');
-set(ha, 'fontsize', 13);
+set(ha, 'fontsize', 13, 'fontweight', 'bold');
 set(ha, 'yTickLabel', num2strNoNegZero(-get(gca, 'yTick')'));
 if ~xlabelOff
   xlabel(ha, 'longitude(deg)');
