@@ -12,8 +12,10 @@
     var Response = null;
     var variable = "";
 
+    // called on load or reload
     window.onload = function() {
       select_all_months();
+      select_data();
       select_var();
     }
 
@@ -34,7 +36,7 @@
         document.getElementById('Dec').checked = true;
     }
 
-    // see if no month is checked
+    // see if no month is selected
     function no_month_check()
     {
         if (document.getElementById('Jan').checked == false &&
@@ -73,11 +75,17 @@
         document.getElementById('Dec').checked = false;
     }
 
-    function select_data()
+    // enable all vars in dropdown menu
+    function reset_vars()
     {
+      var x=document.getElementById("var");
 
+      x.options[0].disabled=false;
+      x.options[1].disabled=false;
+      x.options[2].disabled=false;
     }
 
+    // form variable string based on "var" dropdown selection
     function select_var()
     {
       var var_string = $("#var").val();
@@ -96,35 +104,75 @@
       // alert("variable: " + variable)
     }
 
+    // set up "var" dropdown based status of "data" dropdown
+    function select_data()
+    {
+      var data_string = $("#data").val();
+      var x=document.getElementById("var");
+
+      // enable all options in "var" dropdown first
+      reset_vars();
+
+      // alert(data_string);
+
+      // disable corresponding "var" options
+      if (data_string == "NASA/AMSRE") {
+        x.options[0].disabled=true;
+        x.options[1].selected=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/MODIS") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/TRMM") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].selected=true;
+      }
+
+      // form variable string
+      select_var();
+    }
+
+    // select checkboxes based on "months" dropdown
     function select_months()
     {
       var s1=document.getElementById("months");
       // alert(s1.selectedIndex);
       // alert(s1.options[s1.selectedIndex].value);
+
+      // "select none"
       if (s1.selectedIndex == 1) {
         reset_months();
       }
+      // "select all"
       if (s1.selectedIndex == 0) {
         select_all_months();
       }
+      // "summer"
       if (s1.selectedIndex == 2) {
         reset_months();
         document.getElementById('Jun').checked = true;
         document.getElementById('Jul').checked = true;
         document.getElementById('Aug').checked = true;
       }
+      // "autumn"
       if (s1.selectedIndex == 3) {
         reset_months();
         document.getElementById('Sep').checked = true;
         document.getElementById('Oct').checked = true;
         document.getElementById('Nov').checked = true;
       }
+      // "winter"
       if (s1.selectedIndex == 4) {
         reset_months();
         document.getElementById('Dec').checked = true;
         document.getElementById('Jan').checked = true;
         document.getElementById('Feb').checked = true;
       }
+      // "spring"
       if (s1.selectedIndex == 5) {
         reset_months();
         document.getElementById('Mar').checked = true;
@@ -146,7 +194,8 @@
 	Response = null;
         // flag error if no month box is checked
         if (no_month_check()) {
-           $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
+           // $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
+           $("#Response").html("Error: please check at least one month.");
            $("#Image").html("");
            return;
         }
@@ -155,6 +204,8 @@
         $("#Image").html("");
 
         // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+
+        // form url string
         var url = "http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?";
 
         var d1 = $("#data").val();
@@ -276,12 +327,14 @@
                     Response = null;
                     var text = JSON.stringify(data, null, 4);
                     text = "Error in backend: <br>" + text; 
-                    $("#Response").html("<span style='color:red'>" + text + "</span>");
+                    // $("#Response").html("<span style='color:red'>" + text + "</span>");
+                    $("#Response").html(text);
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
                 // alert(text);
-                $("#Response").html("<pre>"+text+"</pre>");
+                // $("#Response").html("<pre>"+text+"</pre>");
+                $("#Response").html(text);
 
                 var html = "<img src='"+data.url+"' width='680'/>";
                 // alert(html);
@@ -319,18 +372,22 @@
 </tr>
 
 <tr>
-<td>data source:</td><td><select name="data", id="data">
+<td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<optgroup label="Model">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
 <option>GISS/E2-R</option>
 <option>NCAR/CAM5</option>
 <option>UKMO/HadGEM2-ES</option>
 <!-- <option>NASA/obs4MIPs</option>  -->
+</optgroup>
+<optgroup label="Observation">
 <option>NASA/MODIS</option>
 <option>NASA/AMSRE</option>
 <!-- <option>NASA/AIRS</option> -->
 <!-- <option>NASA/MLS</option> -->
 <option>NASA/TRMM</option>
+</optgroup>
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
@@ -396,18 +453,22 @@
 </tr>
 
 <tr>
-<td colspan="2"><input id="twodvarmap" type="submit" value="get service"/></td>
+<td colspan="4" align="center"><input id="twodvarmap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 </tr>
 
-</table>
-
-</p>
-
-<p>   
-<h4>2-D Variable Map Result:</h4>
-<div id="Response">Text Here</div>
+<tr>
+<td colspan="4">
 <div id="Image">Image Here</div>
+</td>
+</tr>
+<tr>
+<td colspan="4" align="center">
+<textarea id="Response" cols="89" rows="6">Text Here</textarea>
+</td>
+</tr>
 </p>
+
+</table>
 
 </body>
 </html>
