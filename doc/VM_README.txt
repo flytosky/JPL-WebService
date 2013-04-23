@@ -66,3 +66,18 @@ assume there is only command line interface
 . cd /tmp/vmware-tools-distrib/; sudo ./vmware-install.pl -d
 . sudo reboot
 
+
+=========================
+configure shared folder
+=========================
+. Virtual Machine Settings -> Options -> Shared Folders -> Always enabled
+  (name: export, Host Path: /export)
+
+. On guest vm, sudo vi /etc/fstab, and append this line:
+.host:/export/data1    /export/data1    vmhgfs    user    0    0
+
+. Or, it can be done manually by:
+  sudo mount -t vmhgfs .host:/export/data1 /export/data1
+
+
+
