@@ -55,7 +55,7 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 @app.route('/svc/twoDimMap', methods=["GET"])
 @crossdomain(origin='*')
-def display():
+def displayTwoDimMap():
     """Run displayTwoDimMap"""
 
     # status and message
@@ -91,7 +91,7 @@ def display():
       print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+months
       tag = md5.new(seed_str).hexdigest()
-      output_dir = current_dir + '/svc/static/' + tag
+      output_dir = current_dir + '/svc/static/twoDimMap/' + tag
       print 'output_dir: ', output_dir
       if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -105,7 +105,7 @@ def display():
       # chdir back
       os.chdir(current_dir)
 
-      url = 'http://cmacws.jpl.nasa.gov:8090/static/' + tag + '/' + imgFileName
+      url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
