@@ -48,7 +48,7 @@ def display():
       # chdir back
       os.chdir(current_dir)
 
-      url = 'http://cmacws.jpl.nasa.gov:8088/twoDimMap/static/' + tag
+      url = 'http://cmacws.jpl.nasa.gov:8088/twoDimClimatology/static/' + tag
 
       if message.find('Error') >= 0:
         success = False
