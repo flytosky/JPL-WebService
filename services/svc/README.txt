@@ -1,4 +1,4 @@
-services
+svc
 ====
 
 CMAC web services
@@ -22,4 +22,4 @@ python run.py
 
 To run in production mode
 --------------------------
-gunicorn -w2 -b 0.0.0.0:8888 -k tornado --daemon -p services.pid services:app
+gunicorn -w2 -b 0.0.0.0:8888 -k tornado --daemon -p svc.pid svc:app
