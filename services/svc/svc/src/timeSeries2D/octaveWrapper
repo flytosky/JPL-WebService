@@ -36,12 +36,17 @@ if narg > 5
   latRange = str2num(arg_list{6});
 end
 
+if narg > 6
+  output_dir = arg_list{7};
+end
+
 printf("%s", arg_list{1})
 printf("%s", arg_list{2})
 printf("%s", arg_list{3})
 printf("%s", arg_list{4})
 printf("%s", arg_list{5})
 printf("%s", arg_list{6})
+printf("%s", arg_list{7})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -70,4 +75,7 @@ lonStr = ['lon' num2str(lonRange(1)) '_' num2str(lonRange(2)) 'deg'];
 latStr = ['lat' num2str(latRange(1)) '_' num2str(latRange(2)) 'deg'];
 
 figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.jpeg'];
-displayTimeSeriesTwoDim(dataFileFullPath, figFile, varName, startTime, stopTime, lonRange, latRange);
+figFilePath = [output_dir '/' figFile];
+printf("figFile: %s\n", figFile)
+printf("figFilePath: %s\n", figFilePath)
+displayTimeSeriesTwoDim(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange);
