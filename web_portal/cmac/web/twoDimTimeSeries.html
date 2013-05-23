@@ -12,16 +12,30 @@
     var Response = null;
     var variable = "";
 
+
     // called on load or reload
     window.onload = function() {
       select_data();
       select_var();
     }
 
+
+    // enable all vars in dropdown menu
+    function reset_vars()
+    {
+      var x=document.getElementById("var");
+
+      x.options[0].disabled=false;
+      x.options[1].disabled=false;
+      x.options[2].disabled=false;
+    }
+
+
     // form variable string based on "var" dropdown selection
     function select_var()
     {
       var var_string = $("#var").val();
+      // alert("var_string: " + var_string)
 
       if (var_string == "Total Cloud Fraction")
         variable = "clt";
@@ -34,7 +48,7 @@
       else if (var_string == "Precipitation")
         variable = "pr";
 
-      alert("variable: " + variable)
+      // alert("variable: " + variable)
     }
 
 
@@ -78,6 +92,7 @@
         event.preventDefault();
       });
 
+
       $("#timeSeries2D").click(function(event) {
         // alert('****** inside timeSeries2D()!');
         Response = null;
@@ -88,7 +103,7 @@
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
-        alert("url: " + url);
+        // alert("url: " + url);
 
         var d1 = $("#data").val();
         var model1 = d1.replace("/", "_");
@@ -97,13 +112,13 @@
         arglist = arglist.concat("model=");
         arglist = arglist.concat(model1);
 
-        alert("arglist: " + arglist);
+        // alert("arglist: " + arglist);
 
         var v1 = $("#var").val();
         arglist = arglist.concat("&var=");
         arglist = arglist.concat(variable);
 
-        alert("arglist: " + arglist);
+        // alert("arglist: " + arglist);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
@@ -117,7 +132,7 @@
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
 
-        alert("arglist: " + arglist);
+        // alert("arglist: " + arglist);
 
         var lon0 = $("#lon0").val();
         var lon1 = $("#lon1").val();
@@ -141,7 +156,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -165,7 +180,7 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='680'/>";                // alert(html);
+                var html = "<img src='"+data.url+"' width='820'/>";                // alert(html);
                 $("#Image").html(html);
             },
             error: function(xhr, textStatus, errorThrown) {
@@ -248,22 +263,19 @@
 <td colspan="4" align="center"><input id="timeSeries2D" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 </tr>
 
-
-
-<tr>   
+<tr>
 <td colspan="4">
 <div id="Image">Image Here</div>
-</td>  
+</td>
+</tr>
+
+<tr>
+<td colspan="4" align="center">
+<textarea id="Response" cols="110" rows="6">Text Here</textarea>
+</td>
 </tr>
 
 </table>
-
-</p>
-
-<p>
-
-<div id="Response">Result of 2D Var Time Series Service:</div>
-</p>
 
 </body>
 </html>
