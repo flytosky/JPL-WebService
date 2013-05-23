@@ -9,73 +9,67 @@
   <script type="text/javascript" src="js/xmisc.js"></script>
   <script type="text/javascript">
 
-    // for x variable
-    var x = null;
-    var xMasked = null;
-    var xAllowRange = null;
-    var xRejectList = null;
+    var Response = null;
+    var variable = "";
 
-    // for y variable
-    var y = null;
-    var yMasked = null;
-    var yAllowRange = null;
-    var yRejectList = null;
-
-    // for plot
-    var xMin = null;
-    var xMax = null;
-    var yMin = null;
-    var yMax = null;
-
-    var mask_x = function() {
-        var z;
-        z = xmisc.select_by_range(x, xAllowRange, null, false);
-        z = xmisc.select_by_list(z, xRejectList, null, true);
-        xMasked = z;
-        return true;
+    // called on load or reload
+    window.onload = function() {
+      select_data();
+      select_var();
     }
 
-    var mask_y = function() {
-        var z;
-        z = xmisc.select_by_range(y, yAllowRange, null, false);
-        z = xmisc.select_by_list(z, yRejectList, null, true);
-        yMasked = z;
-        return true;
+    // form variable string based on "var" dropdown selection
+    function select_var()
+    {
+      var var_string = $("#var").val();
+
+      if (var_string == "Total Cloud Fraction")
+        variable = "clt";
+      else if (var_string == "Air Temperature")
+        variable = "ta";
+      else if (var_string == "Surface Temperature")
+        variable = "ts";
+      else if (var_string == "Specific Humidity")
+        variable = "hus";
+      else if (var_string == "Precipitation")
+        variable = "pr";
+
+      alert("variable: " + variable)
     }
 
-    var myplot = function() {
-        var rv = xmisc.get_series(xMasked, yMasked);
-        if (rv.error != null) {
-            alert(rv.error);
-            return;
-        }
 
-        var options = {
-            xaxis: {
-                min: xMin,
-                max: xMax
-            },
-            yaxis: {
-                min: yMin,
-                max: yMax
-            }
-        };
+    // set up "var" dropdown based status of "data" dropdown
+    function select_data()
+    {
+      var data_string = $("#data").val();
+      var x=document.getElementById("var");
 
-        var data = [
-            {
-                data: rv.data,
-                clickable: true,
-                lines: { show: false},
-                points: { show: true}
-            }
-        ];
+      // enable all options in "var" dropdown first
+      reset_vars();
 
-        $.plot($("#content"), data, options);
-    };
+      // alert(data_string);
 
-    var stqResponse = null;
-    var samResponse = null;
-    var izpdResponse = null;
+      // disable corresponding "var" options
+      if (data_string == "NASA/AMSRE") {
+        x.options[0].disabled=true;
+        x.options[1].selected=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/MODIS") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/TRMM") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].selected=true;
+      }
+
+      // form variable string
+      select_var();
+    }
+
 
     $(document).ready(function(){
 
@@ -84,317 +78,106 @@
         event.preventDefault();
       });
 
-      $("#stq").click(function(event) {
-	stqResponse = null;
-        $("#stqResponse").html("working...");
+      $("#timeSeries2D").click(function(event) {
+        // alert('****** inside timeSeries2D()!');
+        Response = null;
 
-        var url = $("#stqEndpoint").val();
-        var difid = $("#difid").val();
+        $("#Response").html("Calculating ...");
+        $("#Image").html("");
+
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // form url string
+        var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
+        alert("url: " + url);
+
+        var d1 = $("#data").val();
+        var model1 = d1.replace("/", "_");
+
+        var arglist = "";
+        arglist = arglist.concat("model=");
+        arglist = arglist.concat(model1);
+
+        alert("arglist: " + arglist);
+
+        var v1 = $("#var").val();
+        arglist = arglist.concat("&var=");
+        arglist = arglist.concat(variable);
+
+        alert("arglist: " + arglist);
+
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
+
+        t0 = t0.replace("-", "");
+        t1 = t1.replace("-", "");
+
+        arglist = arglist.concat("&start_time=");
+        arglist = arglist.concat(t0);
+
+        arglist = arglist.concat("&end_time=");
+        arglist = arglist.concat(t1);
+
+        alert("arglist: " + arglist);
+
         var lon0 = $("#lon0").val();
         var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
-        //alert(url);
-        var t = [t0, t1];
-        // http://surf11.com/entry/157/javascript-isinteger-function
-        if (t1.search(/^[0-9]+$/) == 0) {
-            t = [t0, parseInt(t1)];
-        }
-        var lon = [parseFloat(lon0), parseFloat(lon1)]
-        var lat = [parseFloat(lat0), parseFloat(lat1)]
-        var query = {difid:difid, t:t, lon:lon, lat:lat};
-        var text = JSON.stringify(query, null, 4);
-        //alert(text);
-        url = url + "?" + encodeURIComponent(JSON.stringify(query));
-        // alert("url: " + url);
+
+        arglist = arglist.concat("&lon1=");
+        arglist = arglist.concat(lon0);
+
+        arglist = arglist.concat("&lon2=");
+        arglist = arglist.concat(lon1);
+
+        arglist = arglist.concat("&lat1=");
+        arglist = arglist.concat(lat0);
+
+        arglist = arglist.concat("&lat2=");
+        arglist = arglist.concat(lat1);
+
+        // alert("arglist: " + arglist);
+
+        // url = url + encodeURIComponent(arglist);
+        url = url + encodeURI(arglist);
+        // url = url + arglist;
+        alert("url: " + url);
+
         $.ajax({
             type: "GET",
             url: url,
-            //jsonp: "callback",
-            //dataType: "jsonp",
             dataType: "json",
-            //callback: "hihi",
             data: null,
             success: function(data, textStatus, xhr) {
-                stqResponse = data;
-                if (data.error) {
-                    alert(data.error);
-                    stqResponse = null;
-                    $("#stqResponse").html("<span style='color:red'>error in backend</span>");
+                Response = data;
+                // alert("data: " + data);
+                if (data.success == false) {
+                    // alert(data.error);
+                    Response = null;
+                    var text = JSON.stringify(data, null, 4);
+                    text = "Error in backend: <br>" + text; 
+                    // $("#Response").html("<span style='color:red'>" + text + "</span>");
+                    $("#Response").html(text);
                     return;
                 }
-                // clone this member, so that it can be reset late,
-                // because array assignment is by reference.
-                // http://my.opera.com/GreyWyvern/blog/show.dml/1725165
-                var urisClone = data.result.uris.slice(0);
-                var uris = data.result.uris;
-                var prefix = "http://oscar.jpl.nasa.gov";
-                for (var i=0; i<uris.length; i++) {
-                    var w10nNodeMeta = prefix+uris[i]+"/";
-                    uris[i] = "<a href='"+w10nNodeMeta+"?output=html&traverse' target='"+w10nNodeMeta+"'>"+uris[i]+"</a>";
-                }
-                //alert("success status: "+textStatus);
                 var text = JSON.stringify(data, null, 4);
-                //alert(text);
-                $("#stqResponse").html("<pre>"+text+"</pre>");
-                // reset uris back to original
-                data.result.uris = urisClone;
+                // alert(text);
+                // $("#Response").html("<pre>"+text+"</pre>");
+                $("#Response").html(text);
+
+                var html = "<img src='"+data.url+"' width='680'/>";                // alert(html);
+                $("#Image").html(html);
             },
             error: function(xhr, textStatus, errorThrown) {
-		$("#stqResponse").html("error!");
-                alert("error status: "+textStatus);
+                $("#Response").html("error!");
+                // alert("xhr.status: "+xhr.status);
+                // alert("error status: "+textStatus);
             },
             complete: function(xhr, textStatus) {
                 //alert("complete status: "+textStatus);
             }
         });
 
-      });
-
-      $("#sam").click(function(event) {
-	samResponse = null;
-        $("#samResponse").html("working ...");
-
-        var url = $("#samEndpoint").val();
-        //alert(url);
-        if (stqResponse == null) {
-            $("#samResponse").html("error!");
-            alert("You must do STQ First!");
-            return false;
-        }
-
-        var lon = stqResponse.query.lon;
-        var lat = stqResponse.query.lat;
-        var geoRegion = {lon:lon, lat:lat};
-
-        var granules = stqResponse.result.uris;
-        if (granules.length == 0) {
-            $("#samResponse").html("error!");
-            alert("error: no granule!");
-            return false;
-        }
-        var query = {georegion:geoRegion, granules:granules};
-        var text = JSON.stringify(query, null, 4);
-        //alert(text);
-        url = url + "?" + encodeURIComponent(JSON.stringify(query));
-        //url = url + "?" + encodeURI(JSON.stringify(query));
-        //url = url + "?" + escape(JSON.stringify(query));
-        //url = url + "?" + JSON.stringify(query).replace('"', '\"');
-        //alert(url);
-        $.ajax({
-            type: "GET",
-            url: url,
-            //jsonp: "callback",
-            //dataType: "jsonp",
-            dataType: "json",
-            //callback: "hihi",
-            //data: {granules:granules, geoRegion:geoRegion},
-            data:null,
-            success: function(data, textStatus, xhr) {
-		samResponse = data;
-                if (data.error) {
-                    alert(data.error);
-                    samResponse = null;
-                    $("#samResponse").html("<span style='color:red'>error in backend</span>");
-                    return;
-                }
-                //alert("success status: "+textStatus);
-                var text = JSON.stringify(data, null, 4);
-                //alert(text);
-                $("#samResponse").html("<pre>"+text+"</pre>");
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                $("#samResponse").html("error!");
-                alert("error status: "+textStatus);
-            },
-            complete: function(xhr, textStatus) {
-                //alert("complete status: "+textStatus);
-            }
-        });
-
-      });
-
-      $("#izpd").click(function(event) {
-	izpdResponse = null;
-        $("#izpdResponse").html("working ...");
-        $("#zpdImage").html("waiting ...");
-
-        var url = $("#izpdEndpoint").val();
-        //alert(url);
-        if (samResponse == null) {
-            $("#izpdResponse").html("error!");
-            $("#zpdImage").html("no image");
-            alert("You must do SAM First!");
-            return false;
-        }
-        var keyword = "MODIS_NIR";
-        var geoRegion = samResponse.query.georegion;
-	var uri = samResponse.result.uri;
-        if (uri == "") {
-            $("#izpdResponse").html("error!");
-            $("#zpdImage").html("no image");
-            alert("sam has no result!");
-            return false;
-        }
-        var query = {uri:uri, keyword:keyword, georegion:geoRegion};
-        var text = JSON.stringify(query, null, 4);
-        //alert(text);
-        url = url + "?" + encodeURIComponent(JSON.stringify(query));
-        //url = url + "?" + encodeURI(JSON.stringify(query));
-        //url = url + "?" + escape(JSON.stringify(query));
-        //url = url + "?" + JSON.stringify(query).replace('"', '\"');
-        //alert(url);
-        $.ajax({
-            type: "GET",
-            url: url,
-            //jsonp: "callback",
-            //dataType: "jsonp",
-            dataType: "json",
-            //callback: "hihi",
-            //data: {granules:granules, geoRegion:geoRegion},
-            data:null,
-            success: function(data, textStatus, xhr) {
-		izpdResponse = data;
-                if (data.error) {
-                    alert(data.error);
-                    izpdResponse = null;
-                    $("#izpdResponse").html("<span style='color:red'>error in backend</span>");
-                    return;
-                }
-
-                var dataUri = data.result.dataUri;
-                var imageUri = data.result.imageUri;
-                data.result.dataUri = "<a href='"+dataUri+"'>"+dataUri+"</a>";
-                data.result.imageUri = "<a href='"+imageUri+"' target='"+imageUri+"'>"+imageUri+"</a>";
-                //alert("success status: "+textStatus);
-                var text = JSON.stringify(data, null, 4);
-                //alert(text);
-                $("#izpdResponse").html("<pre>"+text+"</pre>");
-                // reset back
-                data.result.dataUri = dataUri;
-                data.result.imageUri = imageUri;
-
-		var html = ""
-                    //+ "<img src='"+data.result.imageUri+"?"+(new Date()).getTime()+"' width='443' height='516'/>";
-                    + "<img src='"+data.result.imageUri+"?"+(new Date()).getTime()+"' width='600'/>";
-                //$("#zpdImage").html("<img src='"+data.result.imageUri+"?"+(new Date()).getTime()+"' width='443' height='516'/>");
-                $("#zpdImage").html(html);
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                $("#izpdResponse").html("error!");
-                $("#zpdImage").html("no image");
-                alert("error status: "+textStatus);
-            },
-            complete: function(xhr, textStatus) {
-                //alert("complete status: "+textStatus);
-            }
-        });
-
-      });
-
-      $("#xAxis").change(function(event) {
-        //alert(this.value);
-        //$("#content").html(this.value);
-        var url = this.value;
-        $.ajax({
-            type: "GET",
-            url: this.value,
-            //url: url,
-            jsonp: "callback",
-            dataType: "jsonp",
-            //callback: "hihi",
-            data: {output:"json", flatten:""},
-            success: function(data, textStatus, xhr) {
-                //alert("success status: "+textStatus);
-                //alert(data.w10n[2].name);
-                x = data.data;
-                mask_x();
-                myplot();
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert("error status: "+textStatus);
-            },
-            complete: function(xhr, textStatus) {
-                alert("complete status: "+textStatus);
-            }
-        }
-        );
-      });
-
-      $("#yAxis").change(function(event) {
-        $.ajax({
-            type: "GET",
-            url: this.value,
-            jsonp: "callback",
-            dataType: "jsonp",
-            data: {output:"json", flatten:""},
-            success: function(data, textStatus, xhr) {
-                //alert("success status: "+textStatus);
-                //alert(data.w10n[3].name);
-                y = data.data;
-                mask_y();
-                myplot();
-            },
-            //error: function(xhr, textStatus, errorThrown) {
-            //    alert("error status: "+textStatus);
-            //},
-            complete: function(xhr, textStatus) {
-                alert("complete status: "+textStatus);
-            }
-        }
-        );
-      });
-
-      $("#xAllowRange").change(function(event) {
-            if (!x)
-                return true;
-            xAllowRange = this.value.split(/s*[\s,]\s*/, 2);
-            if (xAllowRange.length != 2) {
-                alert("Wrong format for xAllowRange: "+this.value);
-                xAllowRange = null;
-                return false;
-            }
-            mask_x();
-            myplot();
-            return true;
-      });
-
-      $("#yAllowRange").change(function(event) {
-            if (!y)
-                return true;
-            yAllowRange = this.value.split(/s*[\s,]\s*/, 2);
-            if (yAllowRange.length != 2) {
-                alert("Wrong format for yAllowRange: "+this.value);
-                yAllowRange = null;
-                return false;
-            }
-            mask_y();
-            myplot();
-            return true;
-      });
-
-      $("#xRange").change(function(event) {
-            xMin = null;
-            xMax = null;
-            var tmp = this.value.split(/s*[\s,]\s*/, 2);
-            if (tmp.length > 0)
-                xMin = tmp[0];
-            if (tmp.length > 1)
-                xMax = tmp[1];
-            myplot();
-      });
-
-      $("#yRange").change(function(event) {
-            yMin = null;
-            yMax = null;
-            var tmp = this.value.split(/s*[\s,]\s*/, 2);
-            if (tmp.length > 0)
-                yMin = tmp[0];
-            if (tmp.length > 1)
-                yMax = tmp[1];
-            myplot();
       });
 
     });
@@ -416,36 +199,61 @@
 </tr>
 
 <tr>
-<td>data source:</td><td><select name=id>
-<option>CCCMA/CANESM2</option>
+
+<td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<optgroup label="Model">
+<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
 <option>GISS/E2-R</option>
 <option>NCAR/CAM5</option>
 <option>UKMO/HadGEM2-ES</option>
-<option>NASA/obs4MIPs</option> </select></td>
-<td>variable name:</td><td><select name=id>
-<option>Surface Temperature</option>
+<!-- <option>NASA/obs4MIPs</option>  -->
+</optgroup>
+<optgroup label="Observation">
+<option>NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<!-- <option>NASA/AIRS</option> -->
+<!-- <option>NASA/MLS</option> -->
+<option>NASA/TRMM</option>
+</optgroup>
+</select></td>
+
+<td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
 <option>Total Cloud Fraction</option>
+<!-- <option>Air Temperature</option> -->
+<option>Surface Temperature</option>
+<!-- <option>Specific Humidity</option> -->
 <option>Precipitation</option> </select></td>
+
+</tr>
+
+
+<tr>
+<td>start year-month:</td><td><input id="t0" value="1990-01" alt="start"/></td>
+<td>end year-month:</td><td><input id="t1" value="2012-12" alt="end"/></td>
+</tr>
+
+
+<tr>
+<td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
+<td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
 </tr>
 
 <tr>
-<td>start year-month:</td><td><input id="t0" value="2011-03"/></td>
-<td>end year-month:</td><td><input id="t1" value="2012-11"/></td>
+<td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
+<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
 
 <tr>
-<td>start lat (deg):</td><td><input id="lat1" value="-90"/></td>
-<td>end lat (deg):</td><td><input id="lat2" value="90"/></td>
+<td colspan="4" align="center"><input id="timeSeries2D" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 </tr>
 
-<tr>
-<td>start lon (deg):</td><td><input id="lon1" value="-360"/></td>
-<td>end lon (deg):</td><td><input id="lon2" value="360"/></td>
-</tr>
 
-<tr>
-<td colspan="2"><input id="2dvarmap" type="submit" value="get service"/></td>
+
+<tr>   
+<td colspan="4">
+<div id="Image">Image Here</div>
+</td>  
 </tr>
 
 </table>
@@ -453,7 +261,8 @@
 </p>
 
 <p>
-<div id="stqResponse">Result of 2D Var Time Series Service:</div>
+
+<div id="Response">Result of 2D Var Time Series Service:</div>
 </p>
 
 </body>
