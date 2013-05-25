@@ -81,6 +81,10 @@ Apply mathematical operations (e.g. apply algebraic, logical, and calculus opera
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
+</p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
 </p>
 <p>
