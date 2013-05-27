@@ -73,31 +73,31 @@ Format data.
 Apply mathematical operations (e.g. apply algebraic, logical, and calculus operations).
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimMap.html">2D Variable Map Service</a>.
+<a href="/cmac/web/twoDimMap.html">2D Variable Map Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimTimeSeries.html">2D Variable Time Series Service</a>.
+<a href="/cmac/web/twoDimTimeSeries.html">2D Variable Time Series Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
+<a href="/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
+<a href="/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/threeDimZonalMean.html">3D Variable Zonal Mean Service</a>.
+<a href="/cmac/web/threeDimZonalMean.html">3D Variable Zonal Mean Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/threeDimVarAverage.html">3D Variable Average Profile Service</a>.
+<a href="/cmac/web/threeDimVarAverage.html">3D Variable Average Profile Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/web/threeDimVarSliceMap.html">3D Variable Slice Map Service</a>.
+<a href="/cmac/web/threeDimVarSliceMap.html">3D Variable Slice Map Service</a>.
 </p>
 </li>
 <li>
