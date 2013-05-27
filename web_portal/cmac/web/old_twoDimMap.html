@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script> -->
+  <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="js/jquery.flot.min.js"></script>
+  <script type="text/javascript" src="js/json2.js"></script>
+  <script type="text/javascript" src="js/xmisc.js"></script>
+  <script type="text/javascript">
+
+    var Response = null;
+    var variable = "";
+
+    // called on load or reload
+    window.onload = function() {
+      select_all_months();
+      select_data();
+      select_var();
+    }
+
+    // select all months in the checkboxes
+    function select_all_months()
+    {
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+        document.getElementById('Dec').checked = true;
+    }
+
+    // see if no month is selected
+    function no_month_check()
+    {
+        if (document.getElementById('Jan').checked == false &&
+           document.getElementById('Feb').checked == false &&
+           document.getElementById('Mar').checked == false &&
+           document.getElementById('Apr').checked == false &&
+           document.getElementById('May').checked == false &&
+           document.getElementById('Jun').checked == false &&
+           document.getElementById('Jul').checked == false &&
+           document.getElementById('Aug').checked == false &&
+           document.getElementById('Sep').checked == false &&
+           document.getElementById('Oct').checked == false &&
+           document.getElementById('Nov').checked == false &&
+           document.getElementById('Dec').checked == false) {
+           // alert("No month check!");
+           return true;
+          }
+        else
+           return false;
+    }
+
+    // unselect all months in the checkboxes
+    function reset_months()
+    {
+        document.getElementById('Jan').checked = false;
+        document.getElementById('Feb').checked = false;
+        document.getElementById('Mar').checked = false;
+        document.getElementById('Apr').checked = false;
+        document.getElementById('May').checked = false;
+        document.getElementById('Jun').checked = false;
+        document.getElementById('Jul').checked = false;
+        document.getElementById('Aug').checked = false;
+        document.getElementById('Sep').checked = false;
+        document.getElementById('Oct').checked = false;
+        document.getElementById('Nov').checked = false;
+        document.getElementById('Dec').checked = false;
+    }
+
+    // enable all vars in dropdown menu
+    function reset_vars()
+    {
+      var x=document.getElementById("var");
+
+      x.options[0].disabled=false;
+      x.options[1].disabled=false;
+      x.options[2].disabled=false;
+    }
+
+    // form variable string based on "var" dropdown selection
+    function select_var()
+    {
+      var var_string = $("#var").val();
+
+      if (var_string == "Total Cloud Fraction")
+        variable = "clt";
+      else if (var_string == "Air Temperature")
+        variable = "ta";
+      else if (var_string == "Surface Temperature")
+        variable = "ts";
+      else if (var_string == "Specific Humidity")
+        variable = "hus";
+      else if (var_string == "Precipitation")
+        variable = "pr";
+
+      // alert("variable: " + variable)
+    }
+
+    // set up "var" dropdown based status of "data" dropdown
+    function select_data()
+    {
+      var data_string = $("#data").val();
+      var x=document.getElementById("var");
+
+      // enable all options in "var" dropdown first
+      reset_vars();
+
+      // alert(data_string);
+
+      // disable corresponding "var" options
+      if (data_string == "NASA/AMSRE") {
+        x.options[0].disabled=true;
+        x.options[1].selected=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/MODIS") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/TRMM") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].selected=true;
+      }
+
+      // form variable string
+      select_var();
+    }
+
+    // select checkboxes based on "months" dropdown
+    function select_months()
+    {
+      var s1=document.getElementById("months");
+      // alert(s1.selectedIndex);
+      // alert(s1.options[s1.selectedIndex].value);
+
+      // "select none"
+      if (s1.selectedIndex == 1) {
+        reset_months();
+      }
+      // "select all"
+      if (s1.selectedIndex == 0) {
+        select_all_months();
+      }
+      // "summer"
+      if (s1.selectedIndex == 2) {
+        reset_months();
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+      }
+      // "autumn"
+      if (s1.selectedIndex == 3) {
+        reset_months();
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+      }
+      // "winter"
+      if (s1.selectedIndex == 4) {
+        reset_months();
+        document.getElementById('Dec').checked = true;
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+      }
+      // "spring"
+      if (s1.selectedIndex == 5) {
+        reset_months();
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+      }
+        
+    }
+
+    $(document).ready(function(){
+
+      $("a").click(function(event){
+        alert("As you can see, the link no longer took you to jquery.com");
+        event.preventDefault();
+      });
+
+
+      $("#twodvarmap").click(function(event) {
+	Response = null;
+        // flag error if no month box is checked
+        if (no_month_check()) {
+           // $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
+           $("#Response").html("Error: please check at least one month.");
+           $("#Image").html("");
+           return;
+        }
+
+        $("#Response").html("Calculating ...");
+        $("#Image").html("");
+
+        // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+
+        // form url string
+        var url = "http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?";
+
+        var d1 = $("#data").val();
+        var model1 = d1.replace("/", "_");
+
+        var arglist = "";
+        arglist = arglist.concat("model=");
+        arglist = arglist.concat(model1);
+
+        var v1 = $("#var").val();
+        arglist = arglist.concat("&var=");
+        arglist = arglist.concat(variable);
+
+        var t0 = $("#t0").val();
+        var t1 = $("#t1").val();
+
+        t0 = t0.replace("-", "");
+        t1 = t1.replace("-", "");
+
+        arglist = arglist.concat("&start_time=");
+        arglist = arglist.concat(t0);
+
+        arglist = arglist.concat("&end_time=");
+        arglist = arglist.concat(t1);
+
+        var lon0 = $("#lon0").val();
+        var lon1 = $("#lon1").val();
+        var lat0 = $("#lat0").val();
+        var lat1 = $("#lat1").val();
+
+        arglist = arglist.concat("&lon1=");
+        arglist = arglist.concat(lon0);
+
+        arglist = arglist.concat("&lon2=");
+        arglist = arglist.concat(lon1);
+
+        arglist = arglist.concat("&lat1=");
+        arglist = arglist.concat(lat0);
+
+        arglist = arglist.concat("&lat2=");
+        arglist = arglist.concat(lat1);
+
+        var s1 = document.getElementById('months');
+
+        // get months checked by client
+        var month_str = "";
+
+        var mm = document.getElementById('Jan');
+        if (mm.checked == true)
+          month_str = month_str.concat(",1");
+
+        var mm = document.getElementById('Feb');
+        if (mm.checked == true)
+          month_str = month_str.concat(",2");
+
+        var mm = document.getElementById('Mar');
+        if (mm.checked == true)
+          month_str = month_str.concat(",3");
+
+        var mm = document.getElementById('Apr');
+        if (mm.checked == true)
+          month_str = month_str.concat(",4");
+
+        var mm = document.getElementById('May');
+        if (mm.checked == true)
+          month_str = month_str.concat(",5");
+
+        var mm = document.getElementById('Jun');
+        if (mm.checked == true)
+          month_str = month_str.concat(",6");
+
+        var mm = document.getElementById('Jul');
+        if (mm.checked == true)
+          month_str = month_str.concat(",7");
+
+        var mm = document.getElementById('Aug');
+        if (mm.checked == true)
+          month_str = month_str.concat(",8");
+
+        var mm = document.getElementById('Sep');
+        if (mm.checked == true)
+          month_str = month_str.concat(",9");
+
+        var mm = document.getElementById('Oct');
+        if (mm.checked == true)
+          month_str = month_str.concat(",10");
+
+        var mm = document.getElementById('Nov');
+        if (mm.checked == true)
+          month_str = month_str.concat(",11");
+
+        var mm = document.getElementById('Dec');
+        if (mm.checked == true)
+          month_str = month_str.concat(",12");
+
+        // remove the leading ','
+        month_str = month_str.substr(1);
+        // alert(month_str);
+
+        arglist = arglist.concat("&months=");
+        arglist = arglist.concat(month_str);
+        // alert("arglist: " + arglist);
+
+        // url = url + encodeURIComponent(arglist);
+        url = url + encodeURI(arglist);
+        // url = url + arglist;
+        // alert("url: " + url);
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            data: null,
+            success: function(data, textStatus, xhr) {
+                Response = data;
+                // alert("data: " + data);
+                if (data.success == false) {
+                    // alert(data.error);
+                    Response = null;
+                    var text = JSON.stringify(data, null, 4);
+                    text = "Error in backend: <br>" + text; 
+                    // $("#Response").html("<span style='color:red'>" + text + "</span>");
+                    $("#Response").html(text);
+                    return;
+                }
+                var text = JSON.stringify(data, null, 4);
+                // alert(text);
+                // $("#Response").html("<pre>"+text+"</pre>");
+                $("#Response").html(text);
+
+                var html = "<img src='"+data.url+"' width='680'/>";
+                // alert(html);
+                $("#Image").html(html);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+		$("#Response").html("error!");
+                // alert("xhr.status: "+xhr.status);
+                // alert("error status: "+textStatus);
+            },
+            complete: function(xhr, textStatus) {
+                //alert("complete status: "+textStatus);
+            }
+        });
+
+      });
+
+
+    });
+    
+  </script>
+</head>
+<body>
+
+<p>
+
+<table border="1">
+
+<tr>
+<td colspan="4">
+<center>
+<b>Service: 2-D Variable Map</b>
+</center>
+</td>
+</tr>
+
+<tr>
+<td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<optgroup label="Model">
+<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>GFDL/CM3</option>
+<option>GISS/E2-R</option>
+<option>NCAR/CAM5</option>
+<option>UKMO/HadGEM2-ES</option>
+<!-- <option>NASA/obs4MIPs</option>  -->
+</optgroup>
+<optgroup label="Observation">
+<option>NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<!-- <option>NASA/AIRS</option> -->
+<!-- <option>NASA/MLS</option> -->
+<option>NASA/TRMM</option>
+</optgroup>
+</select></td>
+
+<td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<option>Total Cloud Fraction</option>
+<!-- <option>Air Temperature</option> -->
+<option>Surface Temperature</option>
+<!-- <option>Specific Humidity</option> -->
+<option>Precipitation</option> </select></td>
+
+</tr>
+
+<tr>
+<td>start year-month:</td><td><input id="t0" value="1990-01" alt="start"/></td>
+<td>end year-month:</td><td><input id="t1" value="2012-12" alt="end"/></td>
+</tr>
+
+<tr>
+<td>select months:</td>
+<td><select name="months" id="months" onchange="select_months()">
+<option id="all">select all</option>
+<option id="none">select none</option>
+<option id="summer">Summer:Jun-Jul-Aug</option>
+<option id="autum">Autumn:Sep-Oct-Nov</option>
+<option id="winter">Winter:Dec-Jan-Feb</option>
+<option id="spring">Spring:Mar-Apr-May</option> </select>
+</td>
+<td>
+</td>
+<td>
+</tr>
+
+<tr>
+<td>
+<label><input type="checkbox" name="option1" id="Jan" value="Jan" /> Jan<br></label>
+<label><input type="checkbox" name="option1" id="Feb" value="Feb" /> Feb<br></label>
+<label><input type="checkbox" name="option1" id="Mar" value="Mar" /> Mar<br></label>
+</td>
+<td>
+<label><input type="checkbox" name="option1" id="Apr" value="Apr" /> Apr<br></label>
+<label><input type="checkbox" name="option1" id="May" value="May" /> May<br></label>
+<label><input type="checkbox" name="option1" id="Jun" value="Jun" /> Jun<br></label>
+</td>
+<td>
+<label><input type="checkbox" name="option1" id="Jul" value="Jul" /> Jul<br></label>
+<label><input type="checkbox" name="option1" id="Aug" value="Aug" /> Aug<br></label>
+<label><input type="checkbox" name="option1" id="Sep" value="Sep" /> Sep<br></label>
+</td>
+<td>
+<label><input type="checkbox" name="option1" id="Oct" value="Oct" /> Oct<br></label>
+<label><input type="checkbox" name="option1" id="Nov" value="Nov" /> Nov<br></label>
+<label><input type="checkbox" name="option1" id="Dec" value="Dec" /> Dec<br></label>
+</td>
+</tr>
+
+<tr>
+<td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
+<td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
+</tr>
+
+<tr>
+<td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
+<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
+</tr>
+
+<tr>
+<td colspan="4" align="center"><input id="twodvarmap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+</tr>
+
+<tr>
+<td colspan="4">
+<div id="Image">Image Here</div>
+</td>
+</tr>
+<tr>
+<td colspan="4" align="center">
+<textarea id="Response" cols="89" rows="6">Text Here</textarea>
+</td>
+</tr>
+</p>
+
+</table>
+
+</body>
+</html>
