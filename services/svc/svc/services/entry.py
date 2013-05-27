@@ -54,6 +54,22 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
+
+def get_host_port(cfg_file):
+    myvars = {}
+    myfile =  open(cfg_file)
+    for line in myfile:
+        name, var = line.partition("=")[::2]
+        name = name.strip()
+        var = var.strip('\n').strip()
+        if name is not '' and var is not '':
+            myvars[name] = var
+
+    ### print myvars
+
+    return myvars["HOSTNAME"], myvars["PORT"]
+
+
 @app.route('/svc/twoDimMap', methods=["GET"])
 @crossdomain(origin='*')
 def displayTwoDimMap():
@@ -106,7 +122,13 @@ def displayTwoDimMap():
       # chdir back
       os.chdir(current_dir)
 
-      url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      ### url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/twoDimMap/' + tag + '/' + imgFileName
+      print 'url: ', url
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
@@ -175,7 +197,13 @@ def display_timeSeries2D():
       # chdir back
       os.chdir(current_dir)
 
-      url = 'http://cmacws.jpl.nasa.gov:8090/static/timeSeries2D/' + tag + '/' + imgFileName
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      ### url = 'http://cmacws.jpl.nasa.gov:8090/static/timeSeries2D/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/timeSeries2D/' + tag + '/' + imgFileName
+      print 'url: ', url
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
