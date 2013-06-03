@@ -102,7 +102,8 @@
 
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
-        var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
+        var url = "http://" + window.location.hostname + ":8090/svc/timeSeries2D?";
         // alert("url: " + url);
 
         var d1 = $("#data").val();
