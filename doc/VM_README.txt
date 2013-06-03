@@ -41,6 +41,10 @@ for remote login
   and add lines like for port forwarding:
   8080 = cmac-appliance:80
   8022 = cmac-appliance:22
+. or, to get the port setting, can copy
+  /home/leipan/nat.conf
+  to
+  /etc/vmware/vmnet8/nat/nat.conf
 . restart vm daemon
   sudo /etc/init.d/vmware restart
 . edit /etc/sysconfig/iptables
@@ -79,5 +83,25 @@ configure shared folder
 . Or, it can be done manually by:
   sudo mount -t vmhgfs .host:/export/data1 /export/data1
 
+
+===========================
+which virtual image to use?
+===========================
+. on cmacws.jpl.nasa.gov
+  /home/leipan/cmac-vm/latest_copy_of_vm
+. on cmacws2.jpl.nasa.gov
+  /home/leipan/cmac-vm/cmacws2_deployment
+. on cmacws3.jpl.nasa.gov
+  /home/leipan/cmac-vm/cmacws3_deployment
+. on cmacws4.jpl.nasa.gov
+  /home/leipan/cmac-vm/cmacws4_deployment
+
+
+===========================
+configure web portal inside virtual machine
+===========================
+. vi /etc/apache2/sites-available/default
+  to set, for example:
+  DocumentRoot /home/svc/cmac/trunk/web_portal/
 
 
