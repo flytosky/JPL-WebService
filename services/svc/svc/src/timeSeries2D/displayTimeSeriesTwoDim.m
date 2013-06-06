@@ -82,7 +82,8 @@ for fileI = 1:nFiles
   disp(size(v));
   disp(latIdx);
   disp(lonIdx);
-  monthlyData(monthIdx1:monthIdx2) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx),2),3);
+  %monthlyData(monthIdx1:monthIdx2) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx),2),3);
+  monthlyData(monthIdx1:monthIdx2) = averageOverSphere(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx), lat);
 end
 
 yearVec = startTime.year:stopTime.year;
@@ -92,12 +93,15 @@ for ii = 1:nYears
   yearStr{ii} = num2str(yearVec(ii));
 end
 
+deltaYear = 1+floor(nYears/12);
+
 figure(1);
 clf;
 plot(1:nMonths, monthlyData, 's-', 'linewidth', 2);
 xlabel('Year')
-set(gca, 'xtick', [(2-startTime.month):12:nMonths]);
-set(gca, 'xticklabel', yearStr); 
+set(gca, 'fontweight', 'bold');
+set(gca, 'xtick', [(2-startTime.month):12*deltaYear:nMonths]);
+set(gca, 'xticklabel', {yearStr{1:deltaYear:end}}); 
 grid on;
 ylabel(['Mean (' v_units ')']);
 title([varName ', average value over lon(' num2str(lonRange(1)) ',' num2str(lonRange(2)) ')deg, lat(' num2str(latRange(1)) ',' num2str(latRange(2)) ')deg, (' v_units ')']);
