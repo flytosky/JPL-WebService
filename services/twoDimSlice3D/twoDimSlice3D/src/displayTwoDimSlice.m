@@ -53,10 +53,32 @@ plev = [];
 for fileI = 1:nFiles
   fd = netcdf(dataFile{fileI}, 'r');
 
+  varinfo = ncvar(fd);
+
+  plevVarName = [];
+  for ii = 1:length(varinfo)
+    varNameList{ii} = ncname(varinfo{ii});
+    if strcmp('plev', varNameList{ii})
+      plevVarName = 'plev';
+      break;
+    elseif strcmp('lev', varNameList{ii})
+      plevVarName = 'lev';
+    end
+  end
+  if isempty(plevVarName)
+    error('No variable for pressure level found!');
+  end
+
   if isempty(monthlyData)
     lon = fd{'lon'}(:);
     lat = fd{'lat'}(:);
-    plev = fd{'plev'}(:);
+    
+    if strcmp(plevVarName, 'plev')
+      plev = fd{'plev'}(:);
+    else
+      p0 = 1.013e5; % 1atm = 1.013e5 Pa
+      plev = fd{'lev'}(:)*p0;
+    end
 
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
@@ -86,7 +108,9 @@ for fileI = 1:nFiles
   end
 
   v = fd{varName}(:);
-  v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  if ~isempty(fd{varName}.missing_value)
+    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  end
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 

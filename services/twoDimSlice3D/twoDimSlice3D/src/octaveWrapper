@@ -58,7 +58,7 @@ end
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
 
-dataDir = ['/home/zhai/cmip5/'  center '/' model '/']; 
+dataDir = ['/export/data1/data/cmip5/'  center '/' model '/']; 
 
 dataFiles = dir([dataDir '/' varName '_*.nc']);
 
