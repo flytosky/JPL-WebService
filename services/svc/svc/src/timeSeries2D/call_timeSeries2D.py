@@ -16,6 +16,10 @@ class call_timeSeries2D:
         self.lat2 = lat2
         self.output_dir = output_dir
 
+        # temporary fix
+        # This application level knowledge may not belong here
+        if self.model == 'NASA_AMSRE' and self.var == 'ts':
+          self.var = 'tos'
 
     def display_timeSeries2D(self):
 
@@ -64,7 +68,8 @@ if __name__ == '__main__':
 #    c1 = call_timeSeries2D('ukmo_hadgem2-a', 'ts', '199001', '199512', '0', '100', '-29', '29', '/home/svc/cmac/trunk/services/svc/svc/src/timeSeries2D')
 #    c1 = call_timeSeries2D('ukmo_hadgem2-a', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
     #c1 = call_timeSeries2D('cccma_canam4', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
-    c1 = call_timeSeries2D('ncc_noresm', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
+#    c1 = call_timeSeries2D('ncc_noresm', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
+    c1 = call_timeSeries2D('nasa_amsre', 'tos', '200001', '200912', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
 
     mesg = c1.display_timeSeries2D()
     print 'mesg: ', mesg
