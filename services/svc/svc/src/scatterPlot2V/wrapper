@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/home/bytang/install/bin/epd ./pythonWrapper $*
+
