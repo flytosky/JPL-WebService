@@ -208,14 +208,14 @@
 <tr>
 <td colspan="4">
 <center>
-<b>Service: Scatter Plot of Two Variable</b>
+<b>Service: Scatter Plot of Two Time Averaged Variables</b>
 </center>
 </td>
 </tr>
 
 <tr>
 
-<td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<td>data source 1:</td><td><select name="data", id="data" onchange="select_data()">
 <optgroup label="Model">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
@@ -233,7 +233,7 @@
 </optgroup>
 </select></td>
 
-<td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<td>variable name 1:</td><td><select name="var", id="var" onchange="select_var()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
@@ -243,23 +243,7 @@
 </tr>
 
 
-<tr>
-<td>start year-month:</td><td><input id="t0" value="1990-01" alt="start"/></td>
-<td>end year-month:</td><td><input id="t1" value="2012-12" alt="end"/></td>
-</tr>
-
-
-<tr>
-<td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
-<td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
-</tr>
-
-<tr>
-<td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
-<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
-</tr>
-
-<td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<td>data source 2:</td><td><select name="data", id="data" onchange="select_data()">
 <optgroup label="Model">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
@@ -277,7 +261,7 @@
 </optgroup>
 </select></td>
 
-<td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<td>variable name 2:</td><td><select name="var", id="var" onchange="select_var()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
