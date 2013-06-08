@@ -67,7 +67,10 @@ class call_twoDimMap:
 
 
 if __name__ == '__main__':
-    c1 = call_twoDimMap('ukmo_hadgem2-es', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+    ### c1 = call_twoDimMap('ukmo_hadgem2-a', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+    ### c1 = call_twoDimMap('cccma_canam4', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+    c1 = call_twoDimMap('ncc_noresm', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+    ### c1 = call_twoDimMap('ukmo_hadgem2-es', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
 
     mesg = c1.displayTwoDimMap()
     print 'mesg: ', mesg
