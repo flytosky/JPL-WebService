@@ -7,6 +7,7 @@ from werkzeug import secure_filename
 
 from svc import app
 from svc.src.twoDimMap import call_twoDimMap
+from svc.src.twoDimSlice3D import call_twoDimSlice3D
 from svc.src.timeSeries2D import call_timeSeries2D
 
 from flask import current_app
@@ -220,4 +221,83 @@ def display_timeSeries2D():
         'message': message,
         'url': url,
     })
+
+
+@app.route('/svc/twoDimSlice3D', methods=["GET"])
+@crossdomain(origin='*')
+def displayTwoDimSlice3D():
+    """Run displayTwoDimSlice3D"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+
+    # get model, var, start time, end time, pressure_level, lon1, lon2, lat1, lat2, months
+
+    model = request.args.get('model', '')
+    var = request.args.get('var', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    pr = request.args.get('pr', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    months = request.args.get('months', '')
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'pr: ', pr
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'months: ', months
+
+    try:
+      # get where the input file and output file are
+      current_dir = os.getcwd()
+      print 'current_dir: ', current_dir
+      seed_str = model+var+startT+endT+pr+lon1+lon2+lat1+lat2+months
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/twoDimSlice3D/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/twoDimSlice3D')
+      # instantiate the app. class
+      c1 = call_twoDimSlice3D.call_twoDimSlice3D(model, var, startT, endT, pr, lon1, lon2, lat1, lat2, months, output_dir)
+      # call the app. function
+      (message, imgFileName) = c1.displayTwoDimSlice3D()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      url = 'http://' + hostname + ':' + port + '/static/twoDimSlice3D/' + tag + '/' + imgFileName
+      print 'url: ', url
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+
+    except ValueError, e:
+        success = False
+        message = str(e)
+
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+    })
+
 
