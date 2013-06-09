@@ -1,7 +1,7 @@
 #!/usr/local/bin/octave -q
 
 arg_list = argv();
-printf ("%s:\n", program_name());
+printf ("program name: %s:\n", program_name());
 
 narg = length(arg_list);
 
@@ -24,16 +24,17 @@ if narg > 3
   stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
 end
 
-lonRange = [0, 360];
 printf("%s", arg_list{1})
 printf("%s", arg_list{2})
 printf("%s", arg_list{3})
 printf("%s", arg_list{4})
 
-if narg > 5
+if narg > 4
   plev = str2num(arg_list{5});
   printf("%s", arg_list{5})
 end
+
+lonRange = [0, 360];
 
 if narg > 5
   lonRange = str2num(arg_list{6});
@@ -54,6 +55,19 @@ if narg > 7
   printf("%s", arg_list{8})
 end
 
+if narg > 8
+  output_dir = arg_list{9};
+end
+
+printf("1. %s\n", arg_list{1})
+printf("2. %s\n", arg_list{2})
+printf("3. %s\n", arg_list{3})
+printf("4. %s\n", arg_list{4})
+printf("5. %s\n", arg_list{5})
+printf("6. %s\n", arg_list{6})
+printf("7. %s\n", arg_list{7})
+printf("8. %s\n", arg_list{8})
+printf("9. %s\n", arg_list{9})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -79,5 +93,8 @@ for ii = 1:nDataFiles
 end
 
 figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.jpeg'];
-displayTwoDimSlice(dataFileFullPath, figFile, varName, startTime, stopTime, plev, lonRange, latRange, monthIdx);
+figFilePath = [output_dir '/' figFile];
+printf("figFile: %s\n", figFile);
+printf("figFilePath: %s\n", figFilePath);
+displayTwoDimSlice(dataFileFullPath, figFilePath, varName, startTime, stopTime, plev, lonRange, latRange, monthIdx);
 title([varName ' at ' num2str(plev/100) 'hPa, map for ' modelName]);
