@@ -83,6 +83,9 @@
       x.options[0].disabled=false;
       x.options[1].disabled=false;
       x.options[2].disabled=false;
+      x.options[3].disabled=false;
+      x.options[4].disabled=false;
+      x.options[5].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -100,6 +103,8 @@
         variable = "hus";
       else if (var_string == "Precipitation")
         variable = "pr";
+      else if (var_string == "Cloud Ice Water Conten")
+        variable = "cli";
 
       // alert("variable: " + variable)
     }
@@ -314,7 +319,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -377,10 +382,18 @@
 <td>data source:</td><td><select name="data", id="data" onchange="select_data()">
 <optgroup label="Model">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>CCCMA/CANAM4</option>
+<option>CSIRO/MK3.6</option>
 <option>GFDL/CM3</option>
+<option>GFDL/ESM2G</option>
+<option>GISS/E2-H</option>
 <option>GISS/E2-R</option>
+<option>IPSL/CM5A-LR</option>
+<option>MIROC/MIROC5</option>
 <option>NCAR/CAM5</option>
+<option>NCAR/NORESM</option>
 <option>UKMO/HadGEM2-ES</option>
+<option>UKMO/HadGEM2-A</option>
 <!-- <option>NASA/obs4MIPs</option>  -->
 </optgroup>
 <optgroup label="Observation">
@@ -393,11 +406,13 @@
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<option>Precipitation</option>
 <option>Total Cloud Fraction</option>
-<!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
-<!-- <option>Specific Humidity</option> -->
-<option>Precipitation</option> </select></td>
+<option>Specific Humidity</option>
+<option>Cloud Ice Water Content</option>
+<option>Air Temperature</option>
+</select></td>
 
 </tr>
 
