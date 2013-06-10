@@ -83,6 +83,10 @@
       x.options[0].disabled=false;
       x.options[1].disabled=false;
       x.options[2].disabled=false;
+      x.options[3].disabled=false;
+      x.options[4].disabled=false;
+      x.options[5].disabled=false;
+
     }
 
     // form variable string based on "var" dropdown selection
@@ -100,6 +104,8 @@
         variable = "hus";
       else if (var_string == "Precipitation")
         variable = "pr";
+      else if (var_string == "Cloud Ice Water Conten")
+        variable = "cli";
 
       // alert("variable: " + variable)
     }
@@ -203,11 +209,11 @@
         $("#Response").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimSlice3D?model=UKMO_HadGEM2-ES&var=hus&start_time=199001&end_time=199512&pr=80000&lon1=0&lon2=20&lat1=-29&lat2=29&months=1,2,3,4,5,6,7,8,9,10,11,12
 
         // form url string
-        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?";
-        var url = "http://" + window.location.hostname + ":8090/svc/twoDimMap?";
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/twoDimSlice3D?";
+        var url = "http://" + window.location.hostname + ":8090/svc/twoDimSlice3D?";
         // alert(url);
 
         var d1 = $("#data").val();
@@ -232,6 +238,10 @@
 
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
+
+        var pres = $("#pres").val()*100;
+        arglist = arglist.concat("&pr=");
+        arglist = arglist.concat(pres);
 
         var lon0 = $("#lon0").val();
         var lon1 = $("#lon1").val();
@@ -314,7 +324,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -377,10 +387,18 @@
 <td>data source:</td><td><select name="data", id="data" onchange="select_data()">
 <optgroup label="Model">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>CCCMA/CANAM4</option>
+<option>CSIRO/MK3.6</option>
 <option>GFDL/CM3</option>
+<option>GFDL/ESM2G</option>
+<option>GISS/E2-H</option>
 <option>GISS/E2-R</option>
+<option>IPSL/CM5A-LR</option>
+<option>MIROC/MIROC5</option>
 <option>NCAR/CAM5</option>
+<option>NCAR/NORESM</option>
 <option>UKMO/HadGEM2-ES</option>
+<option>UKMO/HadGEM2-A</option>
 <!-- <option>NASA/obs4MIPs</option>  -->
 </optgroup>
 <optgroup label="Observation">
@@ -393,12 +411,13 @@
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<option>Precipitation</option>
 <option>Total Cloud Fraction</option>
-<!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
-<!-- <option>Specific Humidity</option> -->
-<option>Precipitation</option> </select></td>
-
+<option>Specific Humidity</option>
+<option>Cloud Ice Water Content</option>
+<option>Air Temperature</option> 
+</select></td>
 </tr>
 
 <tr>
@@ -417,10 +436,10 @@
 <option id="spring">Spring:Mar-Apr-May</option> </select>
 </td>
 <td>
-pressure level (Pa):
+pressure level (hPa):
 </td>
 <td>
-<input id="pres" value="" alt="pressure"/>
+<input id="pres" value="200" alt="pressure"/>
 </tr>
 
 <tr>
