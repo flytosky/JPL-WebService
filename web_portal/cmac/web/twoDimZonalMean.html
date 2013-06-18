@@ -203,10 +203,10 @@
         $("#Response").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+        // sample url: http://cmacws.jpl.nasa.gov:8089/twoDimZonalMean/display?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
 
         // form url string
-        var url = "http://cmacws.jpl.nasa.gov:8089/twoDimMap/display?";
+        var url = "http://cmacws.jpl.nasa.gov:8089/twoDimZonalMean/display?";
 
         var d1 = $("#data").val();
         var model1 = d1.replace("/", "_");
@@ -366,7 +366,7 @@
 <tr>
 <td colspan="4">
 <center>
-<b>Service: 2-D Variable Map</b>
+<b>Service: 2-D Variable Zonal Mean</b>
 </center>
 </td>
 </tr>
