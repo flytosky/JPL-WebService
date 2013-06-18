@@ -90,5 +90,5 @@ figFilePath = [output_dir '/' figFile];
 printf("figFile: %s\n", figFile)
 printf("figFilePath: %s\n", figFilePath)
 displayTwoDimClimatologyGen(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, monthIdx);
-title([varName ' climatology for ' modelName]);
+title([varName ' two dimensional map for ' modelName]);
 
