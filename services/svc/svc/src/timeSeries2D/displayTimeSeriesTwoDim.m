@@ -58,6 +58,9 @@ for fileI = 1:nFiles
   end
 
   v = fd{varName}(:);
+
+  v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
