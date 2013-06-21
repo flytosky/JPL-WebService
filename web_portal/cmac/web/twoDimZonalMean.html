@@ -205,7 +205,7 @@
         $("#Response").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimZonalMean?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimZonalMean?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
 
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/twoDimZonalMean?";
@@ -235,16 +235,8 @@
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
 
-        var lon0 = $("#lon0").val();
-        var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
-
-        arglist = arglist.concat("&lon1=");
-        arglist = arglist.concat(lon0);
-
-        arglist = arglist.concat("&lon2=");
-        arglist = arglist.concat(lon1);
 
         arglist = arglist.concat("&lat1=");
         arglist = arglist.concat(lat0);
