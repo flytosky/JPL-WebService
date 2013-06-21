@@ -10,6 +10,7 @@ from svc.src.twoDimMap import call_twoDimMap
 from svc.src.twoDimSlice3D import call_twoDimSlice3D
 from svc.src.timeSeries2D import call_timeSeries2D
 from svc.src.twoDimZonalMean import call_twoDimZonalMean
+from svc.src.threeDimZonalMean import call_threeDimZonalMean
 
 from flask import current_app
 from functools import update_wrapper
@@ -312,7 +313,7 @@ def displayTwoDimZonalMean():
     message = "ok"
     url = ''
 
-    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months
+    # get model, var, start time, end time, lat1, lat2, months
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -354,8 +355,83 @@ def displayTwoDimZonalMean():
       print 'hostname: ', hostname
       print 'port: ', port
 
-      ### url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
       url = 'http://' + hostname + ':' + port + '/static/twoDimZonalMean/' + tag + '/' + imgFileName
+      print 'url: ', url
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+
+    except ValueError, e:
+        success = False
+        message = str(e)
+
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+    })
+
+
+@app.route('/svc/threeDimZonalMean', methods=["GET"])
+@crossdomain(origin='*')
+def displayThreeDimZonalMean():
+    """Run displayThreeDimZonalMean"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+
+    # get model, var, start time, end time, lat1, lat2, pres1, pres2, months
+
+    model = request.args.get('model', '')
+    var = request.args.get('var', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    pres1 = request.args.get('pres1', '')
+    pres2 = request.args.get('pres2', '')
+    months = request.args.get('months', '')
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'pres1: ', pres1
+    print 'pres2: ', pres2
+    print 'months: ', months
+
+    try:
+      # get where the input file and output file are
+      current_dir = os.getcwd()
+      print 'current_dir: ', current_dir
+      seed_str = model+var+startT+endT+lat1+lat2+pres1+pres2+months
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/threeDimZonalMean/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/threeDimZonalMean')
+      # instantiate the app. class
+      c1 = call_threeDimZonalMean.call_threeDimZonalMean(model, var, startT, endT, lat1, lat2, pres1, pres2, months, output_dir)
+      # call the app. function
+      (message, imgFileName) = c1.displayThreeDimZonalMean()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      url = 'http://' + hostname + ':' + port + '/static/threeDimZonalMean/' + tag + '/' + imgFileName
       print 'url: ', url
 
       print 'message: ', message
