@@ -49,6 +49,18 @@ if narg > 6
   printf("%s", arg_list{7})
 end
 
+if narg > 7
+  output_dir = arg_list{8};
+end
+
+printf("1. %s\n", arg_list{1})
+printf("2. %s\n", arg_list{2})
+printf("3. %s\n", arg_list{3})
+printf("4. %s\n", arg_list{4})
+printf("5. %s\n", arg_list{5})
+printf("6. %s\n", arg_list{6})
+printf("7. %s\n", arg_list{7})
+printf("8. %s\n", arg_list{8})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -74,5 +86,8 @@ for ii = 1:nDataFiles
 end
 
 figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.jpeg'];
-displayVerticalProfile(dataFileFullPath, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx);
+figFilePath = [output_dir '/' figFile];
+printf("figFile: %s\n", figFile)
+printf("figFilePath: %s\n", figFilePath)
+displayVerticalProfile(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, monthIdx);
 title([varName ' vertical profile for ' modelName]);
