@@ -11,6 +11,7 @@ from svc.src.twoDimSlice3D import call_twoDimSlice3D
 from svc.src.timeSeries2D import call_timeSeries2D
 from svc.src.twoDimZonalMean import call_twoDimZonalMean
 from svc.src.threeDimZonalMean import call_threeDimZonalMean
+from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
 
 from flask import current_app
 from functools import update_wrapper
@@ -432,6 +433,82 @@ def displayThreeDimZonalMean():
       print 'port: ', port
 
       url = 'http://' + hostname + ':' + port + '/static/threeDimZonalMean/' + tag + '/' + imgFileName
+      print 'url: ', url
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+
+    except ValueError, e:
+        success = False
+        message = str(e)
+
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+    })
+
+
+@app.route('/svc/threeDimVerticalProfile', methods=["GET"])
+@crossdomain(origin='*')
+def displayThreeDimVerticalProfile():
+    """Run displayThreeDimVerticalProfile"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+
+    # get model, var, start time, end time, lat1, lat2, pres1, pres2, months
+
+    model = request.args.get('model', '')
+    var = request.args.get('var', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    months = request.args.get('months', '')
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'months: ', months
+
+    try:
+      # get where the input file and output file are
+      current_dir = os.getcwd()
+      print 'current_dir: ', current_dir
+      seed_str = model+var+startT+endT+lat1+lat2+lon1+lon2+months
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/threeDimVerticalProfile/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/threeDimVerticalProfile')
+      # instantiate the app. class
+      c1 = call_threeDimVerticalProfile.call_threeDimVerticalProfile(model, var, startT, endT, lon1, lon2, lat1, lat2, months, output_dir)
+      # call the app. function
+      (message, imgFileName) = c1.displayThreeDimVerticalProfile()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      url = 'http://' + hostname + ':' + port + '/static/threeDimVerticalProfile/' + tag + '/' + imgFileName
       print 'url: ', url
 
       print 'message: ', message
