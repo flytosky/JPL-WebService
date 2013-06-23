@@ -235,7 +235,7 @@
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
 
-        var pres = $("#pres").val()*100;
+        var pres = $("#pres").val() * 100;  // convert from hPa on GUI
         arglist = arglist.concat("&pr=");
         arglist = arglist.concat(pres);
 
