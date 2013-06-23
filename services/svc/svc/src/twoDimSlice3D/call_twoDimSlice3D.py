@@ -10,7 +10,7 @@ class call_twoDimSlice3D:
         self.var = var
         self.start_time = start_time
         self.end_time = end_time
-        self.pressure_level = pressure_level * 100 # convert from hPa on GUI
+        self.pressure_level = pressure_level
         self.lon1 = lon1
         self.lon2 = lon2
         self.lat1 = lat1
