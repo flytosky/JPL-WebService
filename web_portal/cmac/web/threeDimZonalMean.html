@@ -251,8 +251,8 @@
           return;
         }
         else {
-          pres1 = splitty[0];
-          pres2 = splitty[1];
+          pres1 = splitty[0] * 100;  // convert from hPa on GUI
+          pres2 = splitty[1] * 100;
         }
 
         arglist = arglist.concat("&pres1=");
