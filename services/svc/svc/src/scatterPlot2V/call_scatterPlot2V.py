@@ -41,13 +41,14 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
                  '%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
                  self.output_dir
         print 'inputs: ', inputs
-        #command = './pythonWrapper ' +  inputs
+        #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
         command = './wrapper ' +  inputs
         cmd = command.split(' ')
         cmdstring = string.join(cmd, ' ')
         print 'cmdstring: ', cmdstring
 
-        try:
+        if 1:
+        #try:
           proc=subprocess.Popen(cmd, cwd='.', stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
           # wait for the process to finish
           stdout_value, stderr_value = proc.communicate()
@@ -71,9 +72,10 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
 
           print 'image_filename: ', image_filename
           return (stdout_value, image_filename)
-        except OSError, e:
-          err_mesg = 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
-          return (err_mesg, '')
+        # 
+        #except OSError, e:
+        #  err_mesg = 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
+        #  return (err_mesg, '')
 
 
 if __name__ == '__main__':
