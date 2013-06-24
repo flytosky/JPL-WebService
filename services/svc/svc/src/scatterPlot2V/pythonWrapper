@@ -434,6 +434,12 @@ if cr['command_arg']       == 1:
 
   if len(sys.argv)>1:
     argv = sys.argv
+
+    print 'argv: '
+    for i in argv:
+      print i
+
+
     # arg 1
     ii = 1
     temp1 = argv[ii].split('_')
@@ -479,6 +485,8 @@ if cr['command_arg']       == 1:
     # arg 9
     ii += 1
     a.outDir = argv[ii]
+    print 'a.outDir: ',
+    print a.outDir
 
 if cr['plot__']       == 1:
   # get file names

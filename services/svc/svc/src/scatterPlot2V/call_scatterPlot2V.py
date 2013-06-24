@@ -10,30 +10,23 @@ model1, var1,
 model2, var2, 
 start_time, end_time, lonS, lonE, latS, latE, output_dir):
 
-        self.model = model1
-        self.var = var1
-        self.start_time = start_time1
-        self.end_time = end_time1
-        self.lon1 = lon1a
-        self.lon2 = lon1b
-        self.lat1 = lat1a
-        self.lat2 = lat1b
-
-        self.model = model2
-        self.var = var2
-        self.start_time = start_time2
-        self.end_time = end_time2
-        self.lon1 = lon2a
-        self.lon2 = lon2b
-        self.lat1 = lat2a
-        self.lat2 = lat2b
+        self.model1 = model1
+        self.var1 = var1
+        self.model2 = model2
+        self.var2 = var2
+        self.start_time = start_time
+        self.end_time = end_time
+        self.lon1 = lonS
+        self.lon2 = lonE
+        self.lat1 = latS
+        self.lat2 = latE
 
         self.output_dir = output_dir
 
         # temporary fix
         # This application level knowledge may not belong here
-        if self.model == 'NASA_AMSRE' and self.var == 'ts':
-          self.var = 'tos'
+        #if self.model1 == 'NASA_AMSRE' and self.var == 'ts':
+        #  self.var = 'tos'
 
 
     def display(self):
@@ -44,11 +37,12 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         inputs = \
                  self.model1 + ' ' + self.var1 + ' ' + \
                  self.model2 + ' ' + self.var2 + ' ' + \
-                 self.start_time1 + ' ' + self.end_time1 + ' ' + \
-                 self.lon1a + ',' + self.lon1b + ' ' + self.lat1a + ',' + self.lat1b + ' ' + \
+                 self.start_time + ' ' + self.end_time + ' ' + \
+                 '%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
                  self.output_dir
         print 'inputs: ', inputs
-        command = './pythonWrapper ' +  inputs
+        #command = './pythonWrapper ' +  inputs
+        command = './wrapper ' +  inputs
         cmd = command.split(' ')
         cmdstring = string.join(cmd, ' ')
         print 'cmdstring: ', cmdstring
