@@ -34,11 +34,12 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         ### print 'current dir: ', os.getcwd()
         # inputs: model name, variable name, start-year-mon, end-year-mon, 'start lon, end lon', 'start lat, end lat', 'mon list'
         # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
+                 #'%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
         inputs = \
                  self.model1 + ' ' + self.var1 + ' ' + \
                  self.model2 + ' ' + self.var2 + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
-                 '%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
+                 self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
                  self.output_dir
         print 'inputs: ', inputs
         #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
