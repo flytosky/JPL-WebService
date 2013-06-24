@@ -5,11 +5,10 @@ import os
 from os.path import basename
 
 class call_scatterPlot2V:
-    def __init__(self, \
-model1, var1, \
-model2, var2, \
-start_time, end_time, lonS, lonE, latS, latE\
-output_dir):
+    def __init__(self, 
+model1, var1, 
+model2, var2, 
+start_time, end_time, lonS, lonE, latS, latE, output_dir):
 
         self.model = model1
         self.var = var1
@@ -44,7 +43,7 @@ output_dir):
         # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
         inputs = \
                  self.model1 + ' ' + self.var1 + ' ' + \
-                 self.model2 + ' ' + self.var2 + ' ' \
+                 self.model2 + ' ' + self.var2 + ' ' + \
                  self.start_time1 + ' ' + self.end_time1 + ' ' + \
                  self.lon1a + ',' + self.lon1b + ' ' + self.lat1a + ',' + self.lat1b + ' ' + \
                  self.output_dir
