@@ -113,6 +113,7 @@ for fileI = 1:nFiles
   for pIdx = 2:length(p_idx)
     monthlyData(monthIdx1:monthIdx2) = monthlyData(monthIdx1:monthIdx2) + p_alphas(pIdx) * meanExcludeNaN(meanExcludeNaN(squeeze(v(idx2Data_start:idx2Data_stop, p_idx(pIdx), latIdx,lonIdx)),2),3);
   end
+  ncclose(fd);
 end
 
 yearVec = startTime.year:stopTime.year;
