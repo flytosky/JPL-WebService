@@ -139,6 +139,7 @@ for fileI = 1:nFiles
   for pIdx = 2:length(p_idx)
     monthlyData(monthIdx1:monthIdx2, :, :) = monthlyData(monthIdx1:monthIdx2, :, :) + squeeze(v(idx2Data_start:idx2Data_stop, p_idx(pIdx), latIdx,lonIdx) * p_alphas(pIdx));
   end
+  ncclose(fd);
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
