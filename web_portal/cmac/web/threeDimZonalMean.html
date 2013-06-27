@@ -251,8 +251,8 @@
           return;
         }
         else {
-          pres1 = splitty[0] * 100;  // convert from hPa on GUI
-          pres2 = splitty[1] * 100;
+          pres1 = splitty[0];
+          pres2 = splitty[1];
         }
 
         arglist = arglist.concat("&pres1=");
@@ -325,7 +325,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -403,11 +403,8 @@
 <!-- <option>NASA/obs4MIPs</option>  -->
 </optgroup>
 <optgroup label="Observation">
-<option>NASA/MODIS</option>
-<option>NASA/AMSRE</option>
-<!-- <option>NASA/AIRS</option> -->
-<!-- <option>NASA/MLS</option> -->
-<option>NASA/TRMM</option>
+<option>NASA/AIRS</option>
+<option>NASA/MLS</option>
 </optgroup>
 </select></td>
 
