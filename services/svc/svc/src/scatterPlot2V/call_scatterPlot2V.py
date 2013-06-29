@@ -29,7 +29,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         #  self.var = 'tos'
 
 
-    def display(self):
+    def displayScatterPlot2V(self):
 
         ### print 'current dir: ', os.getcwd()
         # inputs: model name, variable name, start-year-mon, end-year-mon, 'start lon, end lon', 'start lat, end lat', 'mon list'
@@ -84,5 +84,5 @@ if __name__ == '__main__':
 'ukmo_hadgem2-a', 'ts', 'ukmo_hadgem2-a', 'clt', '199001', '199512', '0', '100', '-29', '29', \
 '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
 
-    mesg = c1.display()
+    mesg = c1.displayScatterPlot2V()
     print 'mesg: ', mesg
