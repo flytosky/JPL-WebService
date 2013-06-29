@@ -462,7 +462,7 @@ def displayThreeDimVerticalProfile():
     message = "ok"
     url = ''
 
-    # get model, var, start time, end time, lat1, lat2, pres1, pres2, months
+    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -509,6 +509,84 @@ def displayThreeDimVerticalProfile():
       print 'port: ', port
 
       url = 'http://' + hostname + ':' + port + '/static/threeDimVerticalProfile/' + tag + '/' + imgFileName
+      print 'url: ', url
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+
+    except ValueError, e:
+        success = False
+        message = str(e)
+
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+    })
+
+
+@app.route('/svc/scatterPlot2V', methods=["GET"])
+@crossdomain(origin='*')
+def displayScatterPlot2V():
+    """Run displayScatterPlot2V"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+
+    # get model1, var1,  model2, var2, start time, end time, lon1, lon2, lat1, lat2
+
+    model1 = request.args.get('model1', '')
+    var1 = request.args.get('var1', '')
+    model2 = request.args.get('model2', '')
+    var2 = request.args.get('var2', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+
+    print 'model1: ', model1
+    print 'var1: ', var1
+    print 'model2: ', model2
+    print 'var2: ', var2
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+
+    try:
+      # get where the input file and output file are
+      current_dir = os.getcwd()
+      print 'current_dir: ', current_dir
+      seed_str = model1+var1+model2+var2+startT+endT+lat1+lat2+lon1+lon2
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/scatterPlot2V/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/scatterPlot2V')
+      # instantiate the app. class
+      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, model2, var2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
+      # call the app. function
+      (message, imgFileName) = c1.displayScatterPlot2V()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      url = 'http://' + hostname + ':' + port + '/static/scatterPlot2V/' + tag + '/' + imgFileName
       print 'url: ', url
 
       print 'message: ', message
