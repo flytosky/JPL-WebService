@@ -90,16 +90,10 @@
     {
       var var_string = $("#var").val();
 
-      if (var_string == "Total Cloud Fraction")
-        variable = "clt";
-      else if (var_string == "Air Temperature")
+      if (var_string == "Air Temperature")
         variable = "ta";
-      else if (var_string == "Surface Temperature")
-        variable = "ts";
       else if (var_string == "Specific Humidity")
         variable = "hus";
-      else if (var_string == "Precipitation")
-        variable = "pr";
       else if (var_string == "Cloud Ice Water Content")
         variable = "cli";
 
@@ -118,19 +112,14 @@
       // alert(data_string);
 
       // disable corresponding "var" options
-      if (data_string == "NASA/AMSRE") {
-        x.options[0].disabled=true;
+      if (data_string == "NASA/AIRS") {
+        x.options[0].selected=true;
         x.options[1].selected=true;
         x.options[2].disabled=true;
       }
-      else if (data_string == "NASA/MODIS") {
+      else if (data_string == "NASA/MLS") {
         x.options[0].selected=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-      }
-      else if (data_string == "NASA/TRMM") {
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
+        x.options[1].selected=true;
         x.options[2].selected=true;
       }
 
@@ -399,9 +388,9 @@
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<option>Air Temperature</option> 
 <option>Specific Humidity</option>
 <option>Cloud Ice Water Content</option>
-<option>Air Temperature</option> 
 </select></td>
 </tr>
 

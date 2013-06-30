@@ -83,6 +83,14 @@
       x.options[0].disabled=false;
       x.options[1].disabled=false;
       x.options[2].disabled=false;
+      x.options[3].disabled=false;
+      x.options[4].disabled=false;
+      x.options[5].disabled=false;
+      x.options[6].disabled=false;
+      x.options[7].disabled=false;
+      x.options[8].disabled=false;
+      x.options[9].disabled=false;
+      x.options[10].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -92,16 +100,26 @@
 
       if (var_string == "Total Cloud Fraction")
         variable = "clt";
-      else if (var_string == "Air Temperature")
-        variable = "ta";
       else if (var_string == "Surface Temperature")
         variable = "ts";
-      else if (var_string == "Specific Humidity")
-        variable = "hus";
-      else if (var_string == "Precipitation")
+      else if (var_string == "Sea Surface Temperature")
+        variable = "tos";
+      else if (var_string == "Precipitation Flux")
         variable = "pr";
-      else if (var_string == "Cloud Ice Water Content")
-        variable = "cli";
+      else if (var_string == "Eastward Near-Surface Wind")
+        variable = "uas";
+      else if (var_string == "Northward Near-Surface Wind")
+        variable = "vas";
+      else if (var_string == "Near-Surface Wind Speed")
+        variable = "sfcWind";
+      else if (var_string == "Sea Surface Height")
+        variable = "zos";
+      else if (var_string == "Leaf Area Index")
+        variable = "lai";
+      else if (var_string == "Equivalent Water Height Over Land")
+        variable = "zl";
+      else if (var_string == "Equivalent Water Height Over Ocean")
+        variable = "zo";
 
       // alert("variable: " + variable)
     }
@@ -118,23 +136,114 @@
       // alert(data_string);
 
       // disable corresponding "var" options
-      if (data_string == "NASA/AMSRE") {
+
+     f (data_string == "NASA/AMSRE") {
         x.options[0].disabled=true;
         x.options[1].disabled=true;
-        x.options[2].selected=true;
+        x.options[2].disabled=true;
+        x.options[3].selected=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
       }
       else if (data_string == "NASA/MODIS") {
         x.options[0].disabled=true;
         x.options[1].selected=true;
         x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].diabled=true;
+        x.options[8].selected=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
       }
       else if (data_string == "NASA/TRMM") {
         x.options[0].selected=true;
         x.options[1].disabled=true;
         x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+      }
+      else if (data_string == "NASA/GPCP") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+      }
+      else if (data_string == "NASA/QuikSCAT") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].selected=true;
+        x.options[5].selected=true;
+        x.options[6].selected=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+      }
+      else if (data_string == "NASA/AVISO") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].selected=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+      }
+      else if (data_string == "NASA/GRACE") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].selected=true;
+        x.options[10].selected=true;
+      }
+      // for all other models
+      else {
+        x.options[0].selected=true;
+        x.options[1].selected=true;
+        x.options[2].selected=true;
+        x.options[3].selected=true;
+        x.options[4].selected=true;
+        x.options[5].selected=true;
+        x.options[6].selected=true;
+        x.options[7].selected=true;
+        x.options[8].selected=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
       }
 
-      // form variable string
+ // form variable string
       select_var();
     }
 
@@ -388,16 +497,26 @@
 <optgroup label="Observation">
 <option>NASA/MODIS</option>
 <option>NASA/AMSRE</option>
-<!-- <option>NASA/AIRS</option> -->
-<!-- <option>NASA/MLS</option> -->
 <option>NASA/TRMM</option>
+<option>NASA/GPCP</option>
+<option>NASA/QuikSCAT</option>
+<option>NASA/AVISO</option>
+<option>NASA/GRACE</option>
 </optgroup>
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
-<option>Precipitation</option>
+<option>Precipitation Flux</option>
 <option>Total Cloud Fraction</option>
 <option>Surface Temperature</option>
+<option>Sea Surface Temperature</option>
+<option>Eastward Near-Surface Wind</option>
+<option>Northward Near-Surface Wind</option>
+<option>Near-Surface Wind Speed</option>
+<option>Sea Surface Height</option>
+<option>Leaf Area Index</option>
+<option>Equivalent Water Height Over Land</option>
+<option>Equivalent Water Height Over Ocean</option>
 </select></td>
 
 </tr>
