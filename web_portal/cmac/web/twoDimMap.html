@@ -233,6 +233,12 @@
         x.options[9].selected=true;
         x.options[10].selected=true;
       }
+      // for all other models
+      else {
+        x.options[0].selected=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+      }
 
       // form variable string
       select_var();
