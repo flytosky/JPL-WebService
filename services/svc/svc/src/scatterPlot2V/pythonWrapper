@@ -165,7 +165,7 @@ class SUBSET_REGION():
   def getFileName(self, center, model, varName):
     fn0 = '%s/%s/%s/%s'%(self.dataDir, center, model, varName)
     #files = glob.glob('%s_*.nc'%fn0)
-    print fn0
+    #print fn0
     files = glob.glob('%s*.des'%fn0)
     files.sort()
     return files[-1]
@@ -292,11 +292,11 @@ class SUBSET_REGION():
   def scatterPlot(self, data1, data2):
     a1 = data1
     a2 = data2
-    print 'a1.shape: ',
-    print a1.shape
+    #print 'a1.shape: ',
+    #print a1.shape
 
-    print 'a2.shape: ',
-    print a2.shape
+    #print 'a2.shape: ',
+    #print a2.shape
 
     if len(a1.shape)==3:
       a1 = a1[0, :,:]
