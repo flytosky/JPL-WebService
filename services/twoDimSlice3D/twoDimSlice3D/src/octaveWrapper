@@ -9,7 +9,7 @@ if narg < 2
   error('Insufficient argument, need a model and a variable name!'); 
 end
 modelName = lower(arg_list{1});
-varName = lower(arg_list{2});
+varName = arg_list{2};
 
 startTime = struct('year', 1980, 'month', 1);
 stopTime = struct('year', 2004, 'month', 12);
@@ -65,7 +65,7 @@ dataFiles = dir([dataDir '/' varName '_*.nc']);
 nDataFiles = length(dataFiles);
 
 if nDataFiles < 1
-  error(['Variable: ' varName ' for Model: ' modelName ' not found!']); 
+  error(['Variable: ' varName ' for data source: ' modelName ' not found!']); 
 end
 
 dataFileFullPath = [];
