@@ -9,7 +9,7 @@ if narg < 2
   error('Insufficient argument, need a model and a variable name!'); 
 end
 modelName = lower(arg_list{1});
-varName = lower(arg_list{2});
+varName = arg_list{2};
 
 printf("%s", arg_list{1})
 printf("%s", arg_list{2})
@@ -53,7 +53,7 @@ dataFiles = dir([dataDir '/' varName '_*.nc']);
 nDataFiles = length(dataFiles);
 
 if nDataFiles < 1
-  error(['Variable: ' varName ' for Model: ' modelName ' not found!']); 
+  error(['Variable: ' varName ' for data source: ' modelName ' not found!']); 
 end
 
 dataFileFullPath = [];
