@@ -77,19 +77,15 @@ Apply mathematical operations (e.g. apply algebraic, logical, and calculus opera
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
+</p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/twoDimTimeSeries.html">2D Variable Time Series Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/twoDimSlice3D.html">2D Slice of 3D Variable Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
+<a href="/cmac/web/twoDimSlice3D.html">3D Variable 2D Slice Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
@@ -97,7 +93,11 @@ Apply mathematical operations (e.g. apply algebraic, logical, and calculus opera
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/threeDimVarAverage.html">3D Variable Average Profile Service</a>.
+<a href="/cmac/web/threeDimVarVertical.html">3D Variable Average Vertical Profile Service</a>.
+</p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
 </p>
 </li>
 <li>
