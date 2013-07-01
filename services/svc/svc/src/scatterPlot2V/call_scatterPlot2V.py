@@ -71,6 +71,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
               print '***** line: ', line
               image_filename = line[l1:]
 
+          image_filename = os.path.basename(image_filename)
           print 'image_filename: ', image_filename
           return (stdout_value, image_filename)
         # 
@@ -82,7 +83,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
 if __name__ == '__main__':
     c1 = call_scatterPlot2V(\
 'ukmo_hadgem2-a', 'ts', 'ukmo_hadgem2-a', 'clt', '199001', '199512', '0', '100', '-29', '29', \
-'/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+'./')
 
     mesg = c1.displayScatterPlot2V()
     print 'mesg: ', mesg
