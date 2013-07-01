@@ -10,20 +10,23 @@
   <script type="text/javascript">
 
     var Response = null;
-    var variable = "";
+    var variable1 = "";
+    var variable2 = "";
 
 
     // called on load or reload
     window.onload = function() {
-      select_data();
-      select_var();
+      select_data1();
+      select_var1();
+      select_data2();
+      select_var2();
     }
 
 
-    // enable all vars in dropdown menu
-    function reset_vars()
+    // enable all vars1 in dropdown menu
+    function reset_vars1()
     {
-      var x=document.getElementById("var");
+      var x=document.getElementById("var1");
 
       x.options[0].disabled=false;
       x.options[1].disabled=false;
@@ -31,35 +34,105 @@
     }
 
 
-    // form variable string based on "var" dropdown selection
-    function select_var()
+    // enable all vars2 in dropdown menu
+    function reset_vars2()
     {
-      var var_string = $("#var").val();
-      // alert("var_string: " + var_string)
+      var x=document.getElementById("var2");
 
-      if (var_string == "Total Cloud Fraction")
-        variable = "clt";
-      else if (var_string == "Air Temperature")
-        variable = "ta";
-      else if (var_string == "Surface Temperature")
-        variable = "ts";
-      else if (var_string == "Specific Humidity")
-        variable = "hus";
-      else if (var_string == "Precipitation")
-        variable = "pr";
-
-      // alert("variable: " + variable)
+      x.options[0].disabled=false;
+      x.options[1].disabled=false;
+      x.options[2].disabled=false;
     }
 
 
-    // set up "var" dropdown based status of "data" dropdown
-    function select_data()
+    // form variable1 string based on "var" dropdown selection
+    function select_var1()
     {
-      var data_string = $("#data").val();
-      var x=document.getElementById("var");
+      var var_string = $("#var1").val();
+      // alert("var_string: " + var_string)
+
+      if (var_string == "Total Cloud Fraction")
+        variable1 = "clt";
+      else if (var_string == "Air Temperature")
+        variable1 = "ta";
+      else if (var_string == "Surface Temperature")
+        variable1 = "ts";
+      else if (var_string == "Sea Surface Temperature")
+        variable1 = "tos";
+      else if (var_string == "Specific Humidity")
+        variable1 = "hus";
+      else if (var_string == "Precipitation Flux")
+        variable1 = "pr";
+      else if (var_string == "Cloud Ice Water Content")
+        variable1 = "cli";
+      else if (var_string == "Eastward Near-Surface Wind")
+        variable1 = "uas";
+      else if (var_string == "Northward Near-Surface Wind")
+        variable1 = "vas";
+      else if (var_string == "Near-Surface Wind Speed")
+        variable1 = "sfcWind";
+      else if (var_string == "Sea Surface Height")
+        variable1 = "zos";
+      else if (var_string == "Leaf Area Index")
+        variable1 = "lai";
+      else if (var_string == "Equivalent Water Height Over Land")
+        variable1 = "zl";
+      else if (var_string == "Equivalent Water Height Over Ocean")
+        variable1 = "zo";
+
+
+      // alert("variable1: " + variable1)
+    }
+
+
+    // form variable2 string based on "var" dropdown selection
+    function select_var2()
+    {
+      var var_string = $("#var2").val();
+      // alert("var_string: " + var_string)
+
+      if (var_string == "Total Cloud Fraction")
+        variable2 = "clt";
+      else if (var_string == "Air Temperature")
+        variable2 = "ta";
+      else if (var_string == "Surface Temperature")
+        variable2 = "ts";
+      else if (var_string == "Sea Surface Temperature")
+        variable2 = "tos";
+      else if (var_string == "Specific Humidity")
+        variable2 = "hus";
+      else if (var_string == "Precipitation Flux")
+        variable2 = "pr";
+      else if (var_string == "Cloud Ice Water Content")
+        variable2 = "cli";
+      else if (var_string == "Eastward Near-Surface Wind")
+        variable2 = "uas";
+      else if (var_string == "Northward Near-Surface Wind")
+        variable2 = "vas";
+      else if (var_string == "Near-Surface Wind Speed")
+        variable2 = "sfcWind";
+      else if (var_string == "Sea Surface Height")
+        variable2 = "zos";
+      else if (var_string == "Leaf Area Index")
+        variable2 = "lai";
+      else if (var_string == "Equivalent Water Height Over Land")
+        variable2 = "zl";
+      else if (var_string == "Equivalent Water Height Over Ocean")
+        variable2 = "zo";
+
+
+      // alert("variable2: " + variable2)
+    }
+
+
+    // set up "var1" dropdown based status of "data1" dropdown
+    function select_data1()
+    {
+      var data_string = $("#data1").val();
+      var x=document.getElementById("var1");
 
       // enable all options in "var" dropdown first
-      reset_vars();
+      reset_vars1();
 
       // alert(data_string);
 
@@ -81,7 +154,40 @@
       }
 
       // form variable string
-      select_var();
+      select_var1();
+    }
+
+
+    // set up "var2" dropdown based status of "data2" dropdown
+    function select_data2()
+    {
+      var data_string = $("#data2").val();
+      var x=document.getElementById("var2");
+
+      // enable all options in "var2" dropdown first
+      reset_vars2();
+
+      // alert(data_string);
+
+      // disable corresponding "var" options
+      if (data_string == "NASA/AMSRE") {
+        x.options[0].disabled=true;
+        x.options[1].selected=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/MODIS") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+      }
+      else if (data_string == "NASA/TRMM") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].selected=true;
+      }
+
+      // form variable string
+      select_var2();
     }
 
 
@@ -93,30 +199,47 @@
       });
 
 
-      $("#timeSeries2D").click(function(event) {
-        // alert('****** inside timeSeries2D()!');
+      $("#scatterPlot2V").click(function(event) {
+        // alert('****** inside scatterPlot2V()!');
         Response = null;
 
         $("#Response").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&model2=ukmo_hadgem2-a&var2=clt&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
-        var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
+        var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
         // alert("url: " + url);
 
-        var d1 = $("#data").val();
+        var d1 = $("#data1").val();
         var model1 = d1.replace("/", "_");
+        model1 = model1.toLowerCase();
 
         var arglist = "";
-        arglist = arglist.concat("model=");
+        arglist = arglist.concat("model1=");
         arglist = arglist.concat(model1);
 
         // alert("arglist: " + arglist);
 
-        var v1 = $("#var").val();
-        arglist = arglist.concat("&var=");
-        arglist = arglist.concat(variable);
+        var v1 = $("#var1").val();
+        arglist = arglist.concat("&var1=");
+        arglist = arglist.concat(variable1);
+
+        // alert("arglist: " + arglist);
+
+        var d2 = $("#data2").val();
+        var model2 = d2.replace("/", "_");
+        model2 = model2.toLowerCase();
+
+        arglist = arglist.concat("&model2=");
+        arglist = arglist.concat(model2);
+
+        // alert("arglist: " + arglist);
+
+        var v2 = $("#var2").val();
+        arglist = arglist.concat("&var2=");
+        arglist = arglist.concat(variable2);
 
         // alert("arglist: " + arglist);
 
@@ -156,7 +279,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -215,13 +338,14 @@
 
 <tr>
 
-<td>data source 1:</td><td><select name="data", id="data" onchange="select_data()">
-<optgroup label="Model">
+<td>data source 1:</td><td><select name="data1", id="data1" onchange="select_data1()">
+<optgroup label="Model1">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
 <option>GISS/E2-R</option>
 <option>NCAR/CAM5</option>
 <option>UKMO/HadGEM2-ES</option>
+<option>UKMO/HadGEM2-A</option>
 <!-- <option>NASA/obs4MIPs</option>  -->
 </optgroup>
 <optgroup label="Observation">
@@ -233,24 +357,25 @@
 </optgroup>
 </select></td>
 
-<td>variable name 1:</td><td><select name="var", id="var" onchange="select_var()">
+<td>variable name 1:</td><td><select name="var1", id="var1" onchange="select_var1()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
 <!-- <option>Specific Humidity</option> -->
-<option>Precipitation</option> </select>
+<option>Precipitation Flux</option> </select>
 
 level1 (hPa) <input id="level1" value="200" alt="level1"/></td>
 </tr>
 
 
-<td>data source 2:</td><td><select name="data", id="data" onchange="select_data()">
-<optgroup label="Model">
+<td>data source 2:</td><td><select name="data2", id="data2" onchange="select_data2()">
+<optgroup label="Model2">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/CM3</option>
 <option>GISS/E2-R</option>
 <option>NCAR/CAM5</option>
 <option>UKMO/HadGEM2-ES</option>
+<option>UKMO/HadGEM2-A</option>
 <!-- <option>NASA/obs4MIPs</option>  -->
 </optgroup>
 <optgroup label="Observation">
@@ -262,12 +387,12 @@ level1 (hPa) <input id="level1" value="200" alt="level1"/></td>
 </optgroup>
 </select></td>
 
-<td>variable name 2:</td><td><select name="var", id="var" onchange="select_var()">
+<td>variable name 2:</td><td><select name="var2", id="var2" onchange="select_var2()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
 <!-- <option>Specific Humidity</option> -->
-<option>Precipitation</option> </select>
+<option>Precipitation Flux</option> </select>
 
 level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 </tr>
@@ -290,7 +415,7 @@ level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 </tr>
 
 <tr>
-<td colspan="4" align="center"><input id="timeSeries2D" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="4" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 </tr>
 
 <tr>
