@@ -12,6 +12,7 @@ from svc.src.timeSeries2D import call_timeSeries2D
 from svc.src.twoDimZonalMean import call_twoDimZonalMean
 from svc.src.threeDimZonalMean import call_threeDimZonalMean
 from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
+from svc.src.scatterPlot2V import call_scatterPlot2V
 
 from flask import current_app
 from functools import update_wrapper
