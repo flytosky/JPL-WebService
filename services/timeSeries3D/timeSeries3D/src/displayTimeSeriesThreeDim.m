@@ -86,6 +86,7 @@ for fileI = 1:nFiles
     v(abs(v - fd{varName}.missing_value) < 1) = NaN;
   end
   v_units = fd{varName}.units;
+  v_units = adjustUnits(v_units, varName);
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
