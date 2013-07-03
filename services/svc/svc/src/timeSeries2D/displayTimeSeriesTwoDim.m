@@ -87,6 +87,7 @@ for fileI = 1:nFiles
   disp(lonIdx);
   %monthlyData(monthIdx1:monthIdx2) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx),2),3);
   monthlyData(monthIdx1:monthIdx2) = averageOverSphere(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx), lat);
+  ncclose(fd);
 end
 
 yearVec = startTime.year:stopTime.year;
