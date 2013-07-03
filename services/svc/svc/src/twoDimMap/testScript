@@ -1,0 +1,2 @@
+#./octaveWrapper ukmo_hadgem2-es clt 198501 199512 '70 105' '0 30' '5,6,7,8' '/tmp/'
+./octaveWrapper nasa_quikscat sfcWind 200501 200812 '70 105' '0 30' '5,6,7,8' '/tmp/'
