@@ -81,7 +81,7 @@ for fileI = 1:nFiles
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
     lat = lat(latIdx);
-    pIdx = find(plev/100 > plevRange(2) & plev/100 <= plevRange(1));
+    pIdx = find(plev > plevRange(2) & plev <= plevRange(1));
     nP = length(pIdx);
     plev = plev(pIdx)/100;
 
@@ -116,6 +116,7 @@ for fileI = 1:nFiles
   disp(size(v));
   disp(latIdx);
   monthlyData(monthIdx1:monthIdx2, :, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,pIdx,latIdx,:),4);
+  ncclose(fd);
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
