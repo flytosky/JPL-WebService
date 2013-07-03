@@ -74,8 +74,14 @@ for fileI = 1:nFiles
     if strcmp(plevVarName, 'plev')
       plev = fd{'plev'}(:);
     else
-      p0 = 1.013e5; % 1atm = 1.013e5 Pa
-      plev = fd{'lev'}(:)*p0;
+      switch lower(fd{'lev'}.units)
+        case 'm',
+          plev = altitude2Pressure(fd{'lev'}(:)/1000)*100; % m -> Km -> hPa -> Pa
+      
+        otherwise,
+          p0 = 1.013e5; % 1atm = 1.013e5 Pa
+          plev = fd{'lev'}(:)*p0;
+      end
     end
 
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
@@ -93,6 +99,7 @@ for fileI = 1:nFiles
     v(abs(v - fd{varName}.missing_value) < 1) = NaN; 
   end
   v_units = fd{varName}.units;
+  v_units = adjustUnits(v_units, varName);
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
