@@ -76,8 +76,14 @@ for fileI = 1:nFiles
     if strcmp(plevVarName, 'plev')
       plev = fd{'plev'}(:);
     else
-      p0 = 1.013e5; % 1atm = 1.013e5 Pa
-      plev = fd{'lev'}(:)*p0;
+      switch lower(fd{'lev'}.units)
+        case 'm',
+          plev = altitude2Pressure(fd{'lev'}(:)/1000)*100; % m -> Km -> hPa -> Pa
+      
+        otherwise,
+          p0 = 1.013e5; % 1atm = 1.013e5 Pa
+          plev = fd{'lev'}(:)*p0;
+      end
     end
 
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
@@ -112,6 +118,7 @@ for fileI = 1:nFiles
     v(abs(v - fd{varName}.missing_value) < 1) = NaN;
   end
   v_units = fd{varName}.units;
+  v_units = adjustUnits(v_units, varName);
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
@@ -147,6 +154,7 @@ end
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
+keyboard;
 h = displayTwoDimData(lon, lat, var_clim');
 title(h, [varName ', at ' num2str(round(thisPlev/100)) 'hPa, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 print(gcf, figFile, '-djpeg');
