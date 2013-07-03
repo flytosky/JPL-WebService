@@ -58,6 +58,9 @@ for fileI = 1:nFiles
   end
 
   v = fd{varName}(:);
+  if ~isempty(fd{varName}.missing_value)
+    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  end
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
@@ -82,6 +85,7 @@ for fileI = 1:nFiles
   disp(size(v));
   disp(latIdx);
   monthlyData(monthIdx1:monthIdx2, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,:),3);
+  ncclose(fd);
 end
 
 % We now determine the relevant months within a year using monthIdx and start month

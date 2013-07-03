@@ -68,7 +68,8 @@ if __name__ == '__main__':
     ### c1 = call_twoDimZonalMean('ukmo_hadgem2-a', 'ts', '199001', '199512', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
     ### c1 = call_twoDimZonalMean('cccma_canam4', 'ts', '199001', '199512', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
     ### c1 = call_twoDimZonalMean('ncc_noresm', 'ts', '199001', '199512', '-29', '29', '4,5,6', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
-    c1 = call_twoDimZonalMean('ukmo_hadgem2-es', 'ts', '199001', '199512', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
+#    c1 = call_twoDimZonalMean('ukmo_hadgem2-es', 'ts', '199001', '199512', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
+    c1 = call_twoDimZonalMean('nasa_quikscat', 'sfcWind', '200301', '200912', '-29', '29', '4,5,6,10,12', '/tmp/');
 
     mesg = c1.displayTwoDimZonalMean()
     print 'mesg: ', mesg
