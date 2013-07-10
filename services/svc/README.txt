@@ -23,3 +23,13 @@ python run.py
 To run in production mode
 --------------------------
 gunicorn -w2 -b 0.0.0.0:8888 -k tornado --daemon -p svc.pid svc:app
+
+To deploy, first edit two files:
+host.cfg
+settings.cfg
+and set the hostname and port right.
+
+Then go to 
+../../web_portal/cmac/web
+and edit all html files
+to set the port right.
