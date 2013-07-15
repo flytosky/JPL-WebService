@@ -1,4 +1,4 @@
-function status = displayVerticalProfile(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx)
+function status = displayVerticalProfile(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, outputFile)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime], longitude and latitude ranges
@@ -12,6 +12,7 @@ function status = displayVerticalProfile(dataFile, figFile, varName, startTime, 
 %   lonRnage	-- an optional argument to specify box boundary along longitude
 %   latRnage	-- an optional argument to specify box boundary along latitude
 %   monthIdx	-- an optional argument to specify months within a year, which is useful for computing climatology for a specific season.
+%   outputFile	-- an optional argument to specify data file name for outputing data used in plot
 %
 % Output:
 %   status	-- a status flag, 0 = okay, -1 something is not right
@@ -21,7 +22,12 @@ function status = displayVerticalProfile(dataFile, figFile, varName, startTime, 
 % Revision history:
 %   2012/12/10:	Initial version, cz
 %   2012/02/06: Added more arguments to facilitate a customized regional and seasonal climatology
+%   2013/06/14: Added capability for outputing plotting data
 %
+
+if nargin < 9
+  outputFile = [];
+end
 
 if nargin < 8
   monthIdx = 1:12;
@@ -141,6 +147,7 @@ for fileI = 1:nFiles
   disp(size(v));
   disp(latIdx);
   monthlyData(monthIdx1:monthIdx2, :) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,:,latIdx,lonIdx),3),4);
+  long_name = fd{varName}.long_name;
   ncclose(fd);
 end
 
@@ -160,3 +167,19 @@ ylabel('Pressure level (hPa)');
 xlim(max(var_clim)*[1e-4, 1.1]);
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' vertical profile climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
+
+data.dimNames = {'plev'};
+data.nDim = 1;
+data.dimSize = [length(plev)];
+data.dimVars = {plev/100};
+data.var = var_clim;
+data.varName = varName;
+data.dimVarUnits = {'hPa'};
+data.varUnits = v_units;
+data.varLongName = long_name;
+
+status = 0;
+
+if ~isempty(outputFile);
+  status = storeDataInNetCDF(data, outputFile);
+end
