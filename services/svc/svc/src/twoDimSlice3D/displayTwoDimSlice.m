@@ -161,7 +161,11 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 h = displayTwoDimData(lon, lat, var_clim');
-title(h, [varName ', at ' num2str(round(thisPlev/100)) 'hPa, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+if varName~='ot' | varName~='os'
+	title(h, [varName ', at ' num2str(round(thisPlev/100)) 'hPa, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+else
+	title(h, [varName ', at ' num2str(round(thisPlev)) 'dbar, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+end
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'latitude', 'longitude'};
