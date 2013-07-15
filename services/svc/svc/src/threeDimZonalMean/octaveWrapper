@@ -86,9 +86,13 @@ for ii = 1:nDataFiles
 end
 
 figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.jpeg'];
+dataFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.nc'];
 figFilePath = [output_dir '/' figFile];
+dataFilePath = [output_dir '/' dataFile];
 printf("figFile: %s\n", figFile)
 printf("figFilePath: %s\n", figFilePath)
-displayThreeDimZonalMean(dataFileFullPath, figFilePath, varName, startTime, stopTime, latRange, plevRange, monthIdx);
+printf("dataFile: %s\n", dataFile)
+printf("dataFilePath: %s\n", dataFilePath)
+displayThreeDimZonalMean(dataFileFullPath, figFilePath, varName, startTime, stopTime, latRange, plevRange, monthIdx, dataFilePath);
 title([varName ' zonal mean map for ' modelName ', ' seasonStr(monthIdx)]);
 

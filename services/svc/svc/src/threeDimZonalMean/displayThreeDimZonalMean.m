@@ -1,4 +1,4 @@
-function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime, stopTime, latRange, plevRange, monthIdx)
+function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime, stopTime, latRange, plevRange, monthIdx, outputFile)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime], longitude and latitude ranges
@@ -12,6 +12,7 @@ function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime
 %   latRnage	-- an optional argument to specify box boundary along latitude
 %   plevRnage	-- an optional argument to specify pressule levels for alitutde range
 %   monthIdx	-- an optional argument to specify months within a year, which is useful for computing climatology for a specific season.
+%   outputFile	-- an optional argument to specify output file for storing the plotting data in netcdf format
 %
 % Output:
 %   status	-- a status flag, 0 = okay, -1 something is not right
@@ -20,7 +21,13 @@ function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime
 %
 % Revision history:
 %   2012/03/25:	Initial version, cz
+%   2013/06/14:	add capability of outputing data file
 %
+status = -1;
+
+if nargin < 9
+  outputFile = [];
+end
 
 if nargin < 8
   monthIdx = 1:12;
@@ -123,6 +130,7 @@ for fileI = 1:nFiles
   disp(size(v));
   disp(latIdx);
   monthlyData(monthIdx1:monthIdx2, :, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,pIdx,latIdx,:),4);
+  long_name = fd{varName}.long_name;
   ncclose(fd);
 end
 
@@ -148,3 +156,19 @@ ylabel('Pressure level (hPa)');
 colorbar('southoutside');
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
+
+data.dimNames = {'plev', 'latitude'};
+data.nDim = 2;
+data.dimSize = [length(plev), length(lat)];
+data.dimVars = {plev, lat};
+data.var = var_clim;
+data.varName = varName;
+data.dimVarUnits = {'hPa', 'degree_north'};
+data.varUnits = v_units;
+data.varLongName = long_name;
+
+status = 0;
+
+if ~isempty(outputFile);
+  status = storeDataInNetCDF(data, outputFile);
+end
