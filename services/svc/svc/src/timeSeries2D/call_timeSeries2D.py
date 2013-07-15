@@ -69,7 +69,8 @@ if __name__ == '__main__':
 #    c1 = call_timeSeries2D('ukmo_hadgem2-a', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
     #c1 = call_timeSeries2D('cccma_canam4', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
 #    c1 = call_timeSeries2D('ncc_noresm', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
-    c1 = call_timeSeries2D('nasa_amsre', 'tos', '200001', '200912', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
+#    c1 = call_timeSeries2D('nasa_amsre', 'tos', '200001', '200912', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
+    c1 = call_timeSeries2D('nasa_quikscat', 'sfcWind', '200001', '200912', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
 
     mesg = c1.display_timeSeries2D()
     print 'mesg: ', mesg

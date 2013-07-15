@@ -1,4 +1,4 @@
-function status = displayTimeSeriesTwoDim(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange)
+function status = displayTimeSeriesTwoDim(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, outputFile)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime]
@@ -21,6 +21,12 @@ function status = displayTimeSeriesTwoDim(dataFile, figFile, varName, startTime,
 %   2012/12/10:	Initial version, cz
 %   2012/02/06: Added more arguments to facilitate a customized regional and seasonal climatology
 %
+status = -1;
+
+if nargin < 8
+  outputFile = [];
+end
+
 if nargin < 7
   latRange = [-90, 90];
 end
@@ -28,8 +34,6 @@ end
 if nargin < 6
   lonRange = [0, 360];
 end 
-
-status = -1;
 
 nMonths = numberOfMonths(startTime, stopTime);
 
@@ -87,6 +91,7 @@ for fileI = 1:nFiles
   disp(lonIdx);
   %monthlyData(monthIdx1:monthIdx2) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx),2),3);
   monthlyData(monthIdx1:monthIdx2) = averageOverSphere(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx), lat);
+  long_name = fd{varName}.long_name;
   ncclose(fd);
 end
 
@@ -110,3 +115,19 @@ grid on;
 ylabel(['Mean (' v_units ')']);
 title([varName ', average value over lon(' num2str(lonRange(1)) ',' num2str(lonRange(2)) ')deg, lat(' num2str(latRange(1)) ',' num2str(latRange(2)) ')deg, (' v_units ')']);
 print(gcf, figFile, '-djpeg');
+
+data.dimNames = {'monthIdx'};
+data.nDim = 1;
+data.dimSize = [nMonths]
+data.dimVars = {1:nMonths};
+data.var = monthlyData;
+data.varName = varName;
+data.dimVarUnits = {'month'};
+data.varUnits = v_units;
+data.varLongName = long_name;
+
+status = 0;
+
+if ~isempty(outputFile);
+  status = storeDataInNetCDF(data, outputFile);
+end

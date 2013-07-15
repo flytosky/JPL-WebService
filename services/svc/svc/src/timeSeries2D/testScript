@@ -1,1 +1,1 @@
-./octaveWrapper ukmo_hadgem2-a clt 199001 199512 '0 100' '0 20' ./tmp/
+./octaveWrapper ukmo_hadgem2-a clt 199001 199512 '0 100' '0 20' /tmp/

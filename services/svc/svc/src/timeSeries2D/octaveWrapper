@@ -75,7 +75,11 @@ lonStr = ['lon' num2str(lonRange(1)) '_' num2str(lonRange(2)) 'deg'];
 latStr = ['lat' num2str(latRange(1)) '_' num2str(latRange(2)) 'deg'];
 
 figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.jpeg'];
+dataFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.nc'];
 figFilePath = [output_dir '/' figFile];
+dataFilePath = [output_dir '/' dataFile];
 printf("figFile: %s\n", figFile)
 printf("figFilePath: %s\n", figFilePath)
-displayTimeSeriesTwoDim(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange);
+printf("dataFile: %s\n", dataFile)
+printf("dataFilePath: %s\n", dataFilePath)
+displayTimeSeriesTwoDim(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, dataFilePath);
