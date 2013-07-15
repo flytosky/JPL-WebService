@@ -9,12 +9,17 @@ cr = {
 #                              1  2   3  4
 'import_':              1,   # 0  1   1  0
 # parameters_
+# def_change_labels:
 # class_SUBSET_REGION():
   # def_getFileName
+  # def_chechTime
   # def_subsetting():
   # def_loadFile
   # def_scatterPlot
   # def_diffPlot
+  # def_diffPlot2
+  # def_diffPlot3
+  # def_diffPlot4
 'init_class':           1,   # 1  1
 'command_arg':          1,   # 1  1
 'plot__':               1,   # 1  1
@@ -37,6 +42,7 @@ if cr['import_']       == 1:
 
   import numpy as np      
   from netCDF4 import Dataset
+  import netCDF4 as nC4
 
   import matplotlib                                                              
   matplotlib.use('Agg')  
@@ -63,12 +69,49 @@ num2month = {
 12: 'DEC',
 }
 
+# def_change_labels(ax):
+def change_labels(ax):
+  x1 = Mat.getp(ax, 'xticklabels')
+  #x1 = Mat.getp(ax.xaxis, 'ticklabels') # not working
+  x1New = []
+  for i in range(len(x1)):
+    t1 = Mat.getp(x1[i], 'text')
+    print t1
+    if not t1: 
+      t2 = ''
+    elif t1[0]==u'\u2212':
+      t2 = str(t1[1:]) + 'W'
+    elif t1[0]==u'0':
+      t2 = str(t1)
+    else:
+      t2 = str(t1) + 'E'
+    x1New.append(t2)
+  #
+  x1 = Mat.getp(ax, 'yticklabels')
+
+  y1New = []
+  for i in range(len(x1)):
+    t1 = Mat.getp(x1[i], 'text')
+    if not t1: 
+      t2 = ''
+    elif t1[0]==u'\u2212':
+      t2 = str(t1[1:]) + 'S'
+    elif t1[0]==u'0':
+      t2 = str(t1)
+    else:
+      t2 = str(t1) + 'N'
+    y1New.append(t2)
+  Mat.setp(ax, xticklabels=x1New, yticklabels=y1New)
+  return x1New, y1New
+
+
 # class_SUBSET_REGION():
 class SUBSET_REGION():
   #== def___init__
   def __init__(self):
     self.ferretCmd = '/home/bytang/install/bin/ferret' 
     self.ferretMem = 100
+    self.isDiffPlot = 0
 
     #self.dataDir = '/home/zhai/cmip5' 
     #self.dataDir = '/home/bytang/cmip5' # my des dir
@@ -110,8 +153,9 @@ class SUBSET_REGION():
     self.varName2='clt'
     self.nDim = 3
 
-    self.timeB = ''
-    self.timeE = ''
+    self.dayS = 15
+    self.dayE = 15
+
     self.outDir = '.'
   
     # the resolution of subsampling
@@ -168,10 +212,12 @@ class SUBSET_REGION():
     fn0 = '%s/%s/%s/%s'%(self.dataDir, center, model, varName)
     #files = glob.glob('%s_*.nc'%fn0)
     #print fn0
-    files1 = glob.glob('%s*.des'%fn0)
-    if len(files1)>0:
-      files1.sort()
-      return files1[0]
+
+    if 0:
+      files1 = glob.glob('%s*.des'%fn0)
+      if len(files1)>0:
+        files1.sort()
+        return files1[0]
 
     files1 = glob.glob('%s*.nc'%fn0)
     if len(files1)>0:
@@ -180,13 +226,49 @@ class SUBSET_REGION():
   
     return None
 
+  # def_getUnits(self):
+  def getUnits(self):
+    nc1 = Dataset(self.inFile1, 'r')
+    data = nc1.variables[self.varName1]
+    self.units1 = data.units
+    nc1.close()
+
+    nc1 = Dataset(self.inFile2, 'r')
+    data = nc1.variables[self.varName2]
+    self.units2 = data.units
+    nc1.close()
+
+  #def_chechTime
   def chechTime(self, ncFile, varName):
     # open file
     nc1 = Dataset(ncFile, 'r')
+
     # read time
-    # correct B/E times
     data = nc1.variables[varName]
     dims = data.dimensions
+    timeName = dims[0]
+    time1 = nc1.variables[timeName]
+
+    tS = nC4.num2date(time1[0], time1.units)
+    tE = nC4.num2date(time1[-1], time1.units)
+
+    tNumS = nC4.date2num(datetime.datetime(self.yearS, self.monthS, self.dayS, 0,0,0), time1.units)
+    tNumE = nC4.date2num(datetime.datetime(self.yearE, self.monthE, self.dayE, 0,0,0), time1.units)
+
+    if tNumS<time1[0]:
+      self.yearS = tS.year
+      self.monthS = tS.month
+      self.dayS = tS.day
+      print 'start time changed to: %d-%2d-%2d'%(self.yearS, self.monthS, self.dayS)
+
+
+    if tNumE>time1[-1]:
+      self.yearE = tE.year
+      self.monthE = tE.month
+      self.dayE = tE.day
+      print '  end time changed to: %d-%2d-%2d'%(self.yearE, self.monthE, self.dayE)
+
+    nc1.close()
 
   # def_subsetting():
   def subsetting(self, ncFile1, varName1, ncFile2=None, varName2='DATA1', varNameOut='DATA1', interp='', dim=4):
@@ -372,7 +454,6 @@ class SUBSET_REGION():
       max1 = float(aaa1.max())
       max2 = float(aaa2.max())
 
-    figFile = '%s/scatter.png'%self.outDir
 
     Mat.clf()
     Mat.scatter(aaa1, aaa2)
@@ -383,12 +464,136 @@ class SUBSET_REGION():
       Mat.plot([min1, max1], [min1, max1], 'r-')
       Mat.hold('off')
 
-    Mat.xlabel('%s_%s : %s'%(a.center1, a.model1, a.varName1))
-    Mat.ylabel('%s_%s : %s'%(a.center2, a.model2, a.varName2))
-    #Mat.title('GRACE ocean data')
+    Mat.xlabel('%s_%s:%s (%s)'%(a.center1, a.model1, a.varName1, a.units1))
+    Mat.ylabel('%s_%s:%s (%s)'%(a.center2, a.model2, a.varName2, a.units2))
+
+    # corr
+    corr1 = np.corrcoef(aaa1,aaa2) 
+    Mat.title('corr coef = %.2f'%(corr1[0,1]))
+
+    figFile = '%s/scatter.png'%self.outDir
     Mat.savefig(figFile, dpi=100)
 
     print 'figFile: %s'%figFile
+
+  # def_diffPlot4
+  def diffPlot4(self, tempFile1, tempFile2):
+    # load data
+    nc1 = Dataset(tempFile1, 'r')
+    data1a = nc1.variables['DATA1']
+    dims1 = data1a.dimensions
+    data1 = data1a[:]
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+    nc1.close()
+
+    nc2 = Dataset(tempFile2, 'r')
+    data2a = nc2.variables['DATA2']
+    dims2 = data2a.dimensions
+    data2 = data2a[:]
+    lon2 = nc2.variables[dims2[-1]][:]
+    lat2 = nc2.variables[dims2[-2]][:]
+    nc2.close()
+
+    # min/max
+    if self.varName1==self.varName2:
+      min1 = min2 = min(data1.min(), data2.min())
+      max1 = max2 = max(data1.max(), data2.max())
+    else:
+      min1 = data1.min()
+      max1 = data1.max()
+      min2 = data2.min()
+      max2 = data2.max()
+
+    # plot 1
+    fig1 = Mat.figure(figsize=(10,16))
+    Mat.clf()
+
+    Mat.subplot(3,1,1)
+    fig1.tight_layout()
+    m1 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
+    temp1 = m1.pcolor(lon1, lat1, data1, vmin=min1, vmax=max1)
+    temp1 = m1.drawcoastlines()
+    #change_labels(Mat.gca())
+    Mat.colorbar()
+    Mat.title('%s_%s:%s (%s)'%(a.center1, a.model1, a.varName1, a.units1))
+
+    # plot 2
+    Mat.subplot(3,1,2)
+    m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
+    temp1 = m2.pcolor(lon2, lat2, data2, vmin=min2, vmax=max2)
+    temp1 = m2.drawcoastlines()
+    #change_labels(Mat.gca())
+    Mat.colorbar()
+    Mat.title('%s_%s:%s (%s)'%(a.center2, a.model2, a.varName2, a.units2))
+
+    # plot diff
+    if self.varName1==self.varName2:
+      Mat.subplot(3,1,3)
+      m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
+      temp1 = m2.pcolor(lon2, lat2, data2-data1 )
+      temp1 = m2.drawcoastlines()
+      #change_labels(Mat.gca())
+      Mat.colorbar()
+      Mat.title('the difference: (%s_%s:%s) - (%s_%s:%s)'\
+        %(a.center2, a.model2, a.varName2, a.center1, a.model1, a.varName1))
+
+    Mat.subplots_adjust(hspace=0.15)
+    figFile = '%s/diffPlot.png'%self.outDir
+    Mat.savefig(figFile, dpi=100)
+
+    print 'figFile: %s'%figFile
+
+  # def_diffPlot3
+  def diffPlot3(self, tempFile1, tempFile2):
+
+    script1 = '''
+  SET MEMORY/SIZE=%d  
+  show memory
+  cancel mode logo
+
+  ! 3
+  use "%s"
+  use "%s"
+  !show data
+
+  ! 3a
+  set view ul
+  shade data1[d=1]
+  go land
+
+  ! 3b
+  set view ur
+  shade data2[d=2]
+  go land
+
+  ! 5
+  set view ll
+  shade data2[d=2] - data1[d=1]
+  go land
+
+  ! 6
+  frame/file="%s/diffPlot.gif"
+
+  exit
+  '''%(
+  self.ferretMem, 
+  # 3
+  tempFile1, 
+  tempFile2, 
+  # 6
+  self.outDir,
+  )
+
+    tmpFileJnl = tempfile.mkstemp(suffix='.jnl', dir=self.outDir)
+    open(tmpFileJnl[1], 'w').write(script1)
+
+    temp1 = '%s -gif -script %s' %(self.ferretCmd, tmpFileJnl[1])
+
+    try:
+      os.system(temp1)
+    except:
+      tempFile = None
 
   # def_diffPlot
   def diffPlot(self):
@@ -437,6 +642,96 @@ class SUBSET_REGION():
     print 'diffFigFile: %s'%fn
     pf.endGif(fn)
     pf.exit()
+
+
+  # def_diffPlot2
+  def diffPlot2(self):
+    dimStr = ', k=1, t="15-%s-%d":"15-%s-%d"@ave'\
+%(num2month[self.monthS], self.yearS, num2month[self.monthE], self.yearE)
+
+    script1 = '''
+  SET MEMORY/SIZE=%d  
+  show memory
+  cancel mode logo
+
+  ! 3
+  use "%s"
+  use "%s"
+  !show data
+
+  ! 3a
+  set view ul
+  shade %s[d=1, x=%f:%f,  y=%f:%f %s]
+  go land
+
+  ! 3b
+  set view ur
+  shade %s[d=2, x=%f:%f,  y=%f:%f %s]
+  go land
+
+  ! 4
+  define var/bad=-9999.0/title="aa" data1 =%s[d=1, x=%f:%f,  y=%f:%f %s]
+
+  ! 4a
+  define var/bad=-9999.0/title="aa" data2 =%s[d=1, x=%f:%f,  y=%f:%f %s]
+
+  ! 5
+  set view ll
+  shade data2[gxy=data1] - data1
+  go land
+
+  ! 6
+  frame/file="%s/diffPlot.gif"
+
+  exit
+  '''%(
+  self.ferretMem, 
+  # 3
+  self.inFile1, 
+  self.inFile2, 
+  # 3a
+  self.varName1,
+  self.lon1S,
+  self.lon1E,
+  self.lat1S,
+  self.lat1E,
+  dimStr,
+  # 3b
+  self.varName2,
+  self.lon1S,
+  self.lon1E,
+  self.lat1S,
+  self.lat1E,
+  dimStr,
+  # 4
+  self.varName1,
+  self.lon1S,
+  self.lon1E,
+  self.lat1S,
+  self.lat1E,
+  dimStr,
+  # 4a
+  self.varName2,
+  self.lon1S,
+  self.lon1E,
+  self.lat1S,
+  self.lat1E,
+  dimStr,
+  # 5
+  # 6
+  self.outDir,
+  )
+
+    tmpFileJnl = tempfile.mkstemp(suffix='.jnl', dir=self.outDir)
+    open(tmpFileJnl[1], 'w').write(script1)
+
+    temp1 = '%s -gif -script %s' %(self.ferretCmd, tmpFileJnl[1])
+
+    try:
+      os.system(temp1)
+    except:
+      tempFile = None
+
 
 if cr['init_class']       == 1:
   a = SUBSET_REGION()
@@ -506,20 +801,31 @@ if cr['command_arg']       == 1:
     print 'a.outDir: ',
     print a.outDir
 
+    if len(argv)>10:
+      # arg 10
+      ii += 1
+      a.isDiffPlot = int(argv[ii])
+
+
 if cr['plot__']       == 1:
   # get file names
   a.inFile1 = a.getFileName(a.center1, a.model1, a.varName1) 
   a.inFile2 = a.getFileName(a.center2, a.model2, a.varName2) 
 
+  a.getUnits()
+
   # subset
   tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4)
   tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4)
 
-  # load variables
-  data1 = a.loadFile(tempFile1)
-  data2 = a.loadFile(tempFile2, varName='DATA2')
-
   # plot scatter
-  a.scatterPlot(data1,data2)
-  #a.diffPlot()
+  if a.isDiffPlot:
+    a.diffPlot4(tempFile1, tempFile2)
+
+  else:
+    # load variables
+    data1 = a.loadFile(tempFile1)
+    data2 = a.loadFile(tempFile2, varName='DATA2')
+
+    a.scatterPlot(data1,data2)
 

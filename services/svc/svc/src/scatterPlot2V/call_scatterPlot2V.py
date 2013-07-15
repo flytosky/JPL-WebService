@@ -22,6 +22,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         self.lat2 = latE
 
         self.output_dir = output_dir
+        self.isDiffPlot = 0
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -40,7 +41,8 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
                  self.model2 + ' ' + self.var2 + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.output_dir
+                 self.output_dir + ' ' + '%d'%self.isDiffPlot
+
         print 'inputs: ', inputs
         #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
         command = './wrapper ' +  inputs
