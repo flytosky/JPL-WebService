@@ -118,7 +118,7 @@ print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'monthIdx'};
 data.nDim = 1;
-data.dimSize = [nMonths]
+data.dimSize = [nMonths];
 data.dimVars = {1:nMonths};
 data.var = monthlyData;
 data.varName = varName;
