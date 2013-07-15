@@ -96,7 +96,9 @@ for fileI = 1:nFiles
     lat = lat(latIdx);
     pIdx = find(plev > plevRange(2) & plev <= plevRange(1));
     nP = length(pIdx);
-    plev = plev(pIdx)/100;
+    if varName~='ot' | varName~='os'
+    	plev = plev(pIdx)/100;
+    end
 
     monthlyData = nan(nMonths, nP, nLat);
   end
@@ -152,7 +154,11 @@ currYTick = get(gca, 'ytick')';
 currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
 set(gca, 'yticklabel', num2str(currYTick));
 xlabel('Latitude (deg)');
-ylabel('Pressure level (hPa)');
+if varName~='ot' | varName~='os'
+	ylabel('Pressure level (hPa)');
+else
+	ylabel('Pressure level (dbar)');
+end
 colorbar('southoutside');
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
@@ -163,7 +169,11 @@ data.dimSize = [length(plev), length(lat)];
 data.dimVars = {plev, lat};
 data.var = var_clim;
 data.varName = varName;
-data.dimVarUnits = {'hPa', 'degree_north'};
+if varName~='ot' | varName~='os'
+	data.dimVarUnits = {'hPa', 'degree_north'};
+else
+	data.dimVarUnits = {'decibar', 'degree_north'};
+end
 data.varUnits = v_units;
 data.varLongName = long_name;
 
