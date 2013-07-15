@@ -91,6 +91,8 @@
       x.options[8].disabled=false;
       x.options[9].disabled=false;
       x.options[10].disabled=false;
+      x.options[11].disabled=false;
+      x.options[12].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -120,6 +122,10 @@
         variable = "zl";
       else if (var_string == "Equivalent Water Height Over Ocean")
         variable = "zo";
+      else if (var_string == "Ocean Heat Content Anomaly within 700 m Depth")
+        variable = "ohc700";
+      else if (var_string == "Ocean Heat Content Anomaly within 2000 m Depth")
+        variable = "ohc2000";
 
       // alert("variable: " + variable)
     }
@@ -148,6 +154,8 @@
         x.options[8].disabled=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/MODIS") {
         x.options[0].disabled=true;
@@ -161,6 +169,8 @@
         x.options[8].selected=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/TRMM") {
         x.options[0].selected=true;
@@ -174,6 +184,8 @@
         x.options[8].disabled=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/GPCP") {
         x.options[0].selected=true;
@@ -187,6 +199,8 @@
         x.options[8].disabled=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/QuikSCAT") {
         x.options[0].disabled=true;
@@ -200,6 +214,8 @@
         x.options[8].disabled=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/AVISO") {
         x.options[0].disabled=true;
@@ -213,6 +229,8 @@
         x.options[8].disabled=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/GRACE") {
         x.options[0].disabled=true;
@@ -226,6 +244,23 @@
         x.options[8].disabled=true;
         x.options[9].selected=true;
         x.options[10].selected=true;
+        x.options[11].selected=true;
+        x.options[12].selected=true;
+      }
+      else if (data_string == "NOAA/NODC") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].selected=true;
+        x.options[12].selected=true;
       }
       // for all other models
       else {
@@ -240,6 +275,8 @@
         x.options[8].selected=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
 
       // form variable string
@@ -511,6 +548,7 @@
 <option>NASA/QuikSCAT</option>
 <option>NASA/AVISO</option>
 <option>NASA/GRACE</option>
+<option>NOAA/NODC</option>
 </optgroup>
 </select></td>
 
@@ -526,6 +564,8 @@
 <option>Leaf Area Index</option>
 <option>Equivalent Water Height Over Land</option>
 <option>Equivalent Water Height Over Ocean</option>
+<option>Ocean Heat Content Anomaly within 700 m Depth</option>
+<option>Ocean Heat Content Anomaly within 2000 m Depth</option>
 </select></td>
 
 </tr>
