@@ -1,4 +1,4 @@
-function status = displayTwoDimSlice(dataFile, figFile, varName, startTime, stopTime, thisPlev, lonRange, latRange, monthIdx)
+function status = displayTwoDimSlice(dataFile, figFile, varName, startTime, stopTime, thisPlev, lonRange, latRange, monthIdx, outputFile)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime], longitude & latitude range, and seasonal months in a year
@@ -14,6 +14,7 @@ function status = displayTwoDimSlice(dataFile, figFile, varName, startTime, stop
 %   lonRnage	-- an optional argument to specify box boundary along longitude
 %   latRnage	-- an optional argument to specify box boundary along latitude
 %   monthIdx	-- an optional argument to specify months within a year, which is useful for computing climatology for a specific season.
+%   outputFile	-- an optional argument to specify the netcdf data filename for outputing 
 %
 % Output:
 %   status	-- a status flag, 0 = okay, -1 something is not right
@@ -23,6 +24,10 @@ function status = displayTwoDimSlice(dataFile, figFile, varName, startTime, stop
 % Revision history:
 %   2013/03/25:	Initial version, cz
 %
+
+if nargin < 10
+  outputFile = [];
+end
 
 if nargin < 9
   monthIdx = 1:12;
@@ -146,6 +151,7 @@ for fileI = 1:nFiles
   for pIdx = 2:length(p_idx)
     monthlyData(monthIdx1:monthIdx2, :, :) = monthlyData(monthIdx1:monthIdx2, :, :) + squeeze(v(idx2Data_start:idx2Data_stop, p_idx(pIdx), latIdx,lonIdx) * p_alphas(pIdx));
   end
+  long_name = fd{varName}.long_name;
   ncclose(fd);
 end
 
@@ -154,7 +160,22 @@ end
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
-keyboard;
 h = displayTwoDimData(lon, lat, var_clim');
 title(h, [varName ', at ' num2str(round(thisPlev/100)) 'hPa, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 print(gcf, figFile, '-djpeg');
+
+data.dimNames = {'latitude', 'longitude'};
+data.nDim = 2;
+data.dimSize = [length(lat), length(lon)];
+data.dimVars = {lat, lon};
+data.var = var_clim;
+data.varName = varName;
+data.dimVarUnits = {'degree_north', 'degree_east'};
+data.varUnits = v_units;
+data.varLongName = long_name;
+
+status = 0;
+
+if ~isempty(outputFile);
+  status = storeDataInNetCDF(data, outputFile);
+end
