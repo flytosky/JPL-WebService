@@ -80,19 +80,19 @@
     {
       var x=document.getElementById("var");
 
-      x.options[0].disabled=true;
-      x.options[1].disabled=true;
-      x.options[2].disabled=true;
-      x.options[3].disabled=true;
-      x.options[4].disabled=true;
-      x.options[5].disabled=true;
-      x.options[6].disabled=true;
-      x.options[7].disabled=true;
-      x.options[8].disabled=true;
-      x.options[9].disabled=true;
-      x.options[10].disabled=true;
-      x.options[11].disabled=true;
-      x.options[12].disabled=true;
+      x.options[0].disabled=false;
+      x.options[1].disabled=false;
+      x.options[2].disabled=false;
+      x.options[3].disabled=false;
+      x.options[4].disabled=false;
+      x.options[5].disabled=false;
+      x.options[6].disabled=false;
+      x.options[7].disabled=false;
+      x.options[8].disabled=false;
+      x.options[9].disabled=false;
+      x.options[10].disabled=false;
+      x.options[11].disabled=false;
+      x.options[12].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -143,36 +143,142 @@
 
       // disable corresponding "var" options
       if (data_string == "NASA/AMSRE") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
         x.options[3].selected=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/MODIS") {
+        x.options[0].disabled=true;
         x.options[1].selected=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
         x.options[8].selected=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/TRMM") {
         x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
       }
       else if (data_string == "NASA/GPCP") {
         x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
       }
       else if (data_string == "NASA/QuikSCAT") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
         x.options[4].selected=true;
         x.options[5].selected=true;
         x.options[6].selected=true;
       }
       else if (data_string == "NASA/AVISO") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
         x.options[7].selected=true;
       }
       else if (data_string == "NASA/GRACE") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
+
         x.options[9].selected=true;
         x.options[10].selected=true;
       }
       else if (data_string == "NOAA/NODC") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+
+
         x.options[11].selected=true;
         x.options[12].selected=true;
       }
       // for all other models
       else {
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
         x.options[0].selected=true;
         x.options[1].selected=true;
         x.options[2].selected=true;
