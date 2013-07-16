@@ -156,25 +156,41 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 figure;
-semilogx(var_clim, -plev/100, 'ks-', 'linewidth', 2);
+y_plev = -plev;
+if varName~='ot' | varName~='os'
+	y_plev = y_plev/100;
+end
+semilogy(var_clim, y_plev, 'ks-', 'linewidth', 2);
 grid on;
 set(gca, 'fontweight', 'bold');
 currYTick = get(gca, 'ytick')';
 currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
 set(gca, 'yticklabel', num2str(currYTick));
-xlabel(['Average (' v_units ')']);
-ylabel('Pressure level (hPa)');
-xlim(max(var_clim)*[1e-4, 1.1]);
+%xlabel(['Average (' v_units ')']);
+xlabel([long_name '(' v_units ')']);
+if varName~='ot' | varName~='os'
+	ylabel('Pressure Level (hPa)');
+else
+	ylabel('Pressure Level (dbar)');
+end
+
+%xlim(max(var_clim)*[1e-4, 1.1]);
+%xlim([min(var_clim)*0.9, max(var_clim)*1.1]);
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' vertical profile climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'plev'};
 data.nDim = 1;
 data.dimSize = [length(plev)];
-data.dimVars = {plev/100};
+if varName~='ot' | varName~='os'
+	data.dimVars = {plev/100};
+	data.dimVarUnits = {'hPa'};
+else
+	data.dimVars = {plev};
+	data.dimVarUnits = {'dbar'};
+end
 data.var = var_clim;
 data.varName = varName;
-data.dimVarUnits = {'hPa'};
 data.varUnits = v_units;
 data.varLongName = long_name;
 
