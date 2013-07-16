@@ -1,4 +1,4 @@
-function ha = displayTwoDimData(lon, lat, twoDimData, ha, cfgParams)
+function [ha, cb] = displayTwoDimData(lon, lat, twoDimData, ha, cfgParams)
 %
 % This function displays two dimensional data (longitude x latitude)
 % overlaying on top of a coastal line.
@@ -21,7 +21,8 @@ else
   xlabelOff = cfgParams.xlabelOff;
   ylabelOff = cfgParams.ylabelOff;
 end
-imagesc(lon, -lat, twoDimData');colorbar('southoutside');
+imagesc(lon, -lat, twoDimData');
+cb = colorbar('southoutside');
 if ~isempty(find(isnan(twoDimData(:))))
   cmap = colormap();
   cmap(1,:) = [1,1,1];
