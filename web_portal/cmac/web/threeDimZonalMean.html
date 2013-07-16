@@ -239,8 +239,8 @@
           return;
         }
         else {
-          pres1 = splitty[0];
-          pres2 = splitty[1];
+          pres1 = splitty[0]*100; // convert from hPa on GUI to Pa
+          pres2 = splitty[1]*100; // convert from hPa on GUI to Pa
         }
 
         arglist = arglist.concat("&pres1=");
@@ -362,7 +362,7 @@
 
 <p>
 
-<table border="1">
+<table border="1" WIDTH="700">
 
 <tr>
 <td colspan="4">
@@ -422,7 +422,7 @@
 <option id="spring">Spring:Mar-Apr-May</option> </select>
 </td>
 <td>   
-pressure level range (hPa):
+atmosphere pressure level range (hPa) or ocean level range (dbar):
 </td>
 <td><input id="pres" value="900,200" alt="pressure"/></td>
 </tr>
