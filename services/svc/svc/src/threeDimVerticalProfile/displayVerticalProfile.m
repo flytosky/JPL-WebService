@@ -167,7 +167,7 @@ currYTick = get(gca, 'ytick')';
 currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
 set(gca, 'yticklabel', num2str(currYTick));
 %xlabel(['Average (' v_units ')']);
-xlabel([long_name '(' v_units ')']);
+xlabel([long_name ' (' v_units ')']);
 if varName~='ot' | varName~='os'
 	ylabel('Pressure Level (hPa)');
 else
