@@ -78,26 +78,16 @@ for fileI = 1:nFiles
     lon = fd{'lon'}(:);
     lat = fd{'lat'}(:);
 
-    if strcmp(plevVarName, 'plev')
-      plev = fd{'plev'}(:);
-    else
-      switch lower(fd{'lev'}.units)
-        case 'm',
-          plev = altitude2Pressure(fd{'lev'}(:)/1000)*100; % m -> Km -> hPa -> Pa
-      
-        otherwise,
-          p0 = 1.013e5; % 1atm = 1.013e5 Pa
-          plev = fd{'lev'}(:)*p0;
-      end
-    end
-
+    plev = readPressureLevels(fd, plevVarName);
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
     lat = lat(latIdx);
     pIdx = find(plev > plevRange(2) & plev <= plevRange(1));
     nP = length(pIdx);
     if varName~='ot' | varName~='os'
-    	plev = plev(pIdx)/100;
+    	plev = plev(pIdx)/100; % convert to hPa
+    else
+        plev = plev(pIdx)/1e6; % convert to dbar
     end
 
     monthlyData = nan(nMonths, nP, nLat);
