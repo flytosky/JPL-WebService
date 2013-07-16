@@ -89,7 +89,9 @@ for fileI = 1:nFiles
   end
 
   v = fd{varName}(:);
-  v(abs(v - fd{varName}.missing_value) < 1) = NaN; 
+  if(~isempty(fd{varName}.missing_value))
+    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  end
 
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
@@ -124,9 +126,11 @@ end
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
-h = displayTwoDimData(lon, lat, var_clim');
+[h, cb] = displayTwoDimData(lon, lat, var_clim');
 title(h, [varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
+% adding title for color bar
 
 data.dimNames = {'latitude', 'longitude'};
 data.nDim = 2;
