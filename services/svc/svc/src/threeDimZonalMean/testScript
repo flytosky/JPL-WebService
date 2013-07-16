@@ -1,4 +1,4 @@
 # ./octaveWrapper ukmo_hadgem2-es hus 198501 199512 '-30 30' '90000, 20000' '5,6,7,8'
 # ./octaveWrapper ncc_noresm cli 197501 199512 '-60 60' '90000, 20000' '5,6,7,8'
 #./octaveWrapper gfdl_cm3 cli 197501 199512 '-60 60' '90000, 20000' '5,6,7,8' /home/swlee
-./octaveWrapper argo_argo os 200101 200112 '-90 90' '500, 100' '5,6,7,8' /tmp
+./octaveWrapper argo_argo os 200101 200112 '-90 90' '500, 100' '5,6,7,8' ~/matlab
