@@ -79,10 +79,12 @@
     function reset_vars()
     {
       var x=document.getElementById("var");
-
       x.options[0].disabled=false;
       x.options[1].disabled=false;
       x.options[2].disabled=false;
+      x.options[3].disabled=false;
+      x.options[4].disabled=false;
+      x.options[5].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -96,6 +98,12 @@
         variable = "hus";
       else if (var_string == "Cloud Ice Water Content")
         variable = "cli";
+      else if (var_string == "Cloud Liquid Water Content")
+        variable = "clw";
+      else if (var_string == "Ocean Temperature")
+        variable = "ot";
+      else if (var_string == "Ocean Salinity")
+        variable = "os";
 
       // alert("variable: " + variable)
     }
@@ -116,11 +124,33 @@
         x.options[0].selected=true;
         x.options[1].selected=true;
         x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
       }
       else if (data_string == "NASA/MLS") {
         x.options[0].selected=true;
         x.options[1].selected=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+      }
+      else if (data_string == "ARGO/ARGO") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].selected=true;
+        x.options[5].selected=true;
+      }
+      else {
+        x.options[0].selected=true;
+        x.options[1].selected=true;
         x.options[2].selected=true;
+        x.options[3].selected=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
       }
 
       // form variable string
@@ -386,6 +416,7 @@
 <optgroup label="Observation">
 <option>NASA/AIRS</option>
 <option>NASA/MLS</option>
+<option>ARGO/ARGO</option>
 </optgroup>
 </select></td>
 
@@ -393,6 +424,9 @@
 <option>Air Temperature</option> 
 <option>Specific Humidity</option>
 <option>Cloud Ice Water Content</option>
+<option>Cloud Liquid Water Content</option>
+<option>Ocean Temperature</option>
+<option>Ocean Salinity</option>
 </select></td>
 </tr>
 
