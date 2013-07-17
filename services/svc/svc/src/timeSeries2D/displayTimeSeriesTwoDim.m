@@ -62,8 +62,10 @@ for fileI = 1:nFiles
   end
 
   v = fd{varName}(:);
-
-  v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  
+  if ~isempty(fd{varName}.missing_value)
+    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  end
 
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
@@ -86,9 +88,9 @@ for fileI = 1:nFiles
     monthIdx2 = nMonths;
   end
 
-  disp(size(v));
-  disp(latIdx);
-  disp(lonIdx);
+  %disp(size(v));
+  %disp(latIdx);
+  %disp(lonIdx);
   %monthlyData(monthIdx1:monthIdx2) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx),2),3);
   monthlyData(monthIdx1:monthIdx2) = averageOverSphere(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx), lat);
   long_name = fd{varName}.long_name;

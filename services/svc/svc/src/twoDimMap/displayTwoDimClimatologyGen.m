@@ -137,7 +137,7 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 [h, cb] = displayTwoDimData(lon, lat, var_clim');
 title(h, [varName ', ' date2Str(real_startTime) '-' date2Str(real_stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
-set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
+set(get(cb,'xlabel'), 'string', [long_name ' (' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
 % adding title for color bar
 
