@@ -79,6 +79,7 @@
     function reset_vars()
     {
       var x=document.getElementById("var");
+
       x.options[0].disabled=false;
       x.options[1].disabled=false;
       x.options[2].disabled=false;
@@ -92,6 +93,18 @@
       x.options[10].disabled=false;
       x.options[11].disabled=false;
       x.options[12].disabled=false;
+      x.options[13].disabled=false;
+      x.options[14].disabled=false;
+      x.options[15].disabled=false;
+      x.options[16].disabled=false;
+      x.options[17].disabled=false;
+      x.options[18].disabled=false;
+      x.options[19].disabled=false;
+      x.options[20].disabled=false;
+      x.options[21].disabled=false;
+      x.options[22].disabled=false;
+      x.options[23].disabled=false;
+      x.options[24].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -125,6 +138,30 @@
         variable = "ohc700";
       else if (var_string == "Ocean Heat Content Anomaly within 2000 m Depth")
         variable = "ohc2000";
+      else if (var_string == "Surface Downwelling Longwave Radiation")
+        variable = "rlds";
+      else if (var_string == "Surface Downwelling Shortwave Radiation")
+        variable = "rlus";
+      else if (var_string == "Surface Upwelling Longwave Radiation")
+        variable = "rsds";
+      else if (var_string == "Surface Upwelling Shortwave Radiation")
+        variable = "rsus";
+      else if (var_string == "Surface Downwelling Clear-Sky Longwave Radiation")
+        variable = "rldscs";
+      else if (var_string == "Surface Downwelling Clear-Sky Shortwave Radiation")
+        variable = "rsdscs";
+      else if (var_string == "Surface Upwelling Clear-Sky Shortwave Radiation")
+        variable = "rsuscs";
+      else if (var_string == "TOA Incident Shortwave Radiation")
+        variable = "rsdt";
+      else if (var_string == "TOA Outgoing Clear-Sky Longwave Radiation")
+        variable = "rlutcs";
+      else if (var_string == "TOA Outgoing Longwave Radiation")
+        variable = "rlut";
+      else if (var_string == "TOA Outgoing Clear-Sky Shortwave Radiation")
+        variable = "rsutcs";
+      else if (var_string == "TOA Outgoing Shortwave Radiation")
+        variable = "rsut";
 
       // alert("variable: " + variable)
     }
@@ -141,11 +178,11 @@
       // alert(data_string);
 
       // disable corresponding "var" options
+
       if (data_string == "NASA/AMSRE") {
         x.options[0].disabled=true;
         x.options[1].disabled=true;
         x.options[2].disabled=true;
-        x.options[3].selected=true;
         x.options[4].disabled=true;
         x.options[5].disabled=true;
         x.options[6].disabled=true;
@@ -155,21 +192,48 @@
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[3].selected=true;
       }
       else if (data_string == "NASA/MODIS") {
         x.options[0].disabled=true;
-        x.options[1].selected=true;
         x.options[2].disabled=true;
         x.options[3].disabled=true;
         x.options[4].disabled=true;
         x.options[5].disabled=true;
         x.options[6].disabled=true;
         x.options[7].disabled=true;
-        x.options[8].selected=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[1].selected=true;
+        //x.options[8].selected=true;
       }
       else if (data_string == "NASA/TRMM") {
         x.options[0].selected=true;
@@ -185,6 +249,18 @@
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
       }
       else if (data_string == "NASA/GPCP") {
         x.options[0].selected=true;
@@ -200,6 +276,18 @@
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
       }
       else if (data_string == "NASA/QuikSCAT") {
 
@@ -213,10 +301,22 @@
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
 
         x.options[4].selected=true;
-        x.options[5].selected=true;
-        x.options[6].selected=true;
+        //x.options[5].selected=true;
+        //x.options[6].selected=true;
       }
       else if (data_string == "NASA/AVISO") {
         x.options[0].disabled=true;
@@ -231,6 +331,18 @@
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
 
         x.options[7].selected=true;
       }
@@ -247,10 +359,21 @@
         x.options[8].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
-
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
 
         x.options[9].selected=true;
-        x.options[10].selected=true;
+        //x.options[10].selected=true;
       }
       else if (data_string == "NOAA/NODC") {
 
@@ -265,10 +388,39 @@
         x.options[8].disabled=true;
         x.options[9].disabled=true;
         x.options[10].disabled=true;
-
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
 
         x.options[11].selected=true;
-        x.options[12].selected=true;
+        //x.options[12].selected=true;
+      }
+      else if (data_string == "NASA/CERES") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
+        x.options[13].selected=true;
       }
       // for all other models
       else {
@@ -278,16 +430,7 @@
         x.options[12].disabled=true;
 
         x.options[0].selected=true;
-        x.options[1].selected=true;
-        x.options[2].selected=true;
-        x.options[3].selected=true;
-        x.options[4].selected=true;
-        x.options[5].selected=true;
-        x.options[6].selected=true;
-        x.options[7].selected=true;
-        x.options[8].selected=true;
       }
-
 
 
  // form variable string
@@ -525,8 +668,20 @@
 
 <tr>
 <td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<!-- <option>NASA/obs4MIPs</option>  -->
+<optgroup label="Observation">
+<option selected="NASA/MODIS">NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<option>NASA/TRMM</option>
+<option>NASA/GPCP</option>
+<option>NASA/QuikSCAT</option>
+<option>NASA/AVISO</option>
+<option>NASA/GRACE</option>
+<option>NOAA/NODC</option>
+<option>NASA/CERES</option>
+</optgroup>
 <optgroup label="Model: Historical">
-<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>CCCMA/CANESM2</option>
 <option>GFDL/ESM2G</option>
 <option>GISS/E2-H</option>
 <option>GISS/E2-R</option>
@@ -541,17 +696,6 @@
 <option>IPSL/CM5A-LR</option>
 <option>MIROC/MIROC5</option>
 <option>UKMO/HadGEM2-A</option>
-</optgroup>
-<!-- <option>NASA/obs4MIPs</option>  -->
-<optgroup label="Observation">
-<option>NASA/MODIS</option>
-<option>NASA/AMSRE</option>
-<option>NASA/TRMM</option>
-<option>NASA/GPCP</option>
-<option>NASA/QuikSCAT</option>
-<option>NASA/AVISO</option>
-<option>NASA/GRACE</option>
-<option>NOAA/NODC</option>
 </optgroup>
 </select></td>
 
@@ -569,8 +713,19 @@
 <option>Equivalent Water Height Over Ocean</option>
 <option>Ocean Heat Content Anomaly within 700 m Depth</option>
 <option>Ocean Heat Content Anomaly within 2000 m Depth</option>
+<option>Surface Downwelling Longwave Radiation</option>
+<option>Surface Downwelling Shortwave Radiation</option>
+<option>Surface Upwelling Longwave Radiation</option>
+<option>Surface Upwelling Shortwave Radiation</option>
+<option>Surface Downwelling Clear-Sky Longwave Radiation</option>
+<option>Surface Downwelling Clear-Sky Shortwave Radiation</option>
+<option>Surface Upwelling Clear-Sky Shortwave Radiation</option>
+<option>TOA Incident Shortwave Radiation</option>
+<option>TOA Outgoing Longwave Radiation</option>
+<option>TOA Outgoing Shortwave Radiation</option>
+<option>TOA Outgoing Clear-Sky Longwave Radiation</option>
+<option>TOA Outgoing Clear-Sky Shortwave Radiation</option>
 </select></td>
-
 </tr>
 
 <tr>
