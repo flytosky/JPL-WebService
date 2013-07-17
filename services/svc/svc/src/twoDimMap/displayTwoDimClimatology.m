@@ -32,6 +32,9 @@ v = [];
 lon = [];
 lat = [];
 
+file_start_time = [];
+file_stop_time = [];
+
 for fileI = 1:nFiles
   fd = netcdf(dataFile{fileI}, 'r');
 
@@ -48,6 +51,8 @@ for fileI = 1:nFiles
   v = fd{varName}(:);
   v_units = fd{varName}.units;
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
+  file_start_time(fileI) = startTime_thisFile;
+  file_stop_time(fileI) = stopTime_thisFile;
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
@@ -70,7 +75,9 @@ for fileI = 1:nFiles
   monthlyData(monthIdx1:monthIdx2, :, :) = v(idx2Data_start:idx2Data_stop,:,:);
 end
 
+[real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
+
 var_clim = squeeze(simpleClimatology(v,1));
 h = displayTwoDimData(lon, lat, var_clim');
-title(h, [varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units ')']);
+title(h, [varName ', ' date2Str(real_startTime) '-' date2Str(real_stopTime) ' climatology (' v_units ')']);
 print(gcf, figFile, '-djpeg');
