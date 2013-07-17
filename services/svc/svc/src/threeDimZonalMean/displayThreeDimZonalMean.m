@@ -87,7 +87,7 @@ for fileI = 1:nFiles
     if varName~='ot' | varName~='os'
     	plev = plev(pIdx)/100; % convert to hPa
     else
-        plev = plev(pIdx)/1e6; % convert to dbar
+        plev = plev(pIdx)/1e4; % convert to dbar
     end
 
     monthlyData = nan(nMonths, nP, nLat);
@@ -149,7 +149,8 @@ if varName~='ot' | varName~='os'
 else
 	ylabel('Pressure level (dbar)');
 end
-colorbar('southoutside');
+cb = colorbar('southoutside');
+set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 

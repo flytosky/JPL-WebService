@@ -4,7 +4,7 @@ if strcmp(plevVarName, 'plev')
   plev = fd{'plev'}(:);
   switch lower(fd{'plev'}.units)
     case {'dbar', 'decibar'},
-      plev = plev * 1e6; % convert from dbar to Pa
+      plev = plev * 1e4; % convert from dbar to Pa
     case 'bar',
       plev = plev * 1e5; % convert from bar to Pa
     case {'milibar', 'mbar', 'hPa'},
