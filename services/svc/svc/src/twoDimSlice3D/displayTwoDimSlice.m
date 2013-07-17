@@ -152,7 +152,7 @@ my_varName =  varName
 if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os')) 
 	title(h, [varName ', at ' num2str(round(thisPlev/100)) 'hPa, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 else
-	title(h, [varName ', at ' num2str(round(thisPlev)) 'dbar, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+	title(h, [varName ', at ' num2str(round(thisPlev/10000)) 'dbar, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 end
 set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
