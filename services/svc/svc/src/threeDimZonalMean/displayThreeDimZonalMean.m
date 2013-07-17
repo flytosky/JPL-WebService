@@ -90,7 +90,7 @@ for fileI = 1:nFiles
     lat = lat(latIdx);
     pIdx = find(plev > plevRange(2) & plev <= plevRange(1));
     nP = length(pIdx);
-    if varName~='ot' | varName~='os'
+    if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
     	plev = plev(pIdx)/100; % convert to hPa
     else
         plev = plev(pIdx)/1e4; % convert to dbar
@@ -150,7 +150,7 @@ currYTick = get(gca, 'ytick')';
 currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
 set(gca, 'yticklabel', num2str(currYTick));
 xlabel('Latitude (deg)');
-if varName~='ot' | varName~='os'
+if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
 	ylabel('Pressure level (hPa)');
 else
 	ylabel('Pressure level (dbar)');
@@ -166,7 +166,7 @@ data.dimSize = [length(plev), length(lat)];
 data.dimVars = {plev, lat};
 data.var = var_clim;
 data.varName = varName;
-if varName~='ot' | varName~='os'
+if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
 	data.dimVarUnits = {'hPa', 'degree_north'};
 else
 	data.dimVarUnits = {'decibar', 'degree_north'};

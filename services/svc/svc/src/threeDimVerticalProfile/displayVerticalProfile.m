@@ -157,7 +157,7 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 figure;
 y_plev = -plev;
-if varName~='ot' | varName~='os'
+if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
 	y_plev = y_plev/100;
 end
 semilogy(var_clim, y_plev, 'ks-', 'linewidth', 2);
@@ -168,7 +168,7 @@ currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
 set(gca, 'yticklabel', num2str(currYTick));
 %xlabel(['Average (' v_units ')']);
 xlabel([long_name ' (' v_units ')']);
-if varName~='ot' | varName~='os'
+if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
 	ylabel('Pressure Level (hPa)');
 else
 	ylabel('Pressure Level (dbar)');
@@ -182,7 +182,7 @@ print(gcf, figFile, '-djpeg');
 data.dimNames = {'plev'};
 data.nDim = 1;
 data.dimSize = [length(plev)];
-if varName~='ot' | varName~='os'
+if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
 	data.dimVars = {plev/100};
 	data.dimVarUnits = {'hPa'};
 else
