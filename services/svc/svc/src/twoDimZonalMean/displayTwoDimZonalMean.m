@@ -93,8 +93,8 @@ for fileI = 1:nFiles
     monthIdx2 = nMonths;
   end
 
-  disp(size(v));
-  disp(latIdx);
+  %disp(size(v));
+  %disp(latIdx);
   monthlyData(monthIdx1:monthIdx2, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,:),3);
   long_name = fd{varName}.long_name;
   ncclose(fd);
