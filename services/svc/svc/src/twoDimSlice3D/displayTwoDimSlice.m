@@ -77,20 +77,7 @@ for fileI = 1:nFiles
   if isempty(monthlyData)
     lon = fd{'lon'}(:);
     lat = fd{'lat'}(:);
-    
-    if strcmp(plevVarName, 'plev')
-      plev = fd{'plev'}(:);
-    else
-      switch lower(fd{'lev'}.units)
-        case 'm',
-          plev = altitude2Pressure(fd{'lev'}(:)/1000)*100; % m -> Km -> hPa -> Pa
-      
-        otherwise,
-          p0 = 1.013e5; % 1atm = 1.013e5 Pa
-          plev = fd{'lev'}(:)*p0;
-      end
-    end
-
+    plev = readPressureLevels(fd, plevVarName);
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
     lat = lat(latIdx);

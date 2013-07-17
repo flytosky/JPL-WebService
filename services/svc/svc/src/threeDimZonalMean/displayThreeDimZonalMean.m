@@ -41,6 +41,12 @@ if nargin < 6
   latRange = [-90, 90];
 end
 
+if plevRange(2)>plevRange(1)
+	tmp=plevRange(1);
+	plevRange(1)=plevRange(2);
+	plevRange(2)=tmp;
+end
+
 nMonths = numberOfMonths(startTime, stopTime);
 
 printf('number of month = %d\n', nMonths);
@@ -150,7 +156,7 @@ else
 	ylabel('Pressure level (dbar)');
 end
 cb = colorbar('southoutside');
-set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 12);
+set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
