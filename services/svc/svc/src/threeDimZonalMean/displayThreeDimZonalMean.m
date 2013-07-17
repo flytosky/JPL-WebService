@@ -150,7 +150,7 @@ else
 	ylabel('Pressure level (dbar)');
 end
 cb = colorbar('southoutside');
-set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
+set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 12);
 title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
