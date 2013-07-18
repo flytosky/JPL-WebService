@@ -270,8 +270,21 @@
           return;
         }
         else {
-          pres1 = splitty[0]*100; // convert from hPa on GUI to Pa
-          pres2 = splitty[1]*100; // convert from hPa on GUI to Pa
+          pres1 = splitty[0];
+          pres2 = splitty[1];
+
+          // alert("variable: " + variable);
+
+          // when variable is the 3D Ocean Salinity or Ocean Temperature
+          if (variable == 'ot' || variable == 'os') {
+            pres1 = pres1 * 10000;  // convert from dbar on GUI
+            pres2 = pres2 * 10000;  // convert from dbar on GUI
+          }
+          // when variable is 2D
+          else {
+            pres1 = pres1 * 100;  // convert from hPa on GUI
+            pres2 = pres2 * 100;  // convert from hPa on GUI
+          }
         }
 
         arglist = arglist.concat("&pres1=");
@@ -393,7 +406,7 @@
 
 <p>
 
-<table border="1" WIDTH="700">
+<table border="1" WIDTH="800">
 
 <tr>
 <td colspan="4">
