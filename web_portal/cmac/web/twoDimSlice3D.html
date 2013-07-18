@@ -255,7 +255,16 @@
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
 
-        var pres = $("#pres").val() * 100;  // convert from hPa on GUI
+        var pres = $("#pres").val();
+        // alert("variable: " + variable);
+
+        // when variable is the 3D Ocean Salinity or Ocean Temperature
+        if (variable == 'ot' || variable == 'os')
+          pres = pres * 10000;  // convert from dbar on GUI
+        // when variable is 2D
+        else
+          pres = pres * 100;  // convert from hPa on GUI
+
         arglist = arglist.concat("&pr=");
         arglist = arglist.concat(pres);
 
@@ -389,7 +398,7 @@
 
 <p>
 
-<table border="1">
+<table border="1" width="800">
 
 <tr>
 <td colspan="4">
