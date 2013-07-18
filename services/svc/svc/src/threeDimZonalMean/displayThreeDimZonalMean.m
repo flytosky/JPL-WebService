@@ -138,7 +138,8 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 
 figure;
-contourf(lat, -plev, var_clim, 'linewidth', 2);
+%contourf(lat, -plev, var_clim, 'linewidth', 2);
+contourf(lat, -plev, var_clim, 30, 'linecolor', 'none');
 if ~isempty(find(isnan(var_clim(:))))
   cmap = colormap();
   cmap(1,:) = [1,1,1];
