@@ -22,7 +22,6 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         self.lat2 = latE
 
         self.output_dir = output_dir
-        self.isDiffPlot = 0
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -30,7 +29,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         #  self.var = 'tos'
 
 
-    def displayScatterPlot2V(self):
+    def displayScatterPlot2V(self, isDiffPlot):
 
         ### print 'current dir: ', os.getcwd()
         # inputs: model name, variable name, start-year-mon, end-year-mon, 'start lon, end lon', 'start lat, end lat', 'mon list'
@@ -41,7 +40,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
                  self.model2 + ' ' + self.var2 + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.output_dir + ' ' + '%d'%self.isDiffPlot
+                 self.output_dir + ' ' + '%d'%isDiffPlot
 
         print 'inputs: ', inputs
         #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
@@ -87,5 +86,9 @@ if __name__ == '__main__':
 'ukmo_hadgem2-a', 'ts', 'ukmo_hadgem2-a', 'clt', '199001', '199512', '0', '100', '-29', '29', \
 './')
 
-    mesg = c1.displayScatterPlot2V()
+    # scatterPlot
+    ### mesg = c1.displayScatterPlot2V(0)
+
+    # differnece plot
+    mesg = c1.displayScatterPlot2V(1)
     print 'mesg: ', mesg
