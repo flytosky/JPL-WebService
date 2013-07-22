@@ -199,17 +199,17 @@
       });
 
 
-      $("#scatterPlot2V").click(function(event) {
-        // alert('****** inside scatterPlot2V()!');
+      $("#diffPlot2V").click(function(event) {
+        // alert('****** inside diffPlot2V()!');
         Response = null;
 
         $("#Response").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&model2=ukmo_hadgem2-a&var2=clt&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/diffPlot2V?model1=ukmo_hadgem2-a&var1=ts&model2=ukmo_hadgem2-a&var2=clt&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
-        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
-        var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/diffPlot2V?";
+        var url = "http://" + window.location.hostname + ":8090/svc/diffPlot2V?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -331,7 +331,7 @@
 <tr>
 <td colspan="4">
 <center>
-<b>Service: Scatter Plot of Two Time Averaged Variables</b>
+<b>Service: Difference Plot of Two Time Averaged Variables</b>
 </center>
 </td>
 </tr>
@@ -437,7 +437,7 @@ level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 </tr>
 
 <tr>
-<td colspan="4" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="4" align="center"><input id="diffPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 </tr>
 
 <tr>
