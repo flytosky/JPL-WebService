@@ -99,6 +99,10 @@ Apply mathematical operations (e.g. apply algebraic, logical, and calculus opera
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
 </p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/diffPlot2Vars.html">Difference Plot of Two Variables Service</a>.
+</p>
 </li>
 <li>
 Apply statistical operations (e.g. calculate standard deviation and correlation).
