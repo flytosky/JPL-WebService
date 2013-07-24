@@ -40,6 +40,10 @@ Convert variable units (e.g. convert cloud water content from the density unit (
 </li>
 <li>
 Check data format.
+</li>
+<li>
+Format data.
+</li>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8083/">CMIP5 Checker Service</a>.
@@ -54,14 +58,10 @@ Check data format.
 <a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Global_Attributes_Requirements.pdf">obs4MIPs Global Attributes Requirements</a>.
 </small>
 </p>
-</li>
-<li>
-Format data.
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8081/">CMIP5 Formatter Service</a>.
 </p>
-</li>
 </ul>
 
 <li>
@@ -71,6 +71,22 @@ Format data.
 <ul>
 <li>
 Apply mathematical operations (e.g. apply algebraic, logical, and calculus operations).
+</li>
+<li>
+Apply statistical operations (e.g. calculate standard deviation and correlation).
+</li>
+<li>
+Assess probability density function  (PDF) distributions of the data (e.g. estimate the PDF of total water content in the stratocumulus regions).
+</li>
+<li>
+Analyze cluster distributions of the data (e.g. identify the number of clusters for the cloud classifications or scene classifications).
+</li>
+<li>
+Sampling multi-variables conditionally based on phenomena and physics (e.g. select cloud water content data in non-convective and non-precipitation conditions).
+</li>
+<li>
+Sort data by a given variable condition (e.g. sort cloud water path data in order of precipitation rate). 
+</li>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/twoDimMap.html">2D Variable Map Service</a>.
@@ -103,22 +119,6 @@ Apply mathematical operations (e.g. apply algebraic, logical, and calculus opera
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/diffPlot2Vars.html">Difference Plot of Two Variables Service</a>.
 </p>
-</li>
-<li>
-Apply statistical operations (e.g. calculate standard deviation and correlation).
-</li>
-<li>
-Assess probability density function  (PDF) distributions of the data (e.g. estimate the PDF of total water content in the stratocumulus regions).
-</li>
-<li>
-Analyze cluster distributions of the data (e.g. identify the number of clusters for the cloud classifications or scene classifications).
-</li>
-<li>
-Sampling multi-variables conditionally based on phenomena and physics (e.g. select cloud water content data in non-convective and non-precipitation conditions).
-</li>
-<li>
-Sort data by a given variable condition (e.g. sort cloud water path data in order of precipitation rate). 
-</li>
 </ul>
 
 </ol>
