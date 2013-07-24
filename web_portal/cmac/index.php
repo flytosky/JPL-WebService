@@ -54,11 +54,7 @@ Format data.
 </p>
 <p>
 <img src="images/document.jpg" alt="document" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Dataset_Requirements_v1.pdf">Obs4MIPs Dataset Requirements</a>.
-</p>
-<p>
-<img src="images/document.jpg" alt="document" height="60" width="60">
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Global_Attributes_Requirements.pdf">Obs4MIPs Global Attributes Requirements</a>.
+<a href="http://obs4mips.llnl.gov:8080/wiki/requirements">Requirements for contributing data to Obs4MIPs</a>.
 </p>
 </ul>
 
