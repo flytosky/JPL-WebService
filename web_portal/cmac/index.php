@@ -49,18 +49,16 @@ Format data.
 <a href="http://cmacws.jpl.nasa.gov:8083/">CMIP5 Checker Service</a>.
 </p>
 <p>
-<small>
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Dataset_Requirements_v1.pdf">obs4MIPs Dataset Requirements</a>.
-</small>
-</p>
-<p>
-<small>
-<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Global_Attributes_Requirements.pdf">obs4MIPs Global Attributes Requirements</a>.
-</small>
-</p>
-<p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="http://cmacws.jpl.nasa.gov:8081/">CMIP5 Formatter Service</a>.
+</p>
+<p>
+<img src="images/document.jpg" alt="document" height="60" width="60">
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Dataset_Requirements_v1.pdf">Obs4MIPs Dataset Requirements</a>.
+</p>
+<p>
+<img src="images/document.jpg" alt="document" height="60" width="60">
+<a href="http://cmacws.jpl.nasa.gov:8080/cmac/obs4MIPs_Global_Attributes_Requirements.pdf">Obs4MIPs Global Attributes Requirements</a>.
 </p>
 </ul>
 
