@@ -177,7 +177,7 @@ end
 
 %xlim(max(var_clim)*[1e-4, 1.1]);
 %xlim([min(var_clim)*0.9, max(var_clim)*1.1]);
-title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' vertical profile climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
+title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' vertical profile climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'plev'};
