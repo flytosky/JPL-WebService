@@ -130,6 +130,7 @@ for fileI = 1:nFiles
   monthlyData(monthIdx1:monthIdx2, :, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,pIdx,latIdx,:),4);
   long_name = fd{varName}.long_name;
   ncclose(fd);
+  clear v;
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
@@ -158,7 +159,7 @@ else
 end
 cb = colorbar('southoutside');
 set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
-title([varName ', ' date2Str(startTime) '-' date2Str(stopTime) ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
+title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'plev', 'latitude'};
