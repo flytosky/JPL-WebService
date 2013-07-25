@@ -140,6 +140,7 @@ for fileI = 1:nFiles
   end
   long_name = fd{varName}.long_name;
   ncclose(fd);
+  clear v;
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
@@ -148,12 +149,11 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
 [h, cb] = displayTwoDimData(lon, lat, var_clim');
-my_varName =  varName
-if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os')) 
-	title(h, [varName ', at ' num2str(round(thisPlev/100)) 'hPa, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
-else
-	title(h, [varName ', at ' num2str(round(thisPlev/10000)) 'dbar, ' date2Str(startTime) '-' date2Str(stopTime) ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+plev_units = 'hPa';
+if strcmp(varName, 'ot') || strcmp(varName, 'os') 
+  plev_units = 'dbar';
 end
+title(h, [varName ', at ' num2str(round(thisPlev/100)) plev_units ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
 
