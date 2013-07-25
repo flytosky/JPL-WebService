@@ -115,7 +115,7 @@ set(gca, 'fontweight', 'bold');
 xlabel('Latitude (deg)');
 %ylabel(['Zonal mean (' v_units ')']);
 ylabel([ long_name ' (' v_units ')']);
-title([varName ', ' date2Str(real_startTime) '-' date2Str(real_stopTime) ' zonal mean climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
+title([varName ', ' date2Str(real_startTime, '/') '-' date2Str(real_stopTime, '/') ' zonal mean climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'latitude'};
