@@ -147,7 +147,6 @@ def displayTwoDimMap():
         success = False
         message = str(e)
 
-
     return jsonify({
         'success': success,
         'message': message,
@@ -353,7 +352,7 @@ def displayTwoDimZonalMean():
       # instantiate the app. class
       c1 = call_twoDimZonalMean.call_twoDimZonalMean(model, var, startT, endT, lat1, lat2, months, output_dir)
       # call the app. function
-      (message, imgFileName) = c1.displayTwoDimZonalMean()
+      (message, imgFileName, dataFileName) = c1.displayTwoDimZonalMean()
       # chdir back
       os.chdir(current_dir)
 
@@ -363,11 +362,14 @@ def displayTwoDimZonalMean():
 
       url = 'http://' + hostname + ':' + port + '/static/twoDimZonalMean/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/twoDimZonalMean/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         success = False
@@ -378,6 +380,7 @@ def displayTwoDimZonalMean():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
