@@ -84,6 +84,7 @@ def displayTwoDimMap():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model, var, start time, end time, lon1, lon2, lat1, lat2, months
 
@@ -317,6 +318,7 @@ def displayTwoDimZonalMean():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model, var, start time, end time, lat1, lat2, months
 
@@ -352,7 +354,9 @@ def displayTwoDimZonalMean():
       # instantiate the app. class
       c1 = call_twoDimZonalMean.call_twoDimZonalMean(model, var, startT, endT, lat1, lat2, months, output_dir)
       # call the app. function
+      ### print 'before the call to c1.displayTwoDimZonalMean() ...'
       (message, imgFileName, dataFileName) = c1.displayTwoDimZonalMean()
+      ### print 'after the call to c1.displayTwoDimZonalMean()'
       # chdir back
       os.chdir(current_dir)
 
