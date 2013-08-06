@@ -12,14 +12,16 @@ cr = {
 # def_change_labels:
 # class_SUBSET_REGION():
   # def_getFileName
-  # def_chechTime
+  # def_getUnits(self):
+  # def_checkTime
   # def_subsetting():
   # def_loadFile
   # def_scatterPlot
   # def_diffPlot
   # def_diffPlot2
   # def_diffPlot3
-  # def_diffPlot4
+  # def_diffPlot4   # this is one used
+  # def_saveData(self):
 'init_class':           1,   # 1  1
 'command_arg':          1,   # 1  1
 'plot__':               1,   # 1  1
@@ -68,6 +70,29 @@ num2month = {
 11: 'NOV',
 12: 'DEC',
 }
+
+modelCenter = [
+'cccma',
+'csiro',
+'gfdl',
+'giss',
+'ipsl',
+'miroc',
+'ncar',
+'ncc',
+'ukmo',
+]
+
+obsCenter = [
+'nasa',
+'noaa',
+'argo',
+]
+
+oceanVar = [
+'ot',
+'os',
+]
 
 # def_change_labels(ax):
 def change_labels(ax):
@@ -209,37 +234,51 @@ class SUBSET_REGION():
 
   # def_getFileName(self, center, model, varName):
   def getFileName(self, center, model, varName):
-    fn0 = '%s/%s/%s/%s'%(self.dataDir, center, model, varName)
-    #files = glob.glob('%s_*.nc'%fn0)
-    #print fn0
+    # the original is just for model
+    if center in modelCenter:
+      dir0 = '%s/%s/%s/original'%(self.dataDir, center, model)
+    else:
+      dir0 = '%s/%s/%s'%(self.dataDir, center, model)
 
-    if 0:
-      files1 = glob.glob('%s*.des'%fn0)
-      if len(files1)>0:
-        files1.sort()
-        return files1[0]
+    files1 = glob.glob('%s/%s_*.nc'%(dir0, varName))
+    files2 = glob.glob('%s/%s_.des'%(dir0, varName))
 
-    files1 = glob.glob('%s*.nc'%fn0)
-    if len(files1)>0:
-      files1.sort()
-      return files1[0]
-  
+    if len(files2)>1:
+      print 'more than 1 des files:'
+      for f in files2:
+        print f
+      return None
+
+    if len(files1)>1 and len(files2)==1:
+      return files2[0], files1[0]
+
+    if len(files1)>1 and len(files2)==0:
+      desFn = '%s/%s_.des'%(dir0, varName)
+      temp1 = 'mkdes --f90 --des %s %s/%s_*.nc'%(desFn, dir0, varName)
+      print temp1
+      os.system(temp1)
+      files2a = glob.glob('%s/%s_.des'%(dir0, varName))
+      return files2a[0], files1[0]
+      
+    if len(files1)==1:
+      return files1[0], files1[0]
+ 
     return None
 
   # def_getUnits(self):
   def getUnits(self):
-    nc1 = Dataset(self.inFile1, 'r')
+    nc1 = Dataset(self.inFile1Nc, 'r')
     data = nc1.variables[self.varName1]
     self.units1 = data.units
     nc1.close()
 
-    nc1 = Dataset(self.inFile2, 'r')
+    nc1 = Dataset(self.inFile2Nc, 'r')
     data = nc1.variables[self.varName2]
     self.units2 = data.units
     nc1.close()
 
-  #def_chechTime
-  def chechTime(self, ncFile, varName):
+  # def_checkTime
+  def checkTime(self, ncFile, varName):
     # open file
     nc1 = Dataset(ncFile, 'r')
 
@@ -271,7 +310,7 @@ class SUBSET_REGION():
     nc1.close()
 
   # def_subsetting():
-  def subsetting(self, ncFile1, varName1, ncFile2=None, varName2='DATA1', varNameOut='DATA1', interp='', dim=4):
+  def subsetting(self, ncFile1, varName1, ncFile2=None, varName2='DATA1', varNameOut='DATA1', interp='', dim=4, lev=None):
 
     try:
       temp1 = os.path.isfile(ncFile1)
@@ -295,7 +334,17 @@ class SUBSET_REGION():
       dimStr = ', t="15-%s-%d":"15-%s-%d"@ave'\
 %(num2month[self.monthS], self.yearS, num2month[self.monthE], self.yearE)
     elif dim==4:
-      dimStr = ', k=1, t="15-%s-%d":"15-%s-%d"@ave'\
+      if lev<0:
+        dimStr = ', k=1, t="15-%s-%d":"15-%s-%d"@ave'\
+%(num2month[self.monthS], self.yearS, num2month[self.monthE], self.yearE)
+      else:
+        dimStr = ', z=%g, t="15-%s-%d":"15-%s-%d"@ave'\
+%(lev, num2month[self.monthS], self.yearS, num2month[self.monthE], self.yearE)
+
+      dimStr2 = ', k=%g, t="15-%s-%d":"15-%s-%d"@ave'\
+%(self.pres2, num2month[self.monthS], self.yearS, num2month[self.monthE], self.yearE)
+      if 0:
+        dimStr = ', k=1, t="15-%s-%d":"15-%s-%d"@ave'\
 %(num2month[self.monthS], self.yearS, num2month[self.monthE], self.yearE)
 
   # 
@@ -386,6 +435,9 @@ class SUBSET_REGION():
     nc1 = Dataset(ncFile, 'r')
     data = nc1.variables[varName][:]
     nc1.close()
+
+    if len(data.shape)==3:
+      data = data[0, :,:]
     return data
  
   # def_scatterPlot
@@ -398,10 +450,10 @@ class SUBSET_REGION():
     #print 'a2.shape: ',
     #print a2.shape
 
-    if len(a1.shape)==3:
-      a1 = a1[0, :,:]
-    if len(a2.shape)==3:
-      a2 = a2[0, :,:]
+    #if len(a1.shape)==3:
+    #  a1 = a1[0, :,:]
+    #if len(a2.shape)==3:
+    #  a2 = a2[0, :,:]
 
     if a1.shape[-1] != a2.shape[-1]:
       min1 = min(a1.shape[-1], a2.shape[-1]) 
@@ -483,6 +535,9 @@ class SUBSET_REGION():
     data1a = nc1.variables['DATA1']
     dims1 = data1a.dimensions
     data1 = data1a[:]
+    if len(data1.shape)==3:
+      data1 = data1[0]
+
     lon1 = nc1.variables[dims1[-1]][:]
     lat1 = nc1.variables[dims1[-2]][:]
     nc1.close()
@@ -491,6 +546,9 @@ class SUBSET_REGION():
     data2a = nc2.variables['DATA2']
     dims2 = data2a.dimensions
     data2 = data2a[:]
+    if len(data2.shape)==3:
+      data2 = data2[0]
+
     lon2 = nc2.variables[dims2[-1]][:]
     lat2 = nc2.variables[dims2[-2]][:]
     nc2.close()
@@ -732,7 +790,50 @@ class SUBSET_REGION():
     except:
       tempFile = None
 
+  # def_saveData(self):
+  def saveData(self, data1,data2):
+    fn = '%s/data_compare.nc'%self.outDir
 
+    # load data
+    nc1 = Dataset(tempFile1, 'r')
+    data1a = nc1.variables['DATA1']
+    dims1 = data1a.dimensions
+    data1 = data1a[:]
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+    nc1.close()
+
+    nc2 = Dataset(tempFile2, 'r')
+    data2a = nc2.variables['DATA2']
+    dims2 = data2a.dimensions
+    data2 = data2a[:]
+    lon2 = nc2.variables[dims2[-1]][:]
+    lat2 = nc2.variables[dims2[-2]][:]
+    nc2.close()
+
+    if type(data1)==type(np.ma.arange(1)):
+      data1a = data1.filled(-9999.0)
+    else: 
+      data1a = data1
+
+    if type(data2)==type(np.ma.arange(1)):
+      data2a = data2.filled(-9999.0)
+    else: 
+      data2a = data2
+
+    NC1.save2nc(data1a, ncfile=fn, name='data1', 
+       newfile=1,
+       format='NETCDF3_CLASSIC',
+       missing_value=-9999.0,
+       axisorder='yx', axislib=NC1.axislib0, axisarray=[lat1, lon1])
+
+    nc1 = dataSet(fn, 'r+')
+    d2 = nc1.createVariable('data2', 'float32', ('lat', 'lon'))
+    d2[:,:] = data2
+    nc1.close()
+
+    print 'dataFile: %s'%dataFile
+    
 if cr['init_class']       == 1:
   a = SUBSET_REGION()
 
@@ -765,58 +866,75 @@ if cr['command_arg']       == 1:
 
     # arg 3
     ii += 1
+    a.pres1 = float(argv[ii])
+    if a.pres1>0 and (a.varName1 not in oceanVar):
+      a.pres1 *= 100.0
+
+    # arg 4
+    ii += 1
     temp1 = argv[ii].split('_')
     a.center2 = temp1[0]
     a.model2 = temp1[1]
 
-    # arg 4
+    # arg 5
     ii += 1
     a.varName2 = argv[ii]
 
-    # arg 5
+    # arg 6
+    ii += 1
+    a.pres2 = float(argv[ii])
+    if a.pres2>0 and (a.varName2 not in oceanVar):
+      a.pres2 *= 100.0
+
+    # arg 7
     ii += 1
     a.yearS = int(argv[ii][:4])
     a.monthS = int(argv[ii][4:])
 
-    # arg 6
+    # arg 8
     ii += 1
     a.yearE = int(argv[ii][:4])
     a.monthE = int(argv[ii][4:])
 
-    # arg 7
+    # arg 9
     ii += 1
     temp1 = argv[ii].split(',')
     a.lon1S = float(temp1[0])
     a.lon1E = float(temp1[1])
 
-    # arg 8
+    # arg 10
     ii += 1
     temp1 = argv[ii].split(',')
     a.lat1S = float(temp1[0])
     a.lat1E = float(temp1[1])
 
-    # arg 9
+    # arg 11
     ii += 1
     a.outDir = argv[ii]
     print 'a.outDir: ',
     print a.outDir
 
-    if len(argv)>10:
-      # arg 10
+    if len(argv)>12:
+      # arg 12
       ii += 1
       a.isDiffPlot = int(argv[ii])
 
 
 if cr['plot__']       == 1:
   # get file names
-  a.inFile1 = a.getFileName(a.center1, a.model1, a.varName1) 
-  a.inFile2 = a.getFileName(a.center2, a.model2, a.varName2) 
+  a.inFile1, a.inFile1Nc = a.getFileName(a.center1, a.model1, a.varName1) 
+  a.inFile2, a.inFile2Nc = a.getFileName(a.center2, a.model2, a.varName2) 
 
   a.getUnits()
 
   # subset
-  tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4)
-  tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4)
+  tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4, lev=a.pres1)
+  tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2)
+  print 'tempFiles:'
+  print tempFile1
+  print tempFile2
+  # zzzz
+  #a.saveFile(data1,data2)
 
   # plot scatter
   if a.isDiffPlot:
