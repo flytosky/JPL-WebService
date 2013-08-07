@@ -95,8 +95,8 @@ for fileI = 1:nFiles
       else
         lonIdx = find(lon <= lonRange(2));
         lonIdx_neg = find(lon_neg >= lonRange(1));
-        lonIdx = [lonIdx_neg; lonIdx];
         lon = [lon_neg(lonIdx_neg); lon(lonIdx)];
+        lonIdx = [lonIdx_neg; lonIdx];
         nLon = length(lonIdx);
       end
     end
