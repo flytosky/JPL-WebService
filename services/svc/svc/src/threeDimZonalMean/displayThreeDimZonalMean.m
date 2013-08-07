@@ -88,7 +88,7 @@ for fileI = 1:nFiles
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
     lat = lat(latIdx);
-    pIdx = find(plev > plevRange(2) & plev <= plevRange(1));
+    pIdx = find(plev >= plevRange(2) & plev <= plevRange(1));
     nP = length(pIdx);
     if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
     	plev = plev(pIdx)/100; % convert to hPa
