@@ -27,7 +27,6 @@ lat_sub = lat(latIdx);
 % We need to handle the case when the longitude has negative values wrapping around 0
 if lonRange(1) >= 0
   lonIdx = find(lon <= lonRange(2) & lon >= lonRange(1));
-  nLon = length(lonIdx);
   lon_sub = lon(lonIdx);
 else
   lon_neg = lon - 360;
@@ -37,7 +36,7 @@ else
   else
     lonIdx = find(lon <= lonRange(2));
     lonIdx_neg = find(lon_neg >= lonRange(1));
-    lonIdx = [lonIdx_neg; lonIdx];
     lon_sub = [lon_neg(lonIdx_neg); lon(lonIdx)];
+    lonIdx = [lonIdx_neg; lonIdx];
   end
 end
