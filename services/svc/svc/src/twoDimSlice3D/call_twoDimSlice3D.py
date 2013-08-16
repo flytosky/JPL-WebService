@@ -53,6 +53,11 @@ class call_twoDimSlice3D:
           ### print 'l1: ', l1
           image_filename = ''
 
+          fst2 = 'dataFile: '
+          l2 = len(fst2)
+          ### print 'l2: ', l2
+          data_filename = ''
+
           lines = stdout_value.split('\n')
           for line in lines:
             ### print '*****: ', line
@@ -60,15 +65,20 @@ class call_twoDimSlice3D:
               print '***** line: ', line
               image_filename = line[l1:]
 
+            if line.find('dataFile: ') >= 0:
+              print '***** line: ', line
+              data_filename = line[l2:]
+
           print 'image_filename: ', image_filename
-          return (stdout_value, image_filename)
+          print 'data_filename: ', data_filename
+          return (stdout_value, image_filename, data_filename)
         except OSError, e:
           err_mesg = 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
-          return (err_mesg, '')
+          return (err_mesg, '', '')
 
 
 if __name__ == '__main__':
-    c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'hus', '201001', '201212', '80000', '0', '30', '-29', '29', '4,5,6', '/home/svc/cmac/trunk/services/svc/svc/static/')
+    c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'hus', '199001', '201212', '20000', '0', '30', '-29', '29', '4,5,6', './')
 
     mesg = c1.displayTwoDimSlice3D()
     print 'mesg: ', mesg
