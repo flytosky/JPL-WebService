@@ -17,11 +17,27 @@
     window.onload = function() {
       select_data();
       select_var();
+      // no data to download yet
+      disable_download_button();
     }
 
 
-    // enable all vars in dropdown menu
+    // disable download data button
+    function disable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=true;
+    }
 
+    // enable download data button
+    function enable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=false;
+    }         
+
+
+    // enable all vars in dropdown menu
     function reset_vars()
     {
       var x=document.getElementById("var");
@@ -392,14 +408,24 @@
       });
 
 
+      $("#download_data").click(function(event) {
+        var durl = $("#data_url").val();
+        // alert(durl);
+        window.location.assign(durl);
+      });
+
+
       $("#timeSeries2D").click(function(event) {
         // alert('****** inside timeSeries2D()!');
         Response = null;
 
+        // no data to download yet
+        disable_download_button();
+
         $("#Response").html("Calculating ...");
+        $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
         var url = "http://" + window.location.hostname + ":8090/svc/timeSeries2D?";
@@ -480,8 +506,13 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='820'/>";                // alert(html);
-                $("#Image").html(html);
+                var html1 = "<img src='"+data.url+"' width='820'/>";
+                // alert(html1);
+                $("#Image").html(html1);
+
+                // post dataUrl to textarea and enable download button
+                $("#data_url").html(data.dataUrl);
+                enable_download_button();
             },
             error: function(xhr, textStatus, errorThrown) {
                 $("#Response").html("error!");
@@ -592,7 +623,11 @@
 </tr>
 
 <tr>
-<td colspan="4" align="center"><input id="timeSeries2D" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="2" align="center"><input id="timeSeries2D" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<form>
+<td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
+</td>
+</form>
 </tr>
 
 <tr>
@@ -603,10 +638,16 @@
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="110" rows="6">Text Here</textarea>
+<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
 </td>
 </tr>
+<tr>  
+<td colspan="4" align="center">  
+<textarea readonly id="Response" cols="89" rows="6">Service Response Text Here</textarea>  
+</td>  
+</tr>  
 
+</p>
 </table>
 
 </body>
