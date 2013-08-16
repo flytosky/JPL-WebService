@@ -17,7 +17,26 @@
       select_all_months();
       select_data();
       select_var();
+      // no data to download yet
+      disable_download_button();
     }
+
+
+    // disable download data button
+    function disable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=true;
+    }
+
+
+    // enable download data button
+    function enable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=false;
+    }         
+
 
     // select all months in the checkboxes
     function select_all_months()
@@ -93,6 +112,9 @@
     {
       var var_string = $("#var").val();
 
+      // disable the download button because of this change
+      disable_download_button();
+
       if (var_string == "Air Temperature")
         variable = "ta";
       else if (var_string == "Specific Humidity")
@@ -114,6 +136,9 @@
     {
       var data_string = $("#data").val();
       var x=document.getElementById("var");
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // enable all options in "var" dropdown first
       reset_vars();
@@ -165,6 +190,9 @@
       // alert(s1.selectedIndex);
       // alert(s1.options[s1.selectedIndex].value);
 
+      // disable the download button because of this change
+      disable_download_button();
+
       // "select none"
       if (s1.selectedIndex == 1) {
         reset_months();
@@ -212,8 +240,19 @@
       });
 
 
+      $("#download_data").click(function(event) {
+        var durl = $("#data_url").val();
+        // alert(durl);
+        window.location.assign(durl);
+      });
+
+
       $("#twodvarmap").click(function(event) {
 	Response = null;
+
+        // no data to download yet
+        disable_download_button();
+
         // flag error if no month box is checked
         if (no_month_check()) {
            // $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
@@ -223,6 +262,7 @@
         }
 
         $("#Response").html("Calculating ...");
+        $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimSlice3D?model=UKMO_HadGEM2-ES&var=hus&start_time=199001&end_time=199512&pr=80000&lon1=0&lon2=20&lat1=-29&lat2=29&months=1,2,3,4,5,6,7,8,9,10,11,12
@@ -373,12 +413,17 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='680'/>";
-                // alert(html);
-                $("#Image").html(html);
+                var html1 = "<img src='"+data.url+"' width='680'/>";
+                // alert(html1);
+                $("#Image").html(html1);
+
+                // post dataUrl to textarea and enable download button
+                $("#data_url").html(data.dataUrl);
+                enable_download_button();
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#Response").html("error!");
+		$("#data_url").html("error!");
                 // alert("xhr.status: "+xhr.status);
                 // alert("error status: "+textStatus);
             },
@@ -500,7 +545,11 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 </tr>
 
 <tr>
-<td colspan="4" align="center"><input id="twodvarmap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="2" align="center"><input id="twodvarmap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<form>
+<td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
+</td>
+</form>
 </tr>
 
 <tr>
@@ -510,7 +559,12 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 </tr>
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="89" rows="6">Text Here</textarea>
+<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+</td>
+</tr>
+<tr>
+<td colspan="4" align="center">
+<textarea readonly id="Response" cols="89" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 </p>
