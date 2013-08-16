@@ -74,6 +74,9 @@
     {
       var var_string = $("#var").val();
 
+      // disable the download button because of this change
+      disable_download_button();
+
       if (var_string == "Total Cloud Fraction")
         variable = "clt";
       else if (var_string == "Surface Temperature")
@@ -134,6 +137,9 @@
     {
       var data_string = $("#data").val();
       var x=document.getElementById("var");
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // enable all options in "var" dropdown first
       reset_vars();

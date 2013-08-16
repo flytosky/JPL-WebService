@@ -128,6 +128,9 @@
     {
       var var_string = $("#var").val();
 
+      // disable the download button because of this change
+      disable_download_button();
+
       if (var_string == "Total Cloud Fraction")
         variable = "clt";
       else if (var_string == "Surface Temperature")
@@ -187,6 +190,9 @@
     {
       var data_string = $("#data").val();
       var x=document.getElementById("var");
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // enable all options in "var" dropdown first
       reset_vars();
@@ -457,6 +463,9 @@
       var s1=document.getElementById("months");
       // alert(s1.selectedIndex);
       // alert(s1.options[s1.selectedIndex].value);
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // "select none"
       if (s1.selectedIndex == 1) {
