@@ -1,5 +1,7 @@
 #!/usr/local/bin/octave -q
 
+addpath([pwd()  '/../util/']);
+
 arg_list = argv();
 printf ("program name: %s\n", program_name());
 
