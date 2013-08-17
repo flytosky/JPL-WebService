@@ -1,4 +1,4 @@
-function avg = simpleClimatology(data, dim)
+function avg = simpleClimatology(data, dim, monthIdx)
 %
 % This function computes climatology by taking an average over the monthly
 % data index, which is the index for dimension "dim".
@@ -8,6 +8,10 @@ function avg = simpleClimatology(data, dim)
 % Revision history:
 % 2012/11/01:	Initial version, cz
 %
+
+if nargin < 3
+  monthIdx = 1:12; % Let the default value of months to cover the whole year
+end
 
 % First obtain the dimension information of the data
 dataSize = size(data);
@@ -19,8 +23,8 @@ data = reshape(data, prod(dataSize(1:(dim-1))), dataSize(dim), prod(dataSize((di
 dataSize(dim) = 1;
 
 avg = zeros(dataSize);
-for ii = 1:12
+for ii = monthIdx
   avg(:) = avg(:) + reshape(meanExcludeNaN(data(:,ii:12:end,:),2), [], 1);
 end
 
-avg = avg/12;
+avg = avg/length(monthIdx);
