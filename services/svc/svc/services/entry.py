@@ -165,6 +165,7 @@ def display_timeSeries2D():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model, var, start time, end time, lon1, lon2, lat1, lat2
 
@@ -202,7 +203,7 @@ def display_timeSeries2D():
       # instantiate the app. class
       c1 = call_timeSeries2D.call_timeSeries2D(model, var, startT, endT, lon1, lon2, lat1, lat2, output_dir)
       # call the app. function
-      (message, imgFileName) = c1.display_timeSeries2D()
+      (message, imgFileName, dataFileName) = c1.display_timeSeries2D()
       # chdir back
       os.chdir(current_dir)
 
@@ -213,11 +214,14 @@ def display_timeSeries2D():
       ### url = 'http://cmacws.jpl.nasa.gov:8090/static/timeSeries2D/' + tag + '/' + imgFileName
       url = 'http://' + hostname + ':' + port + '/static/timeSeries2D/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/timeSeries2D/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         success = False
@@ -228,6 +232,7 @@ def display_timeSeries2D():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
@@ -240,6 +245,7 @@ def displayTwoDimSlice3D():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model, var, start time, end time, pressure_level, lon1, lon2, lat1, lat2, months
 
@@ -281,7 +287,7 @@ def displayTwoDimSlice3D():
       # instantiate the app. class
       c1 = call_twoDimSlice3D.call_twoDimSlice3D(model, var, startT, endT, pr, lon1, lon2, lat1, lat2, months, output_dir)
       # call the app. function
-      (message, imgFileName) = c1.displayTwoDimSlice3D()
+      (message, imgFileName, dataFileName) = c1.displayTwoDimSlice3D()
       # chdir back
       os.chdir(current_dir)
 
@@ -291,11 +297,14 @@ def displayTwoDimSlice3D():
 
       url = 'http://' + hostname + ':' + port + '/static/twoDimSlice3D/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/twoDimSlice3D/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         success = False
@@ -306,6 +315,7 @@ def displayTwoDimSlice3D():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
