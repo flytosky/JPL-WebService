@@ -666,6 +666,7 @@
                     text = "Error in backend: <br>" + text; 
                     // $("#Response").html("<span style='color:red'>" + text + "</span>");
                     $("#Response").html(text);
+                    $("#data_url").html(text);
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
