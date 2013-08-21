@@ -407,6 +407,7 @@ def displayThreeDimZonalMean():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model, var, start time, end time, lat1, lat2, pres1, pres2, months
 
@@ -446,7 +447,8 @@ def displayThreeDimZonalMean():
       # instantiate the app. class
       c1 = call_threeDimZonalMean.call_threeDimZonalMean(model, var, startT, endT, lat1, lat2, pres1, pres2, months, output_dir)
       # call the app. function
-      (message, imgFileName) = c1.displayThreeDimZonalMean()
+      ### (message, imgFileName) = c1.displayThreeDimZonalMean()
+      (message, imgFileName, dataFileName) = c1.displayThreeDimZonalMean()
       # chdir back
       os.chdir(current_dir)
 
@@ -456,11 +458,14 @@ def displayThreeDimZonalMean():
 
       url = 'http://' + hostname + ':' + port + '/static/threeDimZonalMean/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/threeDimZonalMean/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         success = False
@@ -471,6 +476,7 @@ def displayThreeDimZonalMean():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
@@ -483,6 +489,7 @@ def displayThreeDimVerticalProfile():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model, var, start time, end time, lon1, lon2, lat1, lat2, months
 
@@ -522,7 +529,7 @@ def displayThreeDimVerticalProfile():
       # instantiate the app. class
       c1 = call_threeDimVerticalProfile.call_threeDimVerticalProfile(model, var, startT, endT, lon1, lon2, lat1, lat2, months, output_dir)
       # call the app. function
-      (message, imgFileName) = c1.displayThreeDimVerticalProfile()
+      (message, imgFileName, dataFileName) = c1.displayThreeDimVerticalProfile()
       # chdir back
       os.chdir(current_dir)
 
@@ -532,11 +539,14 @@ def displayThreeDimVerticalProfile():
 
       url = 'http://' + hostname + ':' + port + '/static/threeDimVerticalProfile/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/threeDimVerticalProfile/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         success = False
@@ -547,6 +557,7 @@ def displayThreeDimVerticalProfile():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
