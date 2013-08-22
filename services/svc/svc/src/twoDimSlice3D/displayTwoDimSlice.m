@@ -78,28 +78,10 @@ for fileI = 1:nFiles
     lon = fd{'lon'}(:);
     lat = fd{'lat'}(:);
     plev = readPressureLevels(fd, plevVarName);
-    latIdx = find(lat <= latRange(2) & lat >= latRange(1));
-    nLat = length(latIdx);
-    lat = lat(latIdx);
 
-    if lonRange(1) >= 0
-      lonIdx = find(lon <= lonRange(2) & lon >= lonRange(1));
-      nLon = length(lonIdx);
-      lon = lon(lonIdx);
-    else
-      lon_neg = lon - 360;
-      if lonRange(2) < 0
-        lonIdx = find(lon_neg <= lonRange(2) & lon_neg >= lonRange(1));
-        nLon = length(lonIdx);
-        lon = lon_neg(lonIdx);
-      else
-        lonIdx = find(lon <= lonRange(2));
-        lonIdx_neg = find(lon_neg >= lonRange(1));
-        lon = [lon_neg(lonIdx_neg); lon(lonIdx)];
-        lonIdx = [lonIdx_neg; lonIdx];
-        nLon = length(lonIdx);
-      end
-    end
+    [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
+    nLon = length(lon);
+    nLat = length(lat);
 
     [p_idx, p_alphas] = linearInterpHelper(thisPlev, plev, 'log'); % get the layers relevant to the specified pressure level
     monthlyData = nan(nMonths, nLat, nLon);
