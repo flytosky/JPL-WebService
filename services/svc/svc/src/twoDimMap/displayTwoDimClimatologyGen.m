@@ -63,28 +63,10 @@ for fileI = 1:nFiles
     lon = fd{'lon'}(:);
     lat = fd{'lat'}(:);
 
-    latIdx = find(lat <= latRange(2) & lat >= latRange(1));
-    nLat = length(latIdx);
-    lat = lat(latIdx);
+    [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
+    nLon = length(lon);
+    nLat = length(lat);
 
-    if lonRange(1) >= 0
-      lonIdx = find(lon <= lonRange(2) & lon >= lonRange(1));
-      nLon = length(lonIdx);
-      lon = lon(lonIdx);
-    else
-      lon_neg = lon - 360;
-      if lonRange(2) < 0
-        lonIdx = find(lon_neg <= lonRange(2) & lon_neg >= lonRange(1));
-        nLon = length(lonIdx);
-        lon = lon_neg(lonIdx);
-      else
-        lonIdx = find(lon <= lonRange(2));
-        lonIdx_neg = find(lon_neg >= lonRange(1));
-        lon = [lon_neg(lonIdx_neg); lon(lonIdx)];
-        lonIdx = [lonIdx_neg; lonIdx];
-        nLon = length(lonIdx);
-      end
-    end
     long_name = fd{varName}.long_name;
 
     monthlyData = nan(nMonths, nLat, nLon);
