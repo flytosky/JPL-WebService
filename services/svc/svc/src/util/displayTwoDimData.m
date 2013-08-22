@@ -6,7 +6,7 @@ function [ha, cb] = displayTwoDimData(lon, lat, twoDimData, ha, cfgParams)
 persistent coastData;
 
 if isempty(coastData)
-  coastLongAndLat = load('data/coastLineData.txt');
+  coastLongAndLat = load([getDataDirectory('displayTwoDimData') '/coastLineData.txt']);
   coastLongAndLat = reshape(coastLongAndLat, [], 2);
 end
 
