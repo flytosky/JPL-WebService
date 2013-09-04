@@ -6,14 +6,16 @@ from os.path import basename
 
 class call_scatterPlot2V:
     def __init__(self, 
-model1, var1, 
-model2, var2, 
+model1, var1, pres1,
+model2, var2, pres2,
 start_time, end_time, lonS, lonE, latS, latE, output_dir):
 
         self.model1 = model1
         self.var1 = var1
+        self.pres1 = pres1
         self.model2 = model2
         self.var2 = var2
+        self.pres2 = pres2
         self.start_time = start_time
         self.end_time = end_time
         self.lon1 = lonS
@@ -22,6 +24,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         self.lat2 = latE
 
         self.output_dir = output_dir
+        self.isDiffPlot = 0
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -29,18 +32,18 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         #  self.var = 'tos'
 
 
-    def displayScatterPlot2V(self, isDiffPlot):
+    def display(self):
 
         ### print 'current dir: ', os.getcwd()
         # inputs: model name, variable name, start-year-mon, end-year-mon, 'start lon, end lon', 'start lat, end lat', 'mon list'
         # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
                  #'%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
         inputs = \
-                 self.model1 + ' ' + self.var1 + ' ' + \
-                 self.model2 + ' ' + self.var2 + ' ' + \
+                 self.model1 + ' ' + self.var1 + ' ' + self.pres1 + ' ' + \
+                 self.model2 + ' ' + self.var2 + ' ' + self.pres2 + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.output_dir + ' ' + '%d'%isDiffPlot
+                 self.output_dir + ' ' + '%d'%self.isDiffPlot
 
         print 'inputs: ', inputs
         #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
@@ -72,7 +75,6 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
               print '***** line: ', line
               image_filename = line[l1:]
 
-          image_filename = os.path.basename(image_filename)
           print 'image_filename: ', image_filename
           return (stdout_value, image_filename)
         # 
@@ -83,12 +85,8 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
 
 if __name__ == '__main__':
     c1 = call_scatterPlot2V(\
-'ukmo_hadgem2-a', 'ts', 'ukmo_hadgem2-a', 'clt', '199001', '199512', '0', '100', '-29', '29', \
-'./')
+'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
+'/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
 
-    # scatterPlot
-    ### mesg = c1.displayScatterPlot2V(0)
-
-    # differnece plot
-    mesg = c1.displayScatterPlot2V(1)
+    mesg = c1.display()
     print 'mesg: ', mesg
