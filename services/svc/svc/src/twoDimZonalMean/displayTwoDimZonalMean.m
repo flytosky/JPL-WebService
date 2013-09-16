@@ -62,10 +62,10 @@ for fileI = 1:nFiles
     nLat = length(latIdx);
     lat = lat(latIdx);
 
-    monthlyData = nan(nMonths, nLat);
+    monthlyData = nan(nMonths, nLat, 'single');
   end
 
-  v = fd{varName}(:);
+  v = single(fd{varName}(:));
   if ~isempty(fd{varName}.missing_value)
     v(abs(v - fd{varName}.missing_value) < 1) = NaN;
   end
@@ -98,6 +98,7 @@ for fileI = 1:nFiles
   monthlyData(monthIdx1:monthIdx2, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,:),3);
   long_name = fd{varName}.long_name;
   ncclose(fd);
+  clear v;
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
