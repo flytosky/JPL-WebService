@@ -96,10 +96,10 @@ for fileI = 1:nFiles
     nLat = length(lat);
     nP = length(plev);
 
-    monthlyData = nan(nMonths, nP);
+    monthlyData = nan(nMonths, nP, 'single');
   end
 
-  v = fd{varName}(:);
+  v = single(fd{varName}(:));
   if ~isempty(fd{varName}.missing_value)
     v(abs(v - fd{varName}.missing_value) < 1) = NaN; 
   end
