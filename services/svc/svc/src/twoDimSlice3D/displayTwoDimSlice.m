@@ -84,10 +84,10 @@ for fileI = 1:nFiles
     nLat = length(lat);
 
     [p_idx, p_alphas] = linearInterpHelper(thisPlev, plev, 'log'); % get the layers relevant to the specified pressure level
-    monthlyData = nan(nMonths, nLat, nLon);
+    monthlyData = nan(nMonths, nLat, nLon, 'single');
   end
 
-  v = fd{varName}(:);
+  v = single(fd{varName}(:));
   if ~isempty(fd{varName}.missing_value)
     v(abs(v - fd{varName}.missing_value) < 1) = NaN;
   end
