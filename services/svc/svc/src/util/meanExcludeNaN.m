@@ -21,14 +21,16 @@ function meanV = meanExcludeNaN(v, dim, w)
 
 if nargin < 3
   v_size = size(v);
-  w = ones(v_size);
   if nargin < 2
     dim = find(v_size > 1, 1, 'first');
   end
+  meanV = single(sum(~isnan(v), dim));
+  v(isnan(v)) = 0;
+  meanV = sum(v, dim) ./ meanV;
+else
+  % Replace all the NaN with 0 to exclude them in computing mean 
+  w(isnan(v)) = 0;
+  v(isnan(v)) = 0;
+
+  meanV = sum(v .* w, dim) ./ sum(w , dim);
 end
-
-% Replace all the NaN with 0 to exclude them in computing mean 
-w(isnan(v)) = 0;
-v(isnan(v)) = 0;
-
-meanV = sum(v .* w, dim) ./ sum(w , dim);
