@@ -69,10 +69,10 @@ for fileI = 1:nFiles
 
     long_name = fd{varName}.long_name;
 
-    monthlyData = nan(nMonths, nLat, nLon);
+    monthlyData = nan(nMonths, nLat, nLon, 'single');
   end
 
-  v = fd{varName}(:);
+  v = single(fd{varName}(:));
   if(~isempty(fd{varName}.missing_value))
     v(abs(v - fd{varName}.missing_value) < 1) = NaN;
   end
@@ -106,6 +106,7 @@ for fileI = 1:nFiles
   %disp(lonIdx);
   monthlyData(monthIdx1:monthIdx2, :, :) = v(idx2Data_start:idx2Data_stop,latIdx,lonIdx);
   ncclose(fd);
+  clear v;
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
