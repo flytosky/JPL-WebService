@@ -713,6 +713,7 @@
            return;
         }
 
+	$("#validate).html("Calculating ...");
         $("#Response").html("Calculating ...");
         $("#data_url").html("Calculating ...");
         $("#Image").html("");
@@ -752,47 +753,48 @@
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
 
-		if(!((parseFloat(lat0) >= -90.0) && (parseFloat(lat0) <= 90.0)))
-		{
-			alert("The start latitude must be between -90.0 and 90.0 inclusively.");
-			return;
-		}
+	if(!((parseFloat(lat0) >= -90.0) && (parseFloat(lat0) <= 90.0)))
+	{
+		alert("The start latitude must be between -90.0 and 90.0 inclusively.");
+		alert("This is a test!);
+		return;
+	}
 
-		if(!((parseFloat(lat1) >= -90.0) && (parseFloat(lat1) <= 90.0)))
-		{
-			alert("The end latitude must be between -90.0 and 90.0 inclusively.");
-			return;
-		}
+	if(!((parseFloat(lat1) >= -90.0) && (parseFloat(lat1) <= 90.0)))
+	{
+		alert("The end latitude must be between -90.0 and 90.0 inclusively.");
+		return;
+	}
 	
-		if(parseFloat(lat0) >= parseFloat(lat1))
-		{
-			alert("The end latitude must exceed the end latitude");
-			return;
-		}
+	if(parseFloat(lat0) >= parseFloat(lat1))
+	{
+		alert("The end latitude must exceed the end latitude");
+		return;
+	}
 
-		if( Math.abs(parseFloat(lon1) - parseFloat(lon0)) > 360.0)
-		{
-			alert("The start and end longitude must be within 360 degrees of each other.");
-			return;
-		}
+	//if( Math.abs(parseFloat(lon1) - parseFloat(lon0)) > 360.0)
+	//{
+	//	alert("The start and end longitude must be within 360 degrees of each other.");
+	//	return;
+	//}
 
-		if(!((parseFloat(lon0) >= -360.0) && (parseFloat(lon0) <= 360.0)))
-		{
-			alert("The start longitude must be between -360.0 and 360.0 inclusively.");
-			return;
-		}
+	if(!((parseFloat(lon0) >= -180.0) && (parseFloat(lon0) <= 360.0)))
+	{
+		alert("The start longitude must be between -180.0 and 360.0 inclusively.");
+		return;
+	}
 
-		if(!((parseFloat(lon1) >= -360.0) && (parseFloat(lon1) <= 360.0)))
-		{
-			alert("The end longitude must be between -360.0 and 360.0 inclusively.");
-			return;
-		}
+	if(!((parseFloat(lon1) >= -360.0) && (parseFloat(lon1) <= 360.0)))
+	{
+		alert("The end longitude must be between -360.0 and 360.0 inclusively.");
+		return;
+	}
 
-		if(parseFloat(lon0) >= parseFloat(lon1))
-		{
-			alert("The end longitude must exceed the end longitude");
-			return;
-		}
+	if(parseFloat(lon0) >= parseFloat(lon1))
+	{
+		alert("The end longitude must exceed the end longitude");
+		return;
+	}
 	
         arglist = arglist.concat("&lon1=");
         arglist = arglist.concat(lon0);
@@ -1065,7 +1067,13 @@
 </tr>
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+<textarea readonly id="data_url" cols="89" rows="2">Validation Here</textarea>
+</td>
+</tr>
+
+<tr>
+<td colspan="4" align="center">
+<textarea readonly id="data_url" cols="89" rows="2">Data URL Here/textarea>
 </td>
 </tr>
 <tr>
