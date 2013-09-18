@@ -11,11 +11,8 @@ On CentOS
 . download VMware-Player-5.0.0-812388.x86_64.txt
 . chmod +x VMware-Player-5.0.0-812388.x86_64.txt
 . sudo ./VMware-Player-5.0.0-812388.x86_64.txt
-  /usr/bin/vmplayer will be installed.
-. Remember to use
-  sudo /etc/init.d/vmware restart
-  to restart the vmware daemon, in addition to
-  replaying the vm image. This helps!
+/usr/bin/vmplayer
+will be installed.
 
 
 =============
@@ -58,19 +55,6 @@ for remote login
   ssh -p 8022 sflops@oscar1.jpl.nasa.gov
 
 
-====================================
-install vmware tools in an ubuntu vm
-====================================
-assume there is only command line interface
-. play the vm and login as sudo user
-. sudo mkdir /mnt/cdrom
-. sudo mount /dev/cdrom /mnt/cdrom
-. ls /mnt/cdrom to verify the mount
-. tar xzvf /mnt/cdrom/VMwareTools-x.x.x-xxxx.tar.gz -C /tmp/
-. cd /tmp/vmware-tools-distrib/; sudo ./vmware-install.pl -d
-. sudo reboot
-
-
 =========================
 configure shared folder
 =========================
@@ -87,14 +71,27 @@ configure shared folder
 ===========================
 which virtual image to use?
 ===========================
-. on cmacws.jpl.nasa.gov
+. on cmacws3.jpl.nasa.gov (our debugging machine)
   /home/leipan/cmac-vm/latest_copy_of_vm
 . on cmacws2.jpl.nasa.gov
   /home/leipan/cmac-vm/cmacws2_deployment
-. on cmacws3.jpl.nasa.gov
-  /home/leipan/cmac-vm/cmacws3_deployment
+. on cmacws.jpl.nasa.gov
+  /home/leipan/cmac-vm/cmacws_deployment
 . on cmacws4.jpl.nasa.gov
   /home/leipan/cmac-vm/cmacws4_deployment
+
+
+===========================
+how to play a virtual machine?
+===========================
+. take this development/debugging VM
+  /home/leipan/cmac-vm/latest_copy_of_vm
+  as an example
+. log on to physical server cmacws3
+  userid: leipan
+  passwd: sciflo
+. cd /home/leipan/cmac-vm/latest_copy_of_vm
+. vmplayer SciFlo\ Appliance.vmx
 
 
 ===========================
@@ -103,5 +100,17 @@ configure web portal inside virtual machine
 . vi /etc/apache2/sites-available/default
   to set, for example:
   DocumentRoot /home/svc/cmac/trunk/web_portal/
+
+
+===========================
+How to back up vm
+===========================
+. This is where the latest copy of the vm image
+  resides:
+  /home/leipan/cmac-vm/latest_copy_of_vm
+. To copy this vm image for backup purpose
+  cd /home/leipan/cmac-vm
+  cp -r /home/leipan/cmac-vm/latest_copy_of_vm
+/home/leipan/cmac-vm/backup_XYZ_20130916
 
 
