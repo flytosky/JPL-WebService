@@ -114,3 +114,13 @@ How to back up vm
 /home/leipan/cmac-vm/backup_XYZ_20130916
 
 
+===========================
+How to start the cmacws web services?
+===========================
+. log in to the virtual machine as svc
+  ssh -p 8022 svc@cmacws3.jpl.nasa.gov
+  (password: sciflo)
+. cd /home/svc/cmac/trunk/services/svc
+. ./start.sh
+. or python run.py
+
