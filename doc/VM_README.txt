@@ -89,7 +89,7 @@ how to play a virtual machine?
   as an example
 . log on to physical server cmacws3
   userid: leipan
-  passwd: sciflo
+  passwd: @sciflo
 . cd /home/leipan/cmac-vm/latest_copy_of_vm
 . vmplayer SciFlo\ Appliance.vmx
 
