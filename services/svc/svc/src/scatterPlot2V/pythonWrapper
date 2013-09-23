@@ -45,6 +45,7 @@ if cr['import_']       == 1:
   import numpy as np      
   from netCDF4 import Dataset
   import netCDF4 as nC4
+  import NC_btang_v4 as NC1
 
   import matplotlib 
   matplotlib.use('Agg')  
@@ -537,7 +538,10 @@ class SUBSET_REGION():
 
     # corr
     corr1 = np.corrcoef(aaa1,aaa2) 
-    Mat.title('corr coef = %.2f'%(corr1[0,1]))
+    print 'corr1:  ',
+    print corr1.shape
+    print corr1
+    Mat.title('corr coef = %.4f'%(corr1[0,1]))
 
     figFile = '%s/scatter.png'%self.outDir
     Mat.savefig(figFile, dpi=100)
@@ -843,12 +847,12 @@ class SUBSET_REGION():
        missing_value=-9999.0,
        axisorder='yx', axislib=NC1.axislib0, axisarray=[lat1, lon1])
 
-    nc1 = dataSet(fn, 'r+')
+    nc1 = Dataset(fn, 'r+')
     d2 = nc1.createVariable('data2', 'float32', ('lat', 'lon'))
     d2[:,:] = data2
     nc1.close()
 
-    print 'dataFile: %s'%dataFile
+    print 'dataFile: %s'%fn
     
 if cr['init_class']       == 1:
   a = SUBSET_REGION()
@@ -865,6 +869,8 @@ if cr['command_arg']       == 1:
   if len(sys.argv)>1:
     argv = sys.argv
 
+    print 'len(argv) = ',
+    print len(argv)
     print 'argv: '
     for i in argv:
       print i
@@ -947,7 +953,7 @@ if cr['command_arg']       == 1:
     print 'a.outDir: ',
     print a.outDir
 
-    if len(argv)>10:
+    if len(argv)>12:
       # arg 12
       ii += 1
       a.isDiffPlot = int(argv[ii])
@@ -966,7 +972,7 @@ if cr['plot__']       == 1:
   print tempFile1
   print tempFile2
 
-  a.saveFile(tempFile1, tempFile2)
+  a.saveData(tempFile1, tempFile2)
 
   # plot scatter
   if a.isDiffPlot:
