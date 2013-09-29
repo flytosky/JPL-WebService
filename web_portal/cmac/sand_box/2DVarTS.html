@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script> -->
+  <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="js/jquery.flot.min.js"></script>
+  <script type="text/javascript" src="js/json2.js"></script>
+  <script type="text/javascript" src="js/xmisc.js"></script>
+  <script type="text/javascript">
+
+    var Response = null;
+    var variable = "";
+
+
+    // called on load or reload
+    window.onload = function() {
+      select_data();
+      select_var();
+    }
+
+
+    // enable all vars in dropdown menu
+
+    function reset_vars()
+    {
+      var x=document.getElementById("var");
+
+      x.options[0].disabled=false;
+      x.options[1].disabled=false;
+      x.options[2].disabled=false;
+      x.options[3].disabled=false;
+      x.options[4].disabled=false;
+      x.options[5].disabled=false;
+      x.options[6].disabled=false;
+      x.options[7].disabled=false;
+      x.options[8].disabled=false;
+      x.options[9].disabled=false;
+      x.options[10].disabled=false;
+      x.options[11].disabled=false;
+      x.options[12].disabled=false;
+      x.options[13].disabled=false;
+      x.options[14].disabled=false;
+      x.options[15].disabled=false;
+      x.options[16].disabled=false;
+      x.options[17].disabled=false;
+      x.options[18].disabled=false;
+      x.options[19].disabled=false;
+      x.options[20].disabled=false;
+      x.options[21].disabled=false;
+      x.options[22].disabled=false;
+      x.options[23].disabled=false;
+      x.options[24].disabled=false;
+    }
+
+    // form variable string based on "var" dropdown selection
+    function select_var()
+    {
+      var var_string = $("#var").val();
+
+      if (var_string == "Total Cloud Fraction")
+        variable = "clt";
+      else if (var_string == "Surface Temperature")
+        variable = "ts";
+      else if (var_string == "Sea Surface Temperature")
+        variable = "tos";
+      else if (var_string == "Precipitation Flux")
+        variable = "pr";
+      else if (var_string == "Eastward Near-Surface Wind")
+        variable = "uas";
+      else if (var_string == "Northward Near-Surface Wind")
+        variable = "vas";
+      else if (var_string == "Near-Surface Wind Speed")
+        variable = "sfcWind";
+      else if (var_string == "Sea Surface Height")
+        variable = "zos";
+      else if (var_string == "Leaf Area Index")
+        variable = "lai";
+      else if (var_string == "Equivalent Water Height Over Land")
+        variable = "zl";
+      else if (var_string == "Equivalent Water Height Over Ocean")
+        variable = "zo";
+      else if (var_string == "Ocean Heat Content Anomaly within 700 m Depth")
+        variable = "ohc700";
+      else if (var_string == "Ocean Heat Content Anomaly within 2000 m Depth")
+        variable = "ohc2000";
+      else if (var_string == "Surface Downwelling Longwave Radiation")
+        variable = "rlds";
+      else if (var_string == "Surface Downwelling Shortwave Radiation")
+        variable = "rlus";
+      else if (var_string == "Surface Upwelling Longwave Radiation")
+        variable = "rsds";
+      else if (var_string == "Surface Upwelling Shortwave Radiation")
+        variable = "rsus";
+      else if (var_string == "Surface Downwelling Clear-Sky Longwave Radiation")
+        variable = "rldscs";
+      else if (var_string == "Surface Downwelling Clear-Sky Shortwave Radiation")
+        variable = "rsdscs";
+      else if (var_string == "Surface Upwelling Clear-Sky Shortwave Radiation")
+        variable = "rsuscs";
+      else if (var_string == "TOA Incident Shortwave Radiation")
+        variable = "rsdt";
+      else if (var_string == "TOA Outgoing Clear-Sky Longwave Radiation")
+        variable = "rlutcs";
+      else if (var_string == "TOA Outgoing Longwave Radiation")
+        variable = "rlut";
+      else if (var_string == "TOA Outgoing Clear-Sky Shortwave Radiation")
+        variable = "rsutcs";
+      else if (var_string == "TOA Outgoing Shortwave Radiation")
+        variable = "rsut";
+
+      // alert("variable: " + variable)
+    }
+
+
+    // set up "var" dropdown based status of "data" dropdown
+    function select_data()
+    {
+      var data_string = $("#data").val();
+      var x=document.getElementById("var");
+
+      // enable all options in "var" dropdown first
+      reset_vars();
+
+      // alert(data_string);
+
+      // disable corresponding "var" options
+
+      if (data_string == "NASA/AMSRE") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[3].selected=true;
+      }
+      else if (data_string == "NASA/MODIS") {
+        x.options[0].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[1].selected=true;
+        //x.options[8].selected=true;
+      }
+      else if (data_string == "NASA/TRMM") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+      }
+      else if (data_string == "NASA/GPCP") {
+        x.options[0].selected=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+      }
+      else if (data_string == "NASA/QuikSCAT") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[4].selected=true;
+        //x.options[5].selected=true;
+        //x.options[6].selected=true;
+      }
+      else if (data_string == "NASA/AVISO") {
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[7].selected=true;
+      }
+      else if (data_string == "NASA/GRACE") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[9].selected=true;
+        //x.options[10].selected=true;
+      }
+      else if (data_string == "NOAA/NODC") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[11].selected=true;
+        //x.options[12].selected=true;
+      }
+      else if (data_string == "NASA/CERES") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
+        x.options[13].selected=true;
+      }
+	  
+	  else if (data_string == "CCCMA/CANESM2") {
+		
+		x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+      } 
+	  
+	  else if (data_string == "GFLD/ESM2G") {
+	  
+	    x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[22].disabled=true;
+        x.options[24].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "GISS/E2-H") {
+	  
+	    x.options[7].disabled=true;
+	    x.options[8].disabled=true;
+		
+	 	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true; 
+	  }
+	  
+	  else if (data_string == "GISS/E2-R") {
+	  
+		x.options[7].disabled=true;
+	    x.options[8].disabled=true;
+		x.options[13].disabled=true;
+		
+	 	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true; 
+	  }
+	  
+	  else if (data_string == "NCAR/CAM5") {
+
+	  	x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[7].disabled=true;
+        x.options[17].disabled=true;		
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "NCC/NORESM") {
+
+	  	x.options[3].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "UKMO/HadGEM2-ES") {
+	  
+	  	x.options[3].disabled=true;
+        x.options[7].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "CCCMA/CANAM4") {
+	  
+	   	x.options[3].disabled=true;
+	 	x.options[7].disabled=true;
+		x.options[8].disabled=true;
+	
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "CSIRO/MK3.6") {
+
+	   	x.options[3].disabled=true;
+	 	x.options[7].disabled=true;
+		x.options[8].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "GFDL/CM3") {
+	  
+	   	x.options[3].disabled=true;
+	 	x.options[6].disabled=true;
+	 	x.options[7].disabled=true;
+		x.options[8].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "IPSL/CM5A-LR") {
+	  
+		x.options[3].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+		x.options[7].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "MIROC/MIROC5") {
+	  
+	   	x.options[3].disabled=true;
+	 	x.options[7].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+	  
+	  else if (data_string == "UKMO/HadGEM2-A") {
+	  
+	   	x.options[3].disabled=true;
+	 	x.options[7].disabled=true;
+		x.options[8].disabled=true;
+		
+	  	x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+		
+		x.options[0].selected=true;
+	  }
+      // for all other models
+      else {
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
+        x.options[0].selected=true;
+      }
+
+      // form variable string
+      select_var();
+    }
+
+
+    $(document).ready(function(){
+
+      $("a").click(function(event){
+        alert("As you can see, the link no longer took you to jquery.com");
+        event.preventDefault();
+      });
+
+
+      $("#timeSeries2D").click(function(event) {
+        // alert('****** inside timeSeries2D()!');
+        Response = null;
+
+        $("#Response").html("Calculating ...");
+        $("#Image").html("");
+
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // form url string
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
+        var url = "http://" + window.location.hostname + ":8090/svc/timeSeries2D?";
+        // alert("url: " + url);
+
+        var d1 = $("#data").val();
+        var model1 = d1.replace("/", "_");
+
+        var arglist = "";
+        arglist = arglist.concat("model=");
+        arglist = arglist.concat(model1);
+
+        // alert("arglist: " + arglist);
+
+        var v1 = $("#var").val();
+        arglist = arglist.concat("&var=");
+        arglist = arglist.concat(variable);
+
+        // alert("arglist: " + arglist);
+
+        var t0 = $("#t0").val();
+        var t1 = $("#t1").val();
+
+        t0 = t0.replace("-", "");
+        t1 = t1.replace("-", "");
+
+        arglist = arglist.concat("&start_time=");
+        arglist = arglist.concat(t0);
+
+        arglist = arglist.concat("&end_time=");
+        arglist = arglist.concat(t1);
+
+        // alert("arglist: " + arglist);
+
+        var lon0 = $("#lon0").val();
+        var lon1 = $("#lon1").val();
+        var lat0 = $("#lat0").val();
+        var lat1 = $("#lat1").val();
+
+		$("#validate").html("");
+		
+		lat0val = $("#lat0").val();
+		lat1val = $("#lat1").val();
+		
+		// Verify that latitudes are numbers.  If not generate an error message and return.
+		if( isNaN(lat0val) || isNaN(lat1val) )
+		{
+			$("#validate").html("Latitude values have to be a number.");
+			return;		
+		}
+
+		// Verify that the latitudes are between -90.0 and +90.0 inclusively.
+		// If not generate an error message and return.
+		if( parseFloat(lat0val) < -90.0 || parseFloat(lat0val) > 90.0 || 
+		    parseFloat(lat1val) < -90.0 || parseFloat(lat1val) > 90.0){
+			$("#validate").html("Latitude range has illegal value.");
+			return;
+		}
+		
+		// Verify that the second latitude value is greater than the first.
+		// If not generate an error message and return.
+		if( parseFloat(lat0val) > parseFloat(lat1val) ){
+			$("#validate").html("Start latitude must be less than end latitude.");
+			return;
+		}
+		
+		lon0val = $("#lon0").val();
+		lon1val = $("#lon1").val();
+		// Verify that longitudes are numbers.  If not generate an error message and return.
+		if( isNaN(lon0val) || isNaN($("#lon1").val()) )
+		{
+			$("#validate").html("Longitude values have to be a number.");
+			return;		
+		}
+		
+		// Verify that the longitude are between -180.0 and +360.0 inclusively.
+		// If not generate an error message and return.
+		if( parseFloat(lon0val) < -180.0 || parseFloat(lon0val) > 360.0 || 
+		    parseFloat(lon1val) < -180.0 || parseFloat(lon1val) > 360.0){
+			$("#validate").html("Longitude range has illegal value.");
+			return;
+		}
+		
+		// Verify that the second longitude value is greater than the first.
+		// If not generate an error message and return.		
+		if( parseFloat(lon0val) > parseFloat(lon1val) )
+		{
+			$("#validate").html("Start longitude must be less than end longitude.");
+			return;
+		}
+		
+		// Verify that the difference in longitudes is less than or equal to 360.0.
+		// If not generate an error message and return.	
+		if ( Math.abs(parseFloat( lon0val ) - parseFloat( lon1val ) ) > 360.0)
+		{
+			$("#validate").html("The longitudes may not be more than 360 degrees apart.");
+			return;
+		}	
+	
+        arglist = arglist.concat("&lon1=");
+        arglist = arglist.concat(lon0);
+
+        arglist = arglist.concat("&lon2=");
+        arglist = arglist.concat(lon1);
+
+        arglist = arglist.concat("&lat1=");
+        arglist = arglist.concat(lat0);
+
+        arglist = arglist.concat("&lat2=");
+        arglist = arglist.concat(lat1);
+
+        // alert("arglist: " + arglist);
+
+        // url = url + encodeURIComponent(arglist);
+        url = url + encodeURI(arglist);
+        // url = url + arglist;
+        // alert("url: " + url);
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            data: null,
+            success: function(data, textStatus, xhr) {
+                Response = data;
+                // alert("data: " + data);
+                if (data.success == false) {
+                    // alert(data.error);
+                    Response = null;
+                    var text = JSON.stringify(data, null, 4);
+                    text = "Error in backend: <br>" + text; 
+                    // $("#Response").html("<span style='color:red'>" + text + "</span>");
+                    $("#Response").html(text);
+                    return;
+                }
+                var text = JSON.stringify(data, null, 4);
+                // alert(text);
+                // $("#Response").html("<pre>"+text+"</pre>");
+                $("#Response").html(text);
+
+                var html = "<img src='"+data.url+"' width='820'/>";                // alert(html);
+                $("#Image").html(html);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                $("#Response").html("error!");
+                // alert("xhr.status: "+xhr.status);
+                // alert("error status: "+textStatus);
+            },
+            complete: function(xhr, textStatus) {
+                //alert("complete status: "+textStatus);
+            }
+        });
+
+      });
+
+    });
+    
+  </script>
+</head>
+<body>
+
+<p>
+
+<table border="1">
+
+<tr>
+<td colspan="4">
+<center>
+<b>Service: 2-D Variable Time Series</b>
+</center>
+</td>
+</tr>
+
+<tr>
+<td>data source:</td><td><select name="data", id="data" onchange="select_data()">
+<!-- <option>NASA/obs4MIPs</option>  -->
+<optgroup label="Observation">
+<option selected="NASA/MODIS">NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<option>NASA/TRMM</option>
+<option>NASA/GPCP</option>
+<option>NASA/QuikSCAT</option>
+<option>NASA/AVISO</option>
+<option>NASA/GRACE</option>
+<option>NOAA/NODC</option>
+<option>NASA/CERES</option>
+</optgroup>
+<optgroup label="Model: Historical">
+<option>CCCMA/CANESM2</option>
+<option>GFDL/ESM2G</option>
+<option>GISS/E2-H</option>
+<option>GISS/E2-R</option>
+<option>NCAR/CAM5</option>
+<option>NCC/NORESM</option>
+<option>UKMO/HadGEM2-ES</option>
+</optgroup>
+<optgroup label="Model: AMIP">
+<option>CCCMA/CANAM4</option>
+<option>CSIRO/MK3.6</option>
+<option>GFDL/CM3</option>
+<option>IPSL/CM5A-LR</option>
+<option>MIROC/MIROC5</option>
+<option>UKMO/HadGEM2-A</option>
+</optgroup>
+</select></td>
+
+<td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
+<option>Precipitation Flux</option>
+<option>Total Cloud Fraction</option>
+<option>Surface Temperature</option>
+<option>Sea Surface Temperature</option>
+<option>Eastward Near-Surface Wind</option>
+<option>Northward Near-Surface Wind</option>
+<option>Near-Surface Wind Speed</option>
+<option>Sea Surface Height</option>
+<option>Leaf Area Index</option>
+<option>Equivalent Water Height Over Land</option>
+<option>Equivalent Water Height Over Ocean</option>
+<option>Ocean Heat Content Anomaly within 700 m Depth</option>
+<option>Ocean Heat Content Anomaly within 2000 m Depth</option>
+<option>Surface Downwelling Longwave Radiation</option>
+<option>Surface Downwelling Shortwave Radiation</option>
+<option>Surface Upwelling Longwave Radiation</option>
+<option>Surface Upwelling Shortwave Radiation</option>
+<option>Surface Downwelling Clear-Sky Longwave Radiation</option>
+<option>Surface Downwelling Clear-Sky Shortwave Radiation</option>
+<option>Surface Upwelling Clear-Sky Shortwave Radiation</option>
+<option>TOA Incident Shortwave Radiation</option>
+<option>TOA Outgoing Longwave Radiation</option>
+<option>TOA Outgoing Shortwave Radiation</option>
+<option>TOA Outgoing Clear-Sky Longwave Radiation</option>
+<option>TOA Outgoing Clear-Sky Shortwave Radiation</option>
+</select></td>
+</tr>
+
+<tr>
+<td>start year-month:</td><td><input id="t0" value="2000-01" alt="start"/></td>
+<td>end year-month:</td><td><input id="t1" value="2010-12" alt="end"/></td>
+</tr>
+
+
+<tr>
+<td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
+<td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
+</tr>
+
+<tr>
+<td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
+<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
+</tr>
+
+<tr>
+<td colspan="4" align="center"><input id="timeSeries2D" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+</tr>
+
+<tr>
+<td colspan="4">
+<div id="Image">Image Here</div>
+</td>
+</tr>
+
+<tr>
+<td colspan="4" align="center">
+<textarea readonly id="validate" cols="89" rows="2">Validation Here</textarea>
+</td>
+</tr>
+
+<tr>
+<td colspan="4" align="center">
+<textarea id="Response" cols="110" rows="6">Text Here</textarea>
+</td>
+</tr>
+
+</table>
+
+</body>
+</html>
