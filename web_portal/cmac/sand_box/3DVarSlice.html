@@ -445,19 +445,23 @@ else if (data_string == "CCCMA/CANESM2") {
         var pres = $("#pres").val();
         // alert("variable: " + variable);
 
-		// Check for valid pressure values
-		var maxPres = 1000.0;
-		if(variable == 'ot' || variable == 'os') {
-		  maxPres = 2000.0;
-		}
+	// Check for valid pressure values
+	var maxPres = 1000.0;
+	if(variable == 'ot' || variable == 'os') {
+	  maxPres = 2000.0;
+	}
 
-		 // Verify that the pressure is within limits and is a number.
-		 // If not generate an error message and return.		
-		if ( isNaN(pres) || (pres > maxPres) || (pres < 0.0) ){
-			var presStr = "The pressure must be between 0 and " + maxPres + " inclusively.";
-			$("#validate").html(presStr);
-			return;
-		 }
+	// Verify that the pressure is a number.
+	// If not generate an error message and return.		
+	if ( isNaN(pres) ){
+		$("#validate").html("The pressure must be a number.");
+		return;
+	}
+	
+	// Verify that the pressure is between 0.0 and maxPres, inclusively
+	if ( (pres < 0.0) || (pres > maxPre ) ){
+		$("#validate").html("The pressure must be between 0.0 and " + maxPres + " inclusively");
+	}
 		  
         // when variable is the 3D Ocean Salinity or Ocean Temperature
         if (variable == 'ot' || variable == 'os')
@@ -477,65 +481,58 @@ else if (data_string == "CCCMA/CANESM2") {
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
 
-		$("#validate").html("");
+	$("#validate").html("");
 		
-		lat0val = $("#lat0").val();
-		lat1val = $("#lat1").val();
-		
-		// Verify that latitudes are numbers.  If not generate an error message and return.
-		if( isNaN(lat0val) || isNaN(lat1val) )
-		{
-			$("#validate").html("Latitude values have to be a number.");
-			return;		
-		}
+	// Verify that latitudes are numbers.  If not generate an error message and return.
+	if( isNaN( lat0 ) || isNaN( lat1 ) )
+	{
+		$("#validate").html("Latitude values have to be a number.");
+		return;		
+	}
 
-		// Verify that the latitudes are between -90.0 and +90.0 inclusively.
-		// If not generate an error message and return.
-		if( parseFloat(lat0val) < -90.0 || parseFloat(lat0val) > 90.0 || 
-		    parseFloat(lat1val) < -90.0 || parseFloat(lat1val) > 90.0){
-			$("#validate").html("Latitude range has illegal value.");
-			return;
-		}
+	// Verify that the latitudes are between -90.0 and +90.0 inclusively.
+	// If not generate an error message and return.
+	if( parseFloat( lat0 ) < -90.0 || parseFloat( latl ) > 90.0 || 
+	    parseFloat( lat1 ) < -90.0 || parseFloat( lat1 ) > 90.0){
+		$("#validate").html("Latitude range has illegal value.");
+		return;
+	}
 		
-		// Verify that the second latitude value is greater than the first.
-		// If not generate an error message and return.
-		if( parseFloat(lat0val) > parseFloat(lat1val) ){
-			$("#validate").html("Start latitude must be less than end latitude.");
-			return;
-		}
+	// Verify that the second latitude value is greater than the first.
+	// If not generate an error message and return.
+	if( parseFloat( lat0 ) > parseFloat( lat1 ) ){
+		$("#validate").html("Start latitude must be less than end latitude.");
+		return;
+	}
 		
-		lon0val = $("#lon0").val();
-		lon1val = $("#lon1").val();
-		// Verify that longitudes are numbers.  If not generate an error message and return.
-		if( isNaN(lon0val) || isNaN($("#lon1").val()) )
-		{
-			$("#validate").html("Longitude values have to be a number.");
-			return;		
-		}
+	// Verify that longitudes are numbers.  If not generate an error message and return.
+	if( isNaN( lon0 ) || isNaN( lon1 ) ){
+		$("#validate").html("Longitude values have to be a number.");
+		return;		
+	}
 		
-		// Verify that the longitude are between -180.0 and +360.0 inclusively.
-		// If not generate an error message and return.
-		if( parseFloat(lon0val) < -180.0 || parseFloat(lon0val) > 360.0 || 
-		    parseFloat(lon1val) < -180.0 || parseFloat(lon1val) > 360.0){
+	// Verify that the longitude are between -180.0 and +360.0 inclusively.
+	// If not generate an error message and return.
+		if( parseFloat(lon0) < -180.0 || parseFloat(lon0) > 360.0 || 
+		    parseFloat(lon1) < -180.0 || parseFloat(lon1) > 360.0){
 			$("#validate").html("Longitude range has illegal value.");
 			return;
-		}
+	}
 		
-		// Verify that the second longitude value is greater than the first.
-		// If not generate an error message and return.		
-		if( parseFloat(lon0val) > parseFloat(lon1val) )
-		{
-			$("#validate").html("Start longitude must be less than end longitude.");
-			return;
-		}
+	// Verify that the second longitude value is greater than the first.
+	// If not generate an error message and return.		
+	if( parseFloat( lon0 ) > parseFloat( lon1 ) ){
+		$("#validate").html("Start longitude must be less than end longitude.");
+		return;
+	}
 		
-		// Verify that the difference in longitudes is less than or equal to 360.0.
-		// If not generate an error message and return.	
-		if ( Math.abs(parseFloat( lon0val ) - parseFloat( lon1val ) ) > 360.0)
-		{
-			$("#validate").html("The longitudes may not be more than 360 degrees apart.");
-			return;
-		}	
+	// Verify that the difference in longitudes is less than or equal to 360.0.
+	// If not generate an error message and return.	
+	if ( Math.abs(parseFloat( lon0 ) - parseFloat( lon1 ) ) > 360.0)
+	{
+		$("#validate").html("The longitudes may not be more than 360 degrees apart.");
+		return;
+	}	
 		
         arglist = arglist.concat("&lon1=");
         arglist = arglist.concat(lon0);

@@ -754,32 +754,28 @@
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
 
-		$("#validate").html("");
+	$("#validate").html("");
 		
-		lat0val = $("#lat0").val();
-		lat1val = $("#lat1").val();
-		
-		// Verify that latitudes are numbers.  If not generate an error message and return.
-		if( isNaN(lat0val) || isNaN(lat1val) )
-		{
-			$("#validate").html("Latitude values have to be a number.");
-			return;		
-		}
+	// Verify that latitudes are numbers.  If not generate an error message and return.
+	if( isNaN(lat0) || isNaN(lat1) ){
+		$("#validate").html("Latitude values have to be a number.");
+		return;		
+	}
 
-		// Verify that the latitudes are between -90.0 and +90.0 inclusively.
-		// If not generate an error message and return.
-		if( parseFloat(lat0val) < -90.0 || parseFloat(lat0val) > 90.0 || 
-		    parseFloat(lat1val) < -90.0 || parseFloat(lat1val) > 90.0){
-			$("#validate").html("Latitude range has illegal value.");
-			return;
-		}
+	// Verify that the latitudes are between -90.0 and +90.0 inclusively.
+	// If not generate an error message and return.
+	if( parseFloat(lat0) < -90.0 || parseFloat(lat0) > 90.0 || 
+	    parseFloat(lat1) < -90.0 || parseFloat(lat1) > 90.0){
+		$("#validate").html("Latitude range has illegal value.");
+		return;
+	}
 		
-		// Verify that the second latitude value is greater than the first.
-		// If not generate an error message and return.
-		if( parseFloat(lat0val) > parseFloat(lat1val) ){
-			$("#validate").html("Start latitude must be less than end latitude.");
-			return;
-		}
+	// Verify that the second latitude value is greater than the first.
+	// If not generate an error message and return.
+	if( parseFloat(lat0) > parseFloat(lat1) ){
+		$("#validate").html("Start latitude must be less than end latitude.");
+		return;
+	}
 		
         arglist = arglist.concat("&lat1=");
         arglist = arglist.concat(lat0);

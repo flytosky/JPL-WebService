@@ -9,7 +9,7 @@
   <script type="text/javascript" src="js/xmisc.js"></script>
   <script type="text/javascript">
 
-    var Response = null;
+    var Response = null;/
     var variable = "";
 
     // called on load or reload
@@ -17,7 +17,26 @@
       select_all_months();
       select_data();
       select_var();
+      // no data to download yet
+      disable_download_button();
     }
+
+
+    // disable download data button
+    function disable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=true;
+    }
+
+
+    // enable download data button
+    function enable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=false;
+    }
+
 
     // select all months in the checkboxes
     function select_all_months()
@@ -79,6 +98,7 @@
     function reset_vars()
     {
       var x=document.getElementById("var");
+
       x.options[0].disabled=false;
       x.options[1].disabled=false;
       x.options[2].disabled=false;
@@ -91,6 +111,9 @@
     function select_var()
     {
       var var_string = $("#var").val();
+
+      // disable the download button because of this change
+      disable_download_button();
 
       if (var_string == "Air Temperature")
         variable = "ta";
@@ -113,6 +136,9 @@
     {
       var data_string = $("#data").val();
       var x=document.getElementById("var");
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // enable all options in "var" dropdown first
       reset_vars();
@@ -144,193 +170,6 @@
         x.options[4].selected=true;
         //x.options[5].selected=true;
       }
-	  else if (data_string == "CCCMA/CANESM2") {
-		
-		x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-      } 
-	  
-	  else if (data_string == "GFLD/ESM2G") {
-	  
-	    x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[21].disabled=true;
-        x.options[23].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "GISS/E2-H") {
-	  
-	    x.options[7].disabled=true;
-	    x.options[8].disabled=true;
-		
-	 	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true; 
-	  }
-	  
-	  else if (data_string == "GISS/E2-R") {
-	  
-		x.options[7].disabled=true;
-	    x.options[8].disabled=true;
-		x.options[13].disabled=true;
-		
-	 	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true; 
-	  }
-	  
-	  else if (data_string == "NCAR/CAM5") {
-
-	  	x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[7].disabled=true;
-        x.options[17].disabled=true;		
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "NCC/NORESM") {
-
-	  	x.options[3].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "UKMO/HadGEM2-ES") {
-	  
-	  	x.options[3].disabled=true;
-        x.options[7].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "CCCMA/CANAM4") {
-	  
-	   	x.options[3].disabled=true;
-	 	x.options[7].disabled=true;
-		x.options[8].disabled=true;
-	
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "CSIRO/MK3.6") {
-
-	   	x.options[3].disabled=true;
-	 	x.options[7].disabled=true;
-		x.options[8].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "GFDL/CM3") {
-	  
-	   	x.options[3].disabled=true;
-	 	x.options[6].disabled=true;
-	 	x.options[7].disabled=true;
-		x.options[8].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "IPSL/CM5A-LR") {
-	  
-		x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-		x.options[7].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "MIROC/MIROC5") {
-	  
-	   	x.options[3].disabled=true;
-	 	x.options[7].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
-	  
-	  else if (data_string == "UKMO/HadGEM2-A") {
-	  
-	   	x.options[3].disabled=true;
-	 	x.options[7].disabled=true;
-		x.options[8].disabled=true;
-		
-	  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-		x.options[0].selected=true;
-	  }
       else {
         x.options[0].selected=true;
         //x.options[1].selected=true;
@@ -350,6 +189,9 @@
       var s1=document.getElementById("months");
       // alert(s1.selectedIndex);
       // alert(s1.options[s1.selectedIndex].value);
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // "select none"
       if (s1.selectedIndex == 1) {
@@ -398,8 +240,19 @@
       });
 
 
-      $("#threedvertical").click(function(event) {
+      $("#download_data").click(function(event) {
+        var durl = $("#data_url").val();
+        // alert(durl);
+        window.location.assign(durl);
+      });
+         
+
+      $("#threedvarzonalmean").click(function(event) {
 	Response = null;
+
+        // no data to download yet
+        disable_download_button();
+   
         // flag error if no month box is checked
         if (no_month_check()) {
            // $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
@@ -409,12 +262,13 @@
         }
 
         $("#Response").html("Calculating ...");
+        $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/threeDimVerticalProfile?model=ncc_noresm&var=cli&start_time=199001&end_time=199512&lon1=0&lon2=180&lat1=-29&lat2=29&months=1,2,3,4,5,6,7,8,9,10,11,12"
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/threeDimZonalMean?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lat1=-29&lat2=29&pres1=90&pres2=20months=1,2,4,5,6,10,12
 
         // form url string
-        var url = "http://" + window.location.hostname + ":8090/svc/threeDimVerticalProfile?";
+        var url = "http://" + window.location.hostname + ":8090/svc/threeDimZonalMean?";
         // alert(url);
 
         var d1 = $("#data").val();
@@ -440,74 +294,89 @@
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
 
-        var lon0 = $("#lon0").val();
-        var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
 
-	$("#validate").html("");
-		
-	// Verify that latitudes are numbers.  If not generate an error message and return.
-	if( isNaN(lat0) || isNaN(lat1) )
-	{
-		$("#validate").html("Latitude values have to be a number.");
-		return;		
-	}
+        $("#validate").html("");
 
-	// Verify that the latitudes are between -90.0 and +90.0 inclusively.
-	// If not generate an error message and return.
-	if( parseFloat(lat0) < -90.0 || parseFloat(lat0) > 90.0 || 
-	    parseFloat(lat1) < -90.0 || parseFloat(lat1) > 90.0){
-		$("#validate").html("Latitude range has illegal value.");
-		return;
-	}
-		
-	// Verify that the second latitude value is greater than the first.
-	// If not generate an error message and return.
-	if( parseFloat(lat0) > parseFloat(lat1) ){
-		$("#validate").html("Start latitude must be less than end latitude.");
-		return;
-	}
-		
-	// Verify that longitudes are numbers.  If not generate an error message and return.
-	if( isNaN(lon0) || isNaN(lon1) ){
-		$("#validate").html("Longitude values have to be a number.");
-		return;		
-	}
-		
-	// Verify that the longitude are between -180.0 and +360.0 inclusively.
-	// If not generate an error message and return.
-	if( parseFloat(lon0) < -180.0 || parseFloat(lon0) > 360.0 || 
-	    parseFloat(lon1) < -180.0 || parseFloat(lon1) > 360.0){
-		$("#validate").html("Longitude range has illegal value.");
-		return;
-	}
-		
-	// Verify that the second longitude value is greater than the first.
-	// If not generate an error message and return.		
-	if( parseFloat(lon0) > parseFloat(lon1) ){
-		$("#validate").html("Start longitude must be less than end longitude.");
-		return;
-	}
-		
-	// Verify that the difference in longitudes is less than or equal to 360.0.
-	// If not generate an error message and return.	
-	if ( Math.abs(parseFloat( lon0 ) - parseFloat( lon1 ) ) > 360.0){
-		$("#validate").html("The longitudes may not be more than 360 degrees apart.");
-		return;
-	}	
-	
-        arglist = arglist.concat("&lon1=");
-        arglist = arglist.concat(lon0);
+        // Verify that latitudes are numbers.  If not generate an error message and return.
+        if( isNaN(lat0) || isNaN(lat1) ){
+                $("#validate").html("Latitude values have to be a number.");
+                return;
+        }
 
-        arglist = arglist.concat("&lon2=");
-        arglist = arglist.concat(lon1);
+        // Verify that the latitudes are between -90.0 and +90.0 inclusively.
+        // If not generate an error message and return.
+        if( parseFloat(lat0) < -90.0 || parseFloat(lat0) > 90.0 ||
+            parseFloat(lat1) < -90.0 || parseFloat(lat1) > 90.0){
+                $("#validate").html("Latitude range has illegal value.");
+                return;
+        }
+
+        // Verify that the second latitude value is greater than the first.
+        // If not generate an error message and return.
+        if( parseFloat(lat0) > parseFloat(lat1) ){
+                $("#validate").html("Start latitude must be less than end latitude.");
+                return;
+        }
 
         arglist = arglist.concat("&lat1=");
         arglist = arglist.concat(lat0);
 
         arglist = arglist.concat("&lat2=");
         arglist = arglist.concat(lat1);
+
+        var pres = $("#pres").val();
+		
+		// Check for valid pressure values
+		var maxPres = 1000.0;
+		if(variable == 'ot' || variable == 'os') {
+		  maxPres = 2000.0;
+		}
+
+		 // Verify that the pressure is a number.
+		 // If not generate an error message and return.		
+		if ( isNaN(pres) ){
+			$("#validate").html("The pressure must be a number.");
+			return;
+		}
+
+		 // Verify that the pressure is within limits and is a number.
+		 // If not generate an error message and return.		
+		if (pres > maxPres) || (pres < 0.0) ){
+			var presStr = "The pressure must be between 0 and " + maxPres + " inclusively.";
+			$("#validate").html(presStr);
+			return;
+		}
+		
+        var splitty = pres.split(',');
+        if (splitty.length != 2) {
+          alert("pressure level range needs to be two values separated by comma.");
+          return;
+        }
+        else {
+          pres1 = splitty[0];
+          pres2 = splitty[1];
+
+          // alert("variable: " + variable);
+				
+          // when variable is the 3D Ocean Salinity or Ocean Temperature
+          if (variable == 'ot' || variable == 'os') {
+            pres1 = pres1 * 10000;  // convert from dbar on GUI
+            pres2 = pres2 * 10000;  // convert from dbar on GUI
+          }
+          // when variable is 2D
+          else {
+            pres1 = pres1 * 100;  // convert from hPa on GUI
+            pres2 = pres2 * 100;  // convert from hPa on GUI
+          }
+        }
+
+        arglist = arglist.concat("&pres1=");
+        arglist = arglist.concat(pres1);
+
+        arglist = arglist.concat("&pres2=");
+        arglist = arglist.concat(pres2);
 
         var s1 = document.getElementById('months');
 
@@ -590,6 +459,7 @@
                     text = "Error in backend: <br>" + text; 
                     // $("#Response").html("<span style='color:red'>" + text + "</span>");
                     $("#Response").html(text);
+                    $("#data_url").html(text);
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
@@ -597,12 +467,17 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='680'/>";
-                // alert(html);
-                $("#Image").html(html);
+                var html1 = "<img src='"+data.url+"' width='680'/>";
+                // alert(html1);
+                $("#Image").html(html1);
+
+                // post dataUrl to textarea and enable download button
+                $("#data_url").html(data.dataUrl);
+                enable_download_button();
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#Response").html("error!");
+                $("#data_url").html("error!");
                 // alert("xhr.status: "+xhr.status);
                 // alert("error status: "+textStatus);
             },
@@ -622,12 +497,12 @@
 
 <p>
 
-<table border="1">
+<table border="1" WIDTH="800">
 
 <tr>
 <td colspan="4">
 <center>
-<b>Service: 3-D Variable Average Vertical Profile</b>
+<b>Service: 3-D Variable Zonal Mean</b>
 </center>
 </td>
 </tr>
@@ -659,18 +534,19 @@
 </select></td>
 
 <td>variable name:</td><td><select name="var", id="var" onchange="select_var()">
-<option>Air Temperature</option> 
+<option>Air Temperature</option>
 <option>Specific Humidity</option>
 <option>Cloud Ice Water Content</option>
 <option>Cloud Liquid Water Content</option>
 <option>Ocean Temperature</option>
 <option>Ocean Salinity</option>
 </select></td>
+
 </tr>
 
 <tr>
-<td>start year-month:</td><td><input id="t0" value="1990-01" alt="start"/></td>
-<td>end year-month:</td><td><input id="t1" value="2012-12" alt="end"/></td>
+<td>start year-month:</td><td><input id="t0" value="2000-01" alt="start"/></td>
+<td>end year-month:</td><td><input id="t1" value="2010-12" alt="end"/></td>
 </tr>
 
 <tr>
@@ -683,10 +559,10 @@
 <option id="winter">Winter:Dec-Jan-Feb</option>
 <option id="spring">Spring:Mar-Apr-May</option> </select>
 </td>
-<td>
+<td>   
+atmosphere pressure range (hPa) <br> or ocean pressure range (dbar):
 </td>
-<td>
-</td>
+<td><input id="pres" value="900,200" alt="pressure"/></td>
 </tr>
 
 <tr>
@@ -718,12 +594,12 @@
 </tr>
 
 <tr>
-<td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
-<td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
-</tr>
+<td colspan="2" align="center"><input id="threedvarzonalmean" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<form>
+<td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
+</td>
+</form>
 
-<tr>
-<td colspan="4" align="center"><input id="threedvertical" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 </tr>
 
 <tr>
@@ -740,7 +616,12 @@
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="89" rows="6">Text Here</textarea>
+<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+</td>
+</tr>
+<tr>
+<td colspan="4" align="center">
+<textarea readonly id="Response" cols="89" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 </p>
