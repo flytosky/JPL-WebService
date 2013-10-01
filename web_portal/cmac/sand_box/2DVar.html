@@ -128,6 +128,9 @@
     {
       var var_string = $("#var").val();
 
+      // disable the download button because of this change
+      disable_download_button();
+
       if (var_string == "Total Cloud Fraction")
         variable = "clt";
       else if (var_string == "Surface Temperature")
@@ -187,6 +190,9 @@
     {
       var data_string = $("#data").val();
       var x=document.getElementById("var");
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // enable all options in "var" dropdown first
       reset_vars();
@@ -434,173 +440,8 @@
         x.options[10].disabled=true;
         x.options[11].disabled=true;
         x.options[12].disabled=true;
+
         x.options[13].selected=true;
-      }
-      else if (data_string == "CCCMA/CANESM2") {
-	x.options[3].disabled=true;
-	x.options[7].disabled=true;
-	x.options[8].disabled=true;		
-	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-	x.options[0].selected=true;
-      } 
-      else if (data_string == "GFLD/ESM2G") {
-	  
-   	x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[22].disabled=true;
-        x.options[24].disabled=true;		
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "GISS/E2-H") {
-	  
-	x.options[7].disabled=true;
-	x.options[8].disabled=true;
-	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true; 
-      }
-      else if (data_string == "GISS/E2-R") {
-	x.options[7].disabled=true;
-        x.options[8].disabled=true;
-	x.options[13].disabled=true;
-		
- 	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-	x.options[0].selected=true; 
-      }
-      else if (data_string == "NCAR/CAM5") {
-  	x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[7].disabled=true;
-        x.options[17].disabled=true;		
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "NCC/NORESM") {
-  	x.options[3].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "UKMO/HadGEM2-ES") {
-  	x.options[3].disabled=true;
-        x.options[7].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "CCCMA/CANAM4") {
-   	x.options[3].disabled=true;
- 	x.options[7].disabled=true;
-	x.options[8].disabled=true;
-	
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "CSIRO/MK3.6") {
-   	x.options[3].disabled=true;
- 	x.options[7].disabled=true;
-	x.options[8].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "GFDL/CM3") {
-	  
-   	x.options[3].disabled=true;
- 	x.options[6].disabled=true;
- 	x.options[7].disabled=true;
-	x.options[8].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "IPSL/CM5A-LR") {
-	x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-	x.options[7].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "MIROC/MIROC5") {
-   	x.options[3].disabled=true;
- 	x.options[7].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
-      }
-      else if (data_string == "UKMO/HadGEM2-A") {
-        x.options[3].disabled=true;
-	x.options[7].disabled=true;
-	x.options[8].disabled=true;
-		
-  	x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-		
-	x.options[0].selected=true;
       }
       // for all other models
       else {
@@ -622,6 +463,9 @@
       var s1=document.getElementById("months");
       // alert(s1.selectedIndex);
       // alert(s1.options[s1.selectedIndex].value);
+
+      // disable the download button because of this change
+      disable_download_button();
 
       // "select none"
       if (s1.selectedIndex == 1) {
@@ -747,7 +591,7 @@
 
 	// Verify that the second latitude value is greater than the first.
 	// If not, generate an error message and return.
-	if( parseFloat(lat0) >= parseFloat(lat1) ){
+	if( parseFloat(lat0) > parseFloat(lat1) ){
 		$("#validate").html("Start latitude must be less than end latitude.");
 		return;
 	}
@@ -762,13 +606,13 @@
 	// If not generate an error message and return.
 	if( parseFloat(lon0) < -180.0 || parseFloat(lon0) > 360.0 || 
 		parseFloat(lon1) < -180.0 || parseFloat(lon1) > 360.0){
-		$("#validate").html("Longitude range has an illegal value.");
+		$("#validate").html("Longitude range has illegal value.");
 		return;
 	}
-	
+
 	// Verify that the second longitude value is greater than the first.
 	// If not generate an error message and return.
-	if( parseFloat(lon0) >= parseFloat(lon1) )
+	if( parseFloat(lon0) > parseFloat(lon1) )
 	{
 		$("#validate").html("Start longitude must be less than end longitude.");
 		return;
@@ -875,6 +719,7 @@
                     text = "Error in backend: <br>" + text; 
                     // $("#Response").html("<span style='color:red'>" + text + "</span>");
                     $("#Response").html(text);
+                    $("#data_url").html(text);
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
@@ -892,6 +737,7 @@
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#Response").html("error!");
+		$("#data_url").html("error!");
                 // alert("xhr.status: "+xhr.status);
                 // alert("error status: "+textStatus);
             },
@@ -1051,9 +897,10 @@
 <div id="Image">Image Here</div>
 </td>
 </tr>
+
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="validate" cols="89" rows="2">Validation Here</textarea>
+<textarea readonly id="data_url" cols="89" rows="2">Validation Here</textarea>
 </td>
 </tr>
 
@@ -1062,7 +909,6 @@
 <textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
 </td>
 </tr>
-
 <tr>
 <td colspan="4" align="center">
 <textarea readonly id="Response" cols="89" rows="6">Service Response Text Here</textarea>

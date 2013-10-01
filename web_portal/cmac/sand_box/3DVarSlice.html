@@ -445,19 +445,19 @@ else if (data_string == "CCCMA/CANESM2") {
         var pres = $("#pres").val();
         // alert("variable: " + variable);
 
+        // Verify that the pressure is a number.
+        // If not generate an error message and return.
+        if ( isNaN(pres) ){
+                $("#validate").html("The pressure must be a number.");
+                return;
+        }
+
 	// Check for valid pressure values
 	var maxPres = 1000.0;
 	if(variable == 'ot' || variable == 'os') {
 	  maxPres = 2000.0;
 	}
 
-	// Verify that the pressure is a number.
-	// If not generate an error message and return.		
-	if ( isNaN(pres) ){
-		$("#validate").html("The pressure must be a number.");
-		return;
-	}
-	
 	// Verify that the pressure is between 0.0 and maxPres, inclusively
 	if ( (pres < 0.0) || (pres > maxPre ) ){
 		$("#validate").html("The pressure must be between 0.0 and " + maxPres + " inclusively");
@@ -772,13 +772,13 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="validate" cols="89" rows="2">Validation Here</textarea>
+<textarea id="validate" cols="110" rows="2">Validation Here</textarea>
 </td>
 </tr>
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="89" rows="6">Text Here</textarea>
+<textarea id="Response" cols="110" rows="6">Text Here</textarea>
 </td>
 </tr>
 </p>
