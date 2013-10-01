@@ -464,14 +464,13 @@ else if (data_string == "CCCMA/CANESM2") {
 	}
 		  
         // when variable is the 3D Ocean Salinity or Ocean Temperature
-        if (variable == 'ot' || variable == 'os')
-
+        if (variable == 'ot' || variable == 'os'){
             pres = pres * 10000;  // convert from dbar on GUI
-            // when variable is 2D
-        else
-		{
-			pres = pres * 100;  // convert from hPa on GUI
-		}
+	}
+        // when variable is 2D
+        else{
+		pres = pres * 100;  // convert from hPa on GUI
+	}
 		
         arglist = arglist.concat("&pr=");
         arglist = arglist.concat(pres);
@@ -492,7 +491,7 @@ else if (data_string == "CCCMA/CANESM2") {
 
 	// Verify that the latitudes are between -90.0 and +90.0 inclusively.
 	// If not generate an error message and return.
-	if( parseFloat( lat0 ) < -90.0 || parseFloat( latl ) > 90.0 || 
+	if( parseFloat( lat0 ) < -90.0 || parseFloat( lat0 ) > 90.0 || 
 	    parseFloat( lat1 ) < -90.0 || parseFloat( lat1 ) > 90.0){
 		$("#validate").html("Latitude range has illegal value.");
 		return;

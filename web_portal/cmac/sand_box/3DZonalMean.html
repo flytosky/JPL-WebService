@@ -359,7 +359,7 @@
 
         // Verify that the pressure is within limits and is a number.
         // If not generate an error message and return.                
-        if ( (pres1 > maxPres) || (pres1 < 0.0 ) || (pres2 > maxPres) || (pres2 < 0.0) ){
+        if ( (pres1 < 0.0) || (pres1 > maxPres) || (pres2 < 0.0 ) || (pres2 > maxPres)  ){
                 var presStr = "The pressure must be between 0 and " + maxPres + " inclusively.";
                 $("#validate").html(presStr);
                 return;
