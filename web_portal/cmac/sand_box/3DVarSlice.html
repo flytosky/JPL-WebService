@@ -460,7 +460,8 @@ else if (data_string == "CCCMA/CANESM2") {
 
 	// Verify that the pressure is between 0.0 and maxPres, inclusively
 	if ( (pres < 0.0) || (pres > maxPres ) ){
-		$("#validate").html("The pressure must be between 0.0 and " + maxPres + " inclusively");
+		var presStr = "The pressure must be between 0.0 and " + maxPres + " inclusively"
+		$("#validate").html(presStr);
 	}
 		  
         // when variable is the 3D Ocean Salinity or Ocean Temperature
