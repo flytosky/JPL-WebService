@@ -280,7 +280,7 @@
 
         // Verify that the second latitude value is greater than the first.
         // If not generate an error message and return.
-        if( parseFloat(lat0val) > parseFloat(lat1val) ){
+        if( parseFloat(lat0) > parseFloat(lat1) ){
                 $("#validate").html("Start latitude must be less than end latitude.");
                 return;
         }
