@@ -462,17 +462,16 @@ else if (data_string == "CCCMA/CANESM2") {
 	if ( (pres < 0.0) || (pres > maxPres ) ){
 		var presStr = "The pressure must be between 0.0 and " + maxPres + " inclusively"
 		$("#validate").html(presStr);
+		return;
 	}
 		  
         // when variable is the 3D Ocean Salinity or Ocean Temperature
         if (variable == 'ot' || variable == 'os')
-
             pres = pres * 10000;  // convert from dbar on GUI
             // when variable is 2D
-        else
-		{
-			pres = pres * 100;  // convert from hPa on GUI
-		}
+        else{
+		pres = pres * 100;  // convert from hPa on GUI
+	}
 		
         arglist = arglist.concat("&pr=");
         arglist = arglist.concat(pres);
