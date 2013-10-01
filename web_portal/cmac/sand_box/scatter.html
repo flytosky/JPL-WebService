@@ -278,14 +278,14 @@
                 return;
         }
 
-        // Verify that the second latitude value is greater than the first.
+	// Verify that the second latitude value is greater than the first.
         // If not generate an error message and return.
         if( parseFloat(lat0) > parseFloat(lat1) ){
                 $("#validate").html("Start latitude must be less than end latitude.");
                 return;
         }
 
-        // Verify that longitudes are numbers.  If not generate an error message and return.
+	// Verify that longitudes are numbers.  If not generate an error message and return.
         if( isNaN(lon0) || isNaN(lon1) ){
                 $("#validate").html("Longitude values have to be a number.");
                 return;
@@ -499,7 +499,7 @@ level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="validate" cols="110" rows="6">Validation Here</textarea>
+<textarea id="validate" cols="110" rows="2">Validation Here</textarea>
 </td>
 </tr>
 
