@@ -459,24 +459,24 @@ else if (data_string == "CCCMA/CANESM2") {
 	}
 
 	// Verify that the pressure is between 0.0 and maxPres, inclusively
-	if ( (pres < 0.0) || (pres > maxPre ) ){
+	if ( (pres < 0.0) || (pres > maxPres ) ){
 		$("#validate").html("The pressure must be between 0.0 and " + maxPres + " inclusively");
 	}
 		  
         // when variable is the 3D Ocean Salinity or Ocean Temperature
-        if (variable == 'ot' || variable == 'os'){
+        if (variable == 'ot' || variable == 'os')
+
             pres = pres * 10000;  // convert from dbar on GUI
-	}
-        // when variable is 2D
-        else{
-		pres = pres * 100;  // convert from hPa on GUI
-	}
+            // when variable is 2D
+        else
+		{
+			pres = pres * 100;  // convert from hPa on GUI
+		}
 		
         arglist = arglist.concat("&pr=");
         arglist = arglist.concat(pres);
 
         var lon0 = $("#lon0").val();
-        var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
 
