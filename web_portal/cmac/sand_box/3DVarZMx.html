@@ -475,36 +475,29 @@ else if (data_string == "CCCMA/CANESM2") {
                  maxPres = 2000.0;
         }
 
-        // Verify that the pressure is a number.
-        // If not generate an error message and return.
-        if ( isNaN(pres) ){
-                $("#validate").html("The pressure must be a number.");
-                return;
-        }
-
         var splitty = pres.split(',');
         if (splitty.length != 2) {
-          alert("pressure level range needs to be two values separated by comma.");
+	  $("#validate").html("The pressure level range needs to be two values separated by comma. ");
           return;
         }
         else {
           pres1 = splitty[0];
           pres2 = splitty[1];
 
-        // Verify that the pressure is a number.
-        // If not generate an error message and return.
-        if ( isNaN(pres1) || isNaN(pres2) ){
+          // Verify that the pressure is a number.
+          // If not generate an error message and return.
+          if ( isNaN(pres1) || isNaN(pres2) ){
                 $("#validate").html("The pressure must be a number.");
                 return;
-        }
+          }
 
-        // Verify that the pressure is within limits and is a number.
-        // If not generate an error message and return.
-        if ( (pres1 < 0.0) || (pres1 > maxPres) || (pres2 < 0.0 ) || (pres2 > maxPres)  ){
+          // Verify that the pressure is within limits and is a number.
+          // If not generate an error message and return.
+          if ( (pres1 < 0.0) || (pres1 > maxPres) || (pres2 < 0.0 ) || (pres2 > maxPres)  ){
                 var presStr = "The pressure must be between 0 and " + maxPres + " inclusively.";
                 $("#validate").html(presStr);
                 return;
-        }
+          }
 
           // alert("variable: " + variable);
 
