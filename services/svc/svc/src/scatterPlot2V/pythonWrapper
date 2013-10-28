@@ -151,6 +151,7 @@ class SUBSET_REGION():
     #self.dataDir = '/home/zhai/cmip5' 
     #self.dataDir = '/home/bytang/cmip5' # my des dir
     self.dataDir = '/export/data1/data/cmip5' 
+    self.desDir = '/home/bytang/projects/cmac/des/original'
     self.inFile = '' 
     self.inFile2 = '' 
 #   self.inFileBU = '' 
@@ -250,8 +251,11 @@ class SUBSET_REGION():
     else:
       dir0 = '%s/%s/%s'%(self.dataDir, center, model)
 
+    desDir = self.desDir
+
     filesNc = glob.glob('%s/%s_*.nc'%(dir0, varName))
-    filesDes = glob.glob('%s/%s_.des'%(dir0, varName))
+    desFn = '%s/%s_%s_%s.des'%(desDir, center, model, varName)
+    filesDes = glob.glob(desFn)
     if 1:
       print 'filesNc, filesDes:'
       print center, model, varName
@@ -268,11 +272,10 @@ class SUBSET_REGION():
       return filesDes[0], filesNc[0]
 
     if len(filesNc)>1 and len(filesDes)==0:
-      desFn = '%s/%s_.des'%(dir0, varName)
       temp1 = 'mkdes --f90 --des %s %s/%s_*.nc'%(desFn, dir0, varName)
       print temp1
       os.system(temp1)
-      files2a = glob.glob('%s/%s_.des'%(dir0, varName))
+      files2a = glob.glob(desFn)
       return files2a[0], filesNc[0]
       
     if len(filesNc)==1:
@@ -849,7 +852,12 @@ class SUBSET_REGION():
 
     nc1 = Dataset(fn, 'r+')
     d2 = nc1.createVariable('data2', 'float32', ('lat', 'lon'))
-    d2[:,:] = data2
+    print d2.shape
+    print data2.shape
+    # zzzz
+    nn0 = min( d2.shape[0], data2.shape[0])
+    nn1 = min( d2.shape[1], data2.shape[1])
+    d2[:nn0,:nn1] = data2[:nn0, :nn1]
     nc1.close()
 
     print 'dataFile: %s'%fn
@@ -960,8 +968,19 @@ if cr['command_arg']       == 1:
 
 if cr['plot__']       == 1:
   # get file names
-  a.inFile1, a.inFile1Nc = a.getFileName(a.center1, a.model1, a.varName1) 
-  a.inFile2, a.inFile2Nc = a.getFileName(a.center2, a.model2, a.varName2) 
+  #try: 
+  if 1: 
+    a.inFile1, a.inFile1Nc = a.getFileName(a.center1, a.model1, a.varName1) 
+  if 0:
+  #except:
+    print 'error: file 1 not there'
+    sys.exit()
+ 
+  try: 
+    a.inFile2, a.inFile2Nc = a.getFileName(a.center2, a.model2, a.varName2) 
+  except:
+    print 'error: file 2 not there'
+    sys.exit()
 
   a.getUnits()
 
