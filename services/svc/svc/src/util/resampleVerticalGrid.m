@@ -51,7 +51,6 @@ fd_out{'plev'}.positive = 'down';
 copyAtt(fd_out, fd_in);
 
 fd_out{varName} = ncfloat('time', 'plev', 'lat', 'lon');
-status = copyAtt(fd_out{varName}, fd_in{varName});
 
 % We now go through the vertical coordinate
 for varI = 1:nVar
@@ -65,8 +64,9 @@ for varI = 1:nVar
       data_regrided(tI,:) = reshape(K*squeeze(data(tI,:,:)), 1, []);
     end
     fd_out{varName}(:) = data_regrided;
-    ncclose(fd_out);
-    ncclose(fd_in);
+    status = copyAtt(fd_out{varName}, fd_in{varName});
+    close(fd_out);
+    close(fd_in);
     return;
   elseif ~isempty(strfind(thisVarName, 'lev'))
     levelVarName = thisVarName;
@@ -106,8 +106,9 @@ switch lower(standard_name)
       data_regrided(tI,:) = reshape(K*squeeze(data(tI,:,:)), 1, []);
     end
     fd_out{varName}(:) = data_regrided;
-    ncclose(fd_out);
-    ncclose(fd_in);
+    status = copyAtt(fd_out{varName}, fd_in{varName});
+    close(fd_out);
+    close(fd_in);
     return;
   case {'atmosphere_sigma_coordinate'},
     ptop_var = lookupTermName(formula.inputVars{1}, termPairs, 'ptop');
@@ -118,15 +119,30 @@ switch lower(standard_name)
     ps = fd_in{ps_var}(:) - ptop;
     pverFunc = @(tI, latI, lonI) ptop*a + ps(tI, latI, lonI)*b;
   case {'atmosphere_hybrid_sigma_pressure_coordinate'},
-    a_var = lookupTermName(formula.inputVars{1}, termPairs, 'a');
-    a = fd_in{a_var}(:);
-    p_ref_var = lookupTermName(formula.inputVars{2}, termPairs, 'p0');
-    p0 = fd_in{p_ref_var}(:);
-    b_var = lookupTermName(formula.inputVars{3}, termPairs, 'b');
+    varIdx = 1;
+    if length(formula.op) == 2
+      if strcmp(formula.op{varIdx}, '+')
+        ap_var = lookupTermName(formula.inputVars{1}, termPairs, 'ap');
+        ap = fd_in{ap_var}(:);
+        varIdx = varIdx+1;
+      else
+        error('Unconventional formula for hybrid sigma pressure coordinate!');
+      end
+    else
+      a_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'a');
+      a = fd_in{a_var}(:);
+      varIdx = varIdx+1;
+      p_ref_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'p0');
+      p0 = fd_in{p_ref_var}(:);
+      varIdx = varIdx+1;
+      ap = a*p0;
+    end
+    b_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'b');
     b = fd_in{b_var}(:);
-    ps_var = lookupTermName(formula.inputVars{4}, termPairs, 'ps');
+    varIdx = varIdx+1;
+    ps_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'ps');
     ps = fd_in{ps_var}(:);
-    pverFunc = @(tI, latI, lonI) a*p0 + b*ps(tI, latI, lonI);
+    pverFunc = @(tI, latI, lonI) ap + b*ps(tI, latI, lonI);
   case {'atmosphere_hybrid_height_coordinate'}
     a_var = lookupTermName(formula.inputVars{1}, termPairs, 'a');
     a = fd_in{a_var}(:);
@@ -139,10 +155,6 @@ switch lower(standard_name)
     error('unknown vertical coordinate!');
 end
 
-[nT,nP_orig,nLat,nLon] = size(data);
-nP = length(plev);
-data_regrided = zeros(nT, nP, nLat, nLon, 'single');
-
 for lonI = 1:nLon
   for latI = 1:nLat
     for tI = 1:nT
@@ -154,7 +166,8 @@ for lonI = 1:nLon
 end
 
 fd_out{varName}(:) = data_regrided;
-ncclose(fd_out);
-ncclose(fd_in);
+status = copyAtt(fd_out{varName}, fd_in{varName});
+close(fd_out);
+close(fd_in);
 
 status = 0;
