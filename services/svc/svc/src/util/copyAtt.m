@@ -1,6 +1,6 @@
 function status = copyAtt(nc_to, nc_from)
 %
-% This function copies a variable from netcdf object "nc_from" to "nc_to"
+% This function copies a attribute from netcdf object "nc_from" to "nc_to"
 %
 status = -1;
 attrb = ncatt(nc_from);
