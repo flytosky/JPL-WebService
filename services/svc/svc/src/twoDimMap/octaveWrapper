@@ -67,7 +67,7 @@ printf("8. %s\n", arg_list{8})
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
 
-dataDir = ['/export/data1/data/cmip5/'  center '/' model '/']; 
+dataDir = [getDataRootDirectory()  center '/' model '/']; 
 
 dataFiles = dir([dataDir '/' varName '_*.nc']);
 
