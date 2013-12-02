@@ -150,7 +150,7 @@ switch lower(standard_name)
     b = fd_in{b_var}(:);
     orog_var = lookupTermName(formula.inputVars{3}, termPairs, 'orog');
     orog = fd_in{orog_var}(:);
-    pverFunc = @(tI, latI, lonI) altiutde2Pressure(a + orog(tI, latI, lonI)*b);
+    pverFunc = @(tI, latI, lonI) altitude2Pressure(a + orog(tI, latI, lonI)*b);
   otherwise,
     error('unknown vertical coordinate!');
 end
