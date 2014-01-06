@@ -1,0 +1,91 @@
+#!/usr/local/bin/octave -q
+addpath([pwd()  '/../util/']);
+
+arg_list = argv();
+printf ("program name: %s\n", program_name());
+
+narg = length(arg_list);
+
+if narg < 13
+  error('Insufficient argument, need specifications of the variable and environmental variable for conditional sampling: model or observation variable name!'); 
+end
+
+% Specify the data source name, in format "modelCenter_modelName" for a GCM or "dataCenter_instrument" for observational data
+sourceName = lower(arg_list{1});
+printf ("sourceName: %s\n", sourceName);
+varName = arg_list{2};
+printf ("varName: %s\n", varName);
+
+% Specify the temporal range, start/stop time in format "yyyymm"
+startTimeStr = arg_list{3};
+printf ("startTimeStr: %s\n", startTimeStr);
+startTime = struct('year', str2num(startTimeStr(1:4)), 'month', str2num(startTimeStr(5:6)));
+
+stopTimeStr = arg_list{4};
+printf ("stopTimeStr: %s\n", stopTimeStr);
+stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
+
+% Regional boundaries: longitude and latitude boundaries
+printf ("lonRange: %s\n", arg_list{5});
+lonRange = str2num(arg_list{5});
+printf ("lonRange: %f\n", lonRange)
+
+printf ("latRange: %s\n", arg_list{6});
+latRange = str2num(arg_list{6});
+
+% pressure range for 3-d variable, using empty or negative values for 2-d variables
+plevRange = str2num(arg_list{7});
+
+% using month index within a year to select a season
+monthIdx = str2num(arg_list{8});
+
+% Source name for the large scale environmental variable used for conditional sampling
+% in format "modelCenter_modelName"  for models and "dataCenter_instrumentName" for observational data
+largeScaleSourceName = lower(arg_list{9});
+
+% variable name as specified by the CMIP5 standard output document.
+largeScaleVarName = lower(arg_list{10});
+
+% Boundary values of bins for the large scale variable
+largeScaleValueBinB = str2num(arg_list{11});
+
+% Pressure level for the large scale variable, the longitude and latitude regions are asssumed to be the same as the physical
+% variable under study.
+% using empty or negative values for 2-d variables
+largeScalePlev = str2num(arg_list{12});
+
+% Output directory name, required by the program.
+output_dir = arg_list{13};
+
+printf("1. %s\n", arg_list{1});
+printf("2. %s\n", arg_list{2});
+printf("3. %s\n", arg_list{3});
+printf("4. %s\n", arg_list{4});
+printf("5. %s\n", arg_list{5});
+printf("6. %s\n", arg_list{6});
+printf("7. %s\n", arg_list{7});
+printf("8. %s\n", arg_list{8});
+printf("9. %s\n", arg_list{9});
+printf("10. %s\n", arg_list{10});
+printf("11. %s\n", arg_list{11});
+printf("12. %s\n", arg_list{12});
+printf("13. %s\n", arg_list{13});
+
+dataFileFullPath = getDataFilePaths(sourceName, varName, startTime, stopTime);
+largeScaleDataFileFullPath = getDataFilePaths(largeScaleSourceName, largeScaleVarName, startTime, stopTime);
+
+figFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '_sortedBy_' largeScaleSourceName '_' largeScaleVarName '.jpeg'];
+dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '_sortedBy_' largeScaleSourceName '_' largeScaleVarName '.nc'];
+
+figFilePath = [output_dir '/' figFile];
+dataFilePath = [output_dir '/' dataFile]; 
+printf("figFile: %s\n", figFile)
+printf("figFilePath: %s\n", figFilePath)
+printf("dataFile: %s\n", dataFile)
+printf("dataFilePath: %s\n", dataFilePath)
+
+status = -1;
+displayConditionalSampling(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange, largeScaleDataFileFullPath, largeScaleVarName, largeScaleValueBinB, largeScalePlev, dataFilePath);
+
+title([varName ' two dimensional map for ' sourceName]);
+
