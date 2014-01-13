@@ -104,6 +104,11 @@ var3d = [
 'os',
 ]
 
+regridVar = [
+'cli',
+'clw',
+]
+
 # def_change_labels(ax):
 def change_labels(ax):
   x1 = Mat.getp(ax, 'xticklabels')
@@ -247,7 +252,11 @@ class SUBSET_REGION():
   def getFileName(self, center, model, varName):
     # the original is just for model
     if center in modelCenter:
-      dir0 = '%s/%s/%s/original'%(self.dataDir, center, model)
+      if varName in regridVar:
+        dir0 = '%s/%s/%s/regridded'%(self.dataDir, center, model)
+      else:
+        dir0 = '%s/%s/%s/original'%(self.dataDir, center, model)
+ 
     else:
       dir0 = '%s/%s/%s'%(self.dataDir, center, model)
 
@@ -852,8 +861,8 @@ class SUBSET_REGION():
 
     nc1 = Dataset(fn, 'r+')
     d2 = nc1.createVariable('data2', 'float32', ('lat', 'lon'))
-    print d2.shape
-    print data2.shape
+    #print d2.shape
+    #print data2.shape
     # zzzz
     nn0 = min( d2.shape[0], data2.shape[0])
     nn1 = min( d2.shape[1], data2.shape[1])
