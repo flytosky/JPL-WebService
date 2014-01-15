@@ -206,7 +206,7 @@
         $("#Response").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&model2=ukmo_hadgem2-a&var2=clt&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
         var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
@@ -228,6 +228,10 @@
 
         // alert("arglist: " + arglist);
 
+        var pres1 = $("#pres1").val();
+        arglist = arglist.concat("&pres1=");
+        arglist = arglist.concat(pres1);
+
         var d2 = $("#data2").val();
         var model2 = d2.replace("/", "_");
         model2 = model2.toLowerCase();
@@ -242,6 +246,10 @@
         arglist = arglist.concat(variable2);
 
         // alert("arglist: " + arglist);
+
+        var pres2 = $("#pres2").val();
+        arglist = arglist.concat("&pres2=");
+        arglist = arglist.concat(pres2);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
@@ -279,7 +287,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -372,10 +380,18 @@
 <option>Surface Temperature</option>
 <!-- <option>Specific Humidity</option> -->
 <option>Precipitation Flux</option> </select>
+</td>
 
 <!--
 level1 (hPa) <input id="level1" value="200" alt="level1"/></td>
 -->
+<td>
+atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
+</td>
+<td>
+<input id="pres1" value="200" alt="pressure"/>
+</td>
+
 </tr>
 
 
@@ -413,10 +429,18 @@ level1 (hPa) <input id="level1" value="200" alt="level1"/></td>
 <option>Surface Temperature</option>
 <!-- <option>Specific Humidity</option> -->
 <option>Precipitation Flux</option> </select>
+</td>
 
 <!--
 level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 -->
+<td>
+atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
+</td>
+<td>
+<input id="pres2" value="200" alt="pressure"/>
+</td>
+
 </tr>
 
 
