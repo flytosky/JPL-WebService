@@ -108,10 +108,11 @@ def displayTwoDimMap():
     print 'lat2: ', lat2
     print 'months: ', months
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+months
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/twoDimMap/' + tag
@@ -145,8 +146,19 @@ def displayTwoDimMap():
         dataUrl = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str("Error caught in displayTwoDimMap()")
 
     return jsonify({
         'success': success,
@@ -187,10 +199,11 @@ def display_timeSeries2D():
     print 'lat1: ', lat1
     print 'lat2: ', lat2
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/timeSeries2D/' + tag
@@ -224,9 +237,19 @@ def display_timeSeries2D():
         dataUrl = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
 
+        success = False
+        message = str("Error caught in display_timeSeries2D()")
 
     return jsonify({
         'success': success,
@@ -271,10 +294,11 @@ def displayTwoDimSlice3D():
     print 'lat2: ', lat2
     print 'months: ', months
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+pr+lon1+lon2+lat1+lat2+months
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/twoDimSlice3D/' + tag
@@ -307,9 +331,19 @@ def displayTwoDimSlice3D():
         dataUrl = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
 
+        success = False
+        message = str("Error caught in displayTwoDimSlice3D()")
 
     return jsonify({
         'success': success,
@@ -348,10 +382,11 @@ def displayTwoDimZonalMean():
     print 'lat2: ', lat2
     print 'months: ', months
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+lat1+lat2+months
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/twoDimZonalMean/' + tag
@@ -386,8 +421,19 @@ def displayTwoDimZonalMean():
         dataUrl = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str("Error caught in displayTwoDimZonalMean()")
 
 
     return jsonify({
@@ -431,10 +477,11 @@ def displayThreeDimZonalMean():
     print 'pres2: ', pres2
     print 'months: ', months
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+lat1+lat2+pres1+pres2+months
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/threeDimZonalMean/' + tag
@@ -468,9 +515,19 @@ def displayThreeDimZonalMean():
         dataUrl = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
 
+        success = False
+        message = str("Error caught in displayThreeDimZonalMean()")
 
     return jsonify({
         'success': success,
@@ -513,10 +570,11 @@ def displayThreeDimVerticalProfile():
     print 'lat2: ', lat2
     print 'months: ', months
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model+var+startT+endT+lat1+lat2+lon1+lon2+months
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/threeDimVerticalProfile/' + tag
@@ -549,9 +607,19 @@ def displayThreeDimVerticalProfile():
         dataUrl = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
 
+        success = False
+        message = str("Error caught in displayThreeDimVerticalProfile()")
 
     return jsonify({
         'success': success,
@@ -595,10 +663,11 @@ def displayScatterPlot2V():
     print 'lat1: ', lat1
     print 'lat2: ', lat2
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model1+var1+model2+var2+startT+endT+lat1+lat2+lon1+lon2
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/scatterPlot2V/' + tag
@@ -628,9 +697,19 @@ def displayScatterPlot2V():
         url = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
 
+        success = False
+        message = str("Error caught in displayScatterPlot2V()")
 
     return jsonify({
         'success': success,
@@ -673,10 +752,11 @@ def displayDiffPlot2V():
     print 'lat1: ', lat1
     print 'lat2: ', lat2
 
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
     try:
-      # get where the input file and output file are
-      current_dir = os.getcwd()
-      print 'current_dir: ', current_dir
       seed_str = model1+var1+model2+var2+startT+endT+lat1+lat2+lon1+lon2
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/diffPlot2V/' + tag
@@ -706,9 +786,19 @@ def displayDiffPlot2V():
         url = ''
 
     except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
         success = False
         message = str(e)
+    except:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
 
+        success = False
+        message = str("Error caught in displayDiffPlot2V()")
 
     return jsonify({
         'success': success,
