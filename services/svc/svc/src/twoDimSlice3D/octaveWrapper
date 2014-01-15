@@ -73,7 +73,7 @@ printf("9. %s\n", arg_list{9})
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
 
-dataDir = [getDataRootDirecotyr()  center '/' model '/break']; 
+dataDir = [getDataRootDirectory()  center '/' model '/break']; 
 
 dataFiles = dir([dataDir '/' varName '_*.nc']);
 
