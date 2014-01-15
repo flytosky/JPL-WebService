@@ -76,6 +76,8 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
               image_filename = line[l1:]
 
           print 'image_filename: ', image_filename
+          image_filename = os.path.basename(image_filename)
+          print 'image_filename: ', image_filename
           return (stdout_value, image_filename)
         # 
         #except OSError, e:
