@@ -152,13 +152,14 @@ def displayTwoDimMap():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayTwoDimMap()")
+        ### message = str("Error caught in displayTwoDimMap()")
+        message = str(e)
 
     return jsonify({
         'success': success,
@@ -243,13 +244,14 @@ def display_timeSeries2D():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in display_timeSeries2D()")
+        ### message = str("Error caught in display_timeSeries2D()")
+        message = str(e)
 
     return jsonify({
         'success': success,
@@ -337,13 +339,14 @@ def displayTwoDimSlice3D():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayTwoDimSlice3D()")
+        ### message = str("Error caught in displayTwoDimSlice3D()")
+        message = str(e)
 
     return jsonify({
         'success': success,
@@ -427,13 +430,14 @@ def displayTwoDimZonalMean():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayTwoDimZonalMean()")
+        ### message = str("Error caught in displayTwoDimZonalMean()")
+        message = str(e)
 
 
     return jsonify({
@@ -521,13 +525,14 @@ def displayThreeDimZonalMean():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayThreeDimZonalMean()")
+        ### message = str("Error caught in displayThreeDimZonalMean()")
+        message = str(e)
 
     return jsonify({
         'success': success,
@@ -613,13 +618,14 @@ def displayThreeDimVerticalProfile():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayThreeDimVerticalProfile()")
+        ### message = str("Error caught in displayThreeDimVerticalProfile()")
+        message = str(e)
 
     return jsonify({
         'success': success,
@@ -639,12 +645,14 @@ def displayScatterPlot2V():
     message = "ok"
     url = ''
 
-    # get model1, var1,  model2, var2, start time, end time, lon1, lon2, lat1, lat2
+    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2
 
     model1 = request.args.get('model1', '')
     var1 = request.args.get('var1', '')
+    pres1 = request.args.get('pres1', '')
     model2 = request.args.get('model2', '')
     var2 = request.args.get('var2', '')
+    pres2 = request.args.get('pres2', '')
     startT = request.args.get('start_time', '')
     endT = request.args.get('end_time', '')
     lon1 = request.args.get('lon1', '')
@@ -654,8 +662,10 @@ def displayScatterPlot2V():
 
     print 'model1: ', model1
     print 'var1: ', var1
+    print 'pres1: ', pres1
     print 'model2: ', model2
     print 'var2: ', var2
+    print 'pres2: ', pres2
     print 'startT: ', startT
     print 'endT: ', endT
     print 'lon1: ', lon1
@@ -678,15 +688,17 @@ def displayScatterPlot2V():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/scatterPlot2V')
       # instantiate the app. class
-      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, model2, var2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
+      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
       # call the app. function (0 means the image created is scatter plot)
-      (message, imgFileName) = c1.displayScatterPlot2V(0)
+      ### (message, imgFileName) = c1.displayScatterPlot2V(0)
+      (message, imgFileName) = c1.display()
       # chdir back
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
       print 'hostname: ', hostname
       print 'port: ', port
+      print 'imgFileName: ', imgFileName
 
       url = 'http://' + hostname + ':' + port + '/static/scatterPlot2V/' + tag + '/' + imgFileName
       print 'url: ', url
@@ -703,13 +715,14 @@ def displayScatterPlot2V():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayScatterPlot2V()")
+        ### message = str("Error caught in displayScatterPlot2V()")
+        message = str(e)
 
     return jsonify({
         'success': success,
@@ -792,13 +805,14 @@ def displayDiffPlot2V():
 
         success = False
         message = str(e)
-    except:
+    except Exception, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
         os.chdir(current_dir)
         print 'change dir back to: ', current_dir
 
         success = False
-        message = str("Error caught in displayDiffPlot2V()")
+        ### message = str("Error caught in displayDiffPlot2V()")
+        message = str(e)
 
     return jsonify({
         'success': success,
