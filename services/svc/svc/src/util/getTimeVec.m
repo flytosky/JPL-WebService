@@ -5,11 +5,9 @@ function [years, months, indices] = getTimeVec(fileName)
 %
 %
 
-fd = netcdf(fileName, 'r');
-cal = fd{'time'}.calendar;
-ts = fd{'time'}(:);
-unitsSpec = fd{'time'}.units;
-close(fd);
+ts = ncread(fileName, 'time');
+cal = ncreadatt(fileName, 'time', 'calendar');
+unitsSpec = ncreadatt(fileName, 'time', 'units');
 
 date0 = sscanf(unitsSpec, 'days since %d-%d-%d');
 [years, months, indices] = convertDaysFromADateToMonths(date0, ts, cal);
