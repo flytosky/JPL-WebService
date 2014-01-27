@@ -49,11 +49,11 @@ lon = [];
 lat = [];
 
 for fileI = 1:nFiles
-  fd = netcdf(dataFile{fileI}, 'r');
+  thisFile = dataFile{fileI};
 
   if isempty(monthlyData)
-    lon = fd{'lon'}(:);
-    lat = fd{'lat'}(:);
+    lon = ncread(thisFile, 'lon');
+    lat = ncread(thisFile, 'lat');
 
     [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
 
@@ -61,19 +61,23 @@ for fileI = 1:nFiles
     monthlyData = nan(nMonths,1);
   end
 
-  v = single(fd{varName}(:));
-  
-  if ~isempty(fd{varName}.missing_value)
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
   end
 
-  v_units = fd{varName}.units;
+  v_units = ncreadatt(thisFile, varName, 'units');
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  nMonths_thisFile = size(v,3);
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -92,9 +96,8 @@ for fileI = 1:nFiles
   %disp(latIdx);
   %disp(lonIdx);
   %monthlyData(monthIdx1:monthIdx2) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx),2),3);
-  monthlyData(monthIdx1:monthIdx2) = averageOverSphere(v(idx2Data_start:idx2Data_stop,latIdx,lonIdx), lat);
-  long_name = fd{varName}.long_name;
-  ncclose(fd);
+  monthlyData(monthIdx1:monthIdx2) = averageOverSphere(v(lonIdx, latIdx, idx2Data_start:idx2Data_stop), lat);
+  long_name = ncreadatt(thisFile, varName, 'long_name');
   clear v;
 end
 
