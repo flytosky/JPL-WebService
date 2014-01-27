@@ -56,13 +56,13 @@ lat = [];
 plev = [];
 
 for fileI = 1:nFiles
-  fd = netcdf(dataFile{fileI}, 'r');
-
-  varinfo = ncvar(fd);
+  thisFile = dataFile{fileI};
+  fileInfo = ncinfo(thisFile);
+  varinfo = fileInfo.Variables;
 
   plevVarName = [];
   for ii = 1:length(varinfo)
-    varNameList{ii} = ncname(varinfo{ii});
+    varNameList{ii} = [varinfo(ii).Name];
     if strcmp('plev', varNameList{ii})
       plevVarName = 'plev';
       break;
@@ -75,30 +75,36 @@ for fileI = 1:nFiles
   end
 
   if isempty(monthlyData)
-    lon = fd{'lon'}(:);
-    lat = fd{'lat'}(:);
-    plev = readPressureLevels(fd, plevVarName);
+    lon = ncread(thisFile, 'lon');
+    lat = ncread(thisFile, 'lat');
+    plev = readPressureLevels(thisFile, plevVarName);
 
     [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
     nLon = length(lon);
     nLat = length(lat);
 
     [p_idx, p_alphas] = linearInterpHelper(thisPlev, plev, 'log'); % get the layers relevant to the specified pressure level
-    monthlyData = nan(nMonths, nLat, nLon, 'single');
+    monthlyData = nan(nLon, nLat, nMonths, 'single');
   end
 
-  v = single(fd{varName}(:));
-  if ~isempty(fd{varName}.missing_value)
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
   end
-  v_units = fd{varName}.units;
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+
+  v_units = ncreadatt(thisFile, varName, 'units');
   v_units = adjustUnits(v_units, varName);
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  nMonths_thisFile = size(v,4);
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -116,12 +122,11 @@ for fileI = 1:nFiles
   disp(size(v));
   disp(latIdx);
   disp(lonIdx);
-  monthlyData(monthIdx1:monthIdx2, :, :) = squeeze(v(idx2Data_start:idx2Data_stop, p_idx(1), latIdx,lonIdx) * p_alphas(1));
+  monthlyData(:,:, monthIdx1:monthIdx2) = squeeze(v(lonIdx, latIdx, p_idx(1), idx2Data_start:idx2Data_stop) * p_alphas(1));
   for pIdx = 2:length(p_idx)
-    monthlyData(monthIdx1:monthIdx2, :, :) = monthlyData(monthIdx1:monthIdx2, :, :) + squeeze(v(idx2Data_start:idx2Data_stop, p_idx(pIdx), latIdx,lonIdx) * p_alphas(pIdx));
+    monthlyData(:,:,monthIdx1:monthIdx2) = monthlyData(:,:,monthIdx1:monthIdx2) + squeeze(v(lonIdx, latIdx, p_idx(pIdx), idx2Data_start:idx2Data_stop) * p_alphas(pIdx));
   end
-  long_name = fd{varName}.long_name;
-  ncclose(fd);
+  long_name = ncreadatt(thisFile, varName, 'long_name');
   clear v;
 end
 
@@ -129,8 +134,8 @@ end
 
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
-var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
-[h, cb] = displayTwoDimData(lon, lat, var_clim');
+var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
+[h, cb] = displayTwoDimData(lon, lat, var_clim);
 plev_units = 'hPa';
 if strcmp(varName, 'ot') || strcmp(varName, 'os') 
   plev_units = 'dbar';
@@ -139,13 +144,13 @@ title(h, [varName ', at ' num2str(round(thisPlev/100)) plev_units ', ' date2Str(
 set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
 
-data.dimNames = {'latitude', 'longitude'};
+data.dimNames = {'longitude', 'latitude'};
 data.nDim = 2;
-data.dimSize = [length(lat), length(lon)];
-data.dimVars = {lat, lon};
+data.dimSize = [length(lon), length(lat)];
+data.dimVars = {lon, lat};
 data.var = var_clim;
 data.varName = varName;
-data.dimVarUnits = {'degree_north', 'degree_east'};
+data.dimVarUnits = {'degree_east', 'degree_north'};
 data.varUnits = v_units;
 data.varLongName = long_name;
 

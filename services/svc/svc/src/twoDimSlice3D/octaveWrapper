@@ -1,6 +1,9 @@
-#!/usr/local/bin/octave -q
+#!/usr/bin/octave -q
 
 addpath([pwd()  '/../util/']);
+
+pkg load netcdf;
+
 arg_list = argv();
 printf ("program name: %s:\n", program_name());
 
