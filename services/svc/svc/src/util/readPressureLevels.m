@@ -1,8 +1,9 @@
-function plev = readPressureLevels(fd, plevVarName)
+function plev = readPressureLevels(fn, plevVarName)
 
 if strcmp(plevVarName, 'plev')
-  plev = fd{'plev'}(:);
-  switch lower(fd{'plev'}.units)
+  plev = ncread(fn, 'plev');
+  units = ncreadatt(fn, 'plev', 'units');
+  switch lower(units)
     case {'dbar', 'decibar'},
       plev = plev * 1e4; % convert from dbar to Pa
     case 'bar',
@@ -13,12 +14,14 @@ if strcmp(plevVarName, 'plev')
       %% don't do anything
   end
 else
-  switch lower(fd{'lev'}.units)
+  lev = ncread(fn, 'lev');
+  units = ncread(fn, 'lev', 'units');
+  switch lower(units)
     case 'm',
-      plev = altitude2Pressure(fd{'lev'}(:)/1000)*100; % m -> Km -> hPa -> Pa
+      plev = altitude2Pressure(lev/1000)*100; % m -> Km -> hPa -> Pa
   
     otherwise,
       p0 = 1.013e5; % 1atm = 1.013e5 Pa
-      plev = fd{'lev'}(:)*p0;
+      plev = lev(:)*p0;
   end
 end

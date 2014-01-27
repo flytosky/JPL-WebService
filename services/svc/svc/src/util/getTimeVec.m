@@ -6,7 +6,12 @@ function [years, months, indices] = getTimeVec(fileName)
 %
 
 ts = ncread(fileName, 'time');
-cal = ncreadatt(fileName, 'time', 'calendar');
+if hasAttribute(fileName, 'time', 'calendar')
+  cal = ncreadatt(fileName, 'time', 'calendar');
+else
+  cal = 'gregorian';
+  warning('!!! no calendar attribute, using Gregorian!');
+end
 unitsSpec = ncreadatt(fileName, 'time', 'units');
 
 date0 = sscanf(unitsSpec, 'days since %d-%d-%d');
