@@ -126,7 +126,8 @@ for fileI = 1:nFiles
 
   disp(size(v));
   disp(latIdx);
-  monthlyData(:, monthIdx1:monthIdx2) = squeeze(meanExcludeNaN(meanExcludeNaN(v(lonIdx, latIdx, :, idx2Data_start:idx2Data_stop),1),2));
+  %monthlyData(:, monthIdx1:monthIdx2) = squeeze(meanExcludeNaN(meanExcludeNaN(v(lonIdx, latIdx, :, idx2Data_start:idx2Data_stop),1),2));
+  monthlyData(:, monthIdx1:monthIdx2) = squeeze(averageOverSphere(v(lonIdx, latIdx, :, idx2Data_start:idx2Data_stop), lat));
   long_name = ncreadatt(thisFile, varName, 'long_name');
   clear v;
 end
@@ -137,9 +138,6 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 var_clim = squeeze(simpleClimatology(monthlyData,2, monthIdxAdj));
 figure;
 y_plev = -plev;
-if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
-	y_plev = y_plev/100;
-end
 semilogy(var_clim, y_plev, 'ks-', 'linewidth', 2);
 grid on;
 set(gca, 'fontweight', 'bold');
