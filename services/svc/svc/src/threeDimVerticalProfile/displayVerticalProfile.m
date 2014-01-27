@@ -56,13 +56,13 @@ lat = [];
 plev = [];
 
 for fileI = 1:nFiles
-  fd = netcdf(dataFile{fileI}, 'r');
-
-  varinfo = ncvar(fd);
+  thisFile = dataFile{fileI};
+  fileInfo = ncinfo(thisFile);
+  varinfo = fileInfo.Variables;
 
   plevVarName = [];
   for ii = 1:length(varinfo)
-    varNameList{ii} = ncname(varinfo{ii});
+    varNameList{ii} = [varinfo(ii).Name];
     if strcmp('plev', varNameList{ii})
       plevVarName = 'plev';
       break;
@@ -75,42 +75,41 @@ for fileI = 1:nFiles
   end
 
   if isempty(monthlyData)
-    lon = fd{'lon'}(:);
-    lat = fd{'lat'}(:);
+    lon = ncread(thisFile, 'lon');
+    lat = ncread(thisFile, 'lat');
 
-    if strcmp(plevVarName, 'plev')
-      plev = fd{'plev'}(:);
+    plev = readPressureLevels(thisFile, plevVarName);
+    nP = length(plev);
+    if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
+    	plev = plev/100; % convert to hPa
     else
-      switch lower(fd{'lev'}.units)
-        case 'm',
-          plev = altitude2Pressure(fd{'lev'}(:)/1000)*100; % m -> Km -> hPa -> Pa
-      
-        otherwise,
-          p0 = 1.013e5; % 1atm = 1.013e5 Pa
-          plev = fd{'lev'}(:)*p0;
-      end
+        plev = plev/1e4; % convert to dbar
     end
-
     [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
     nLon = length(lon);
     nLat = length(lat);
-    nP = length(plev);
 
-    monthlyData = nan(nMonths, nP, 'single');
+    monthlyData = nan(nP, nMonths, 'single');
   end
 
-  v = single(fd{varName}(:));
-  if ~isempty(fd{varName}.missing_value)
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN; 
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
   end
-  v_units = fd{varName}.units;
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+
+  v_units = ncreadatt(thisFile, varName, 'units');
   v_units = adjustUnits(v_units, varName);
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  nMonths_thisFile = size(v,4);
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -127,16 +126,15 @@ for fileI = 1:nFiles
 
   disp(size(v));
   disp(latIdx);
-  monthlyData(monthIdx1:monthIdx2, :) = meanExcludeNaN(meanExcludeNaN(v(idx2Data_start:idx2Data_stop,:,latIdx,lonIdx),3),4);
-  long_name = fd{varName}.long_name;
-  ncclose(fd);
+  monthlyData(:, monthIdx1:monthIdx2) = squeeze(meanExcludeNaN(meanExcludeNaN(v(lonIdx, latIdx, :, idx2Data_start:idx2Data_stop),1),2));
+  long_name = ncreadatt(thisFile, varName, 'long_name');
   clear v;
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
-var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
+var_clim = squeeze(simpleClimatology(monthlyData,2, monthIdxAdj));
 figure;
 y_plev = -plev;
 if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
