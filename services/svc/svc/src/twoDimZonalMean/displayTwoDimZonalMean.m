@@ -52,24 +52,31 @@ file_start_time = {};
 file_stop_time = {};
 
 for fileI = 1:nFiles
-  fd = netcdf(dataFile{fileI}, 'r');
+  thisFile = dataFile{fileI};
 
   if isempty(monthlyData)
-    lon = fd{'lon'}(:);
-    lat = fd{'lat'}(:);
+    lon = ncread(thisFile, 'lon');
+    lat = ncread(thisFile, 'lat');
 
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
     lat = lat(latIdx);
 
-    monthlyData = nan(nMonths, nLat, 'single');
+    monthlyData = nan(nLat, nMonths, 'single');
   end
 
-  v = single(fd{varName}(:));
-  if ~isempty(fd{varName}.missing_value)
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
   end
-  v_units = fd{varName}.units;
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+
+  v_units = ncreadatt(thisFile, varName, 'units');
+
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
   file_start_time{fileI} = startTime_thisFile;
@@ -78,7 +85,7 @@ for fileI = 1:nFiles
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  nMonths_thisFile = size(v,3);
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -93,11 +100,8 @@ for fileI = 1:nFiles
     monthIdx2 = nMonths;
   end
 
-  %disp(size(v));
-  %disp(latIdx);
-  monthlyData(monthIdx1:monthIdx2, :) = meanExcludeNaN(v(idx2Data_start:idx2Data_stop,latIdx,:),3);
-  long_name = fd{varName}.long_name;
-  ncclose(fd);
+  monthlyData(:, monthIdx1:monthIdx2) = meanExcludeNaN(v(:, latIdx, idx2Data_start:idx2Data_stop),1);
+  long_name = ncreadatt(thisFile, varName, 'long_name');
   clear v;
 end
 
@@ -108,7 +112,7 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 [real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
 
-var_clim = squeeze(simpleClimatology(monthlyData,1, monthIdxAdj));
+var_clim = squeeze(simpleClimatology(monthlyData,2, monthIdxAdj));
 figure;
 plot(lat, var_clim, 'ks-', 'linewidth', 2);
 grid on;
