@@ -88,7 +88,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
 if __name__ == '__main__':
     c1 = call_scatterPlot2V(\
 'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
-'/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+'/home/svc/cmac/trunk/services/svc/svc/static/scatterPlot2V')
 
     mesg = c1.display()
     print 'mesg: ', mesg
