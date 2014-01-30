@@ -1,9 +1,9 @@
-#!/home/btang/install/epd/bin/python
+#!/home/svc/install/epd/bin/python
 '''
-execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/pythonWrapper')
+execfile('/home/svc/cmac/trunk/services/svc/svc/src/scatterPlot2V/pythonWrapper')
 
 '''
-HOME='/home/bytang'
+HOME='/home/svc'
 
 cr = {
 #                              1  2   3  4
@@ -149,14 +149,17 @@ def change_labels(ax):
 class SUBSET_REGION():
   #== def___init__
   def __init__(self):
-    self.ferretCmd = '/home/bytang/install/bin/ferret' 
+    ### self.ferretCmd = '/home/bytang/install/bin/ferret' 
+    self.ferretCmd = '/home/svc/install/bin/ferret' 
     self.ferretMem = 100
     self.isDiffPlot = 0
 
     #self.dataDir = '/home/zhai/cmip5' 
     #self.dataDir = '/home/bytang/cmip5' # my des dir
-    self.dataDir = '/export/data1/data/cmip5' 
-    self.desDir = '/home/bytang/projects/cmac/des/original'
+    ### self.dataDir = '/export/data1/data/cmip5' 
+    self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
+    ### self.desDir = '/home/bytang/projects/cmac/des/original'
+    self.desDir = '/home/svc/cmac/des/original'
     self.inFile = '' 
     self.inFile2 = '' 
 #   self.inFileBU = '' 
