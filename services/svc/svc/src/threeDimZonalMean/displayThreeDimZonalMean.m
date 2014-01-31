@@ -84,10 +84,11 @@ for fileI = 1:nFiles
     lon = ncread(thisFile, 'lon');
     lat = ncread(thisFile, 'lat');
 
-    plev = readPressureLevels(thisFile, plevVarName);
     latIdx = find(lat <= latRange(2) & lat >= latRange(1));
     nLat = length(latIdx);
     lat = lat(latIdx);
+
+    plev = readPressureLevels(thisFile, plevVarName);
     pIdx = find(plev >= plevRange(2) & plev <= plevRange(1));
     nP = length(pIdx);
     if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
@@ -143,6 +144,8 @@ end
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
+
+[var_clim, lat, plev] = subsetValidData(var_clim, lat, plev);
 
 figure;
 %contourf(lat, -plev, var_clim, 'linewidth', 2);
