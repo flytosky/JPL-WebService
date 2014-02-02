@@ -345,8 +345,21 @@
 </tr>
 
 <tr>
+<td colspan="2">
+<center>
+data 1
+</center>
+</td>
 
-<td>data source 1:</td><td><select name="data1", id="data1" onchange="select_data1()">
+<td colspan="2">
+<center>
+data 2
+</center>
+</td>
+</tr>
+
+<tr>
+<td>source:</td><td><select name="data1", id="data1" onchange="select_data1()">
 <optgroup label="Model: Historical">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/ESM2G</option>
@@ -374,7 +387,39 @@
 </optgroup>
 </select></td>
 
-<td>variable name 1:</td><td><select name="var1", id="var1" onchange="select_var1()">
+<td>source:</td><td><select name="data2", id="data2" onchange="select_data2()">
+<optgroup label="Model: Historical">
+<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>GFDL/ESM2G</option>
+<option>GISS/E2-H</option>
+<option>GISS/E2-R</option>
+<option>NCAR/CAM5</option>
+<option>NCC/NORESM</option>
+<option>UKMO/HadGEM2-ES</option>
+</optgroup>
+<optgroup label="Model: AMIP">
+<option>CCCMA/CANAM4</option>
+<option>CSIRO/MK3.6</option>
+<option>GFDL/CM3</option>
+<option>IPSL/CM5A-LR</option>
+<option>MIROC/MIROC5</option>
+<option>UKMO/HadGEM2-A</option>
+</optgroup>
+<!-- <option>NASA/obs4MIPs</option>  -->
+<optgroup label="Observation">
+<option>NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<option>NASA/TRMM</option>
+<!-- <option>NASA/AIRS</option> -->
+<!-- <option>NASA/MLS</option> -->
+</optgroup>
+</select></td>
+
+</tr>
+
+<tr>
+
+<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var1()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
@@ -382,9 +427,18 @@
 <option>Precipitation Flux</option> </select>
 </td>
 
-<!--
-level1 (hPa) <input id="level1" value="200" alt="level1"/></td>
--->
+<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var2()">
+<option>Total Cloud Fraction</option>
+<!-- <option>Air Temperature</option> -->
+<option>Surface Temperature</option>
+<!-- <option>Specific Humidity</option> -->
+<option>Precipitation Flux</option> </select>
+</td>
+
+</tr>
+
+<tr>
+
 <td>
 atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 </td>
@@ -392,48 +446,6 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 <input id="pres1" value="200" alt="pressure"/>
 </td>
 
-</tr>
-
-
-<td>data source 2:</td><td><select name="data2", id="data2" onchange="select_data2()">
-<optgroup label="Model: Historical">
-<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
-<option>GFDL/ESM2G</option>
-<option>GISS/E2-H</option>
-<option>GISS/E2-R</option>
-<option>NCAR/CAM5</option>
-<option>NCC/NORESM</option>
-<option>UKMO/HadGEM2-ES</option>
-</optgroup>
-<optgroup label="Model: AMIP">
-<option>CCCMA/CANAM4</option>
-<option>CSIRO/MK3.6</option>
-<option>GFDL/CM3</option>
-<option>IPSL/CM5A-LR</option>
-<option>MIROC/MIROC5</option>
-<option>UKMO/HadGEM2-A</option>
-</optgroup>
-<!-- <option>NASA/obs4MIPs</option>  -->
-<optgroup label="Observation">
-<option>NASA/MODIS</option>
-<option>NASA/AMSRE</option>
-<option>NASA/TRMM</option>
-<!-- <option>NASA/AIRS</option> -->
-<!-- <option>NASA/MLS</option> -->
-</optgroup>
-</select></td>
-
-<td>variable name 2:</td><td><select name="var2", id="var2" onchange="select_var2()">
-<option>Total Cloud Fraction</option>
-<!-- <option>Air Temperature</option> -->
-<option>Surface Temperature</option>
-<!-- <option>Specific Humidity</option> -->
-<option>Precipitation Flux</option> </select>
-</td>
-
-<!--
-level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
--->
 <td>
 atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 </td>
@@ -443,6 +455,8 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 
 </tr>
 
+<tr>
+</tr>
 
 <tr>
 <td>start year-month:</td><td><input id="t0" value="2000-01" alt="start"/></td>
