@@ -20,8 +20,23 @@
       select_var1();
       select_data2();
       select_var2();
+      // no data to download yet
+      disable_download_button();
     }
 
+    // disable download data button
+    function disable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=true;
+    }
+
+    // enable download data button
+    function enable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=false;
+    }
 
     // enable all vars1 in dropdown menu
     function reset_vars1()
@@ -199,11 +214,22 @@
       });
 
 
+      $("#download_data").click(function(event) {
+        var durl = $("#data_url").val();
+        // alert(durl);
+        window.location.assign(durl);
+      });
+
+
       $("#scatterPlot2V").click(function(event) {
         // alert('****** inside scatterPlot2V()!');
         Response = null;
 
+        // no data to download yet
+        disable_download_button();
+
         $("#Response").html("Calculating ...");
+        $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
@@ -287,7 +313,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -304,6 +330,7 @@
                     text = "Error in backend: <br>" + text; 
                     // $("#Response").html("<span style='color:red'>" + text + "</span>");
                     $("#Response").html(text);
+                    $("#data_url").html(text);
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
@@ -313,9 +340,14 @@
 
                 var html = "<img src='"+data.url+"' width='820'/>";                // alert(html);
                 $("#Image").html(html);
+
+                // post dataUrl to textarea and enable download button
+                $("#data_url").html(data.dataUrl);
+                enable_download_button();
             },
             error: function(xhr, textStatus, errorThrown) {
                 $("#Response").html("error!");
+                $("#data_url").html("error!");
                 // alert("xhr.status: "+xhr.status);
                 // alert("error status: "+textStatus);
             },
@@ -475,7 +507,12 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 </tr>
 
 <tr>
-<td colspan="4" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="2" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<form>
+<td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
+</td>
+</form>
+
 </tr>
 
 <tr>
@@ -486,7 +523,13 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="110" rows="6">Text Here</textarea>
+<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+</td>
+</tr>
+
+<tr>
+<td colspan="4" align="center">
+<textarea id="Response" cols="89" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 
