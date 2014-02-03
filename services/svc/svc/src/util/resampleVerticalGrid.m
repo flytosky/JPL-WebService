@@ -5,14 +5,14 @@ function status = resampleVerticalGrid(file_in, file_out, varName, plev)
 %
 
 status = -1;
-fd_in = netcdf(file_in, 'r');
-fd_out = netcdf(file_out, 'c');
 
 % get some info
-varInfo = ncvar(fd_in);
+inFileInfo = ncinfo(file_in);
+outFileInfo = inFileInfo;
+varInfo = inFileInfo.Variables;
 nVar = length(varInfo);
 levelVarName = [];
-data = single(fd_in{varName}(:));
+data = single(ncread(file_in, varName));
 
 [nT, nP_orig,nLat,nLon] = size(data);
 
