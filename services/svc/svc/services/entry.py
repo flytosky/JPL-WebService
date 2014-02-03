@@ -644,6 +644,7 @@ def displayScatterPlot2V():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2
 
@@ -691,7 +692,7 @@ def displayScatterPlot2V():
       c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
       # call the app. function (0 means the image created is scatter plot)
       ### (message, imgFileName) = c1.displayScatterPlot2V(0)
-      (message, imgFileName) = c1.display()
+      (message, imgFileName, dataFileName) = c1.display()
       # chdir back
       os.chdir(current_dir)
 
@@ -702,11 +703,14 @@ def displayScatterPlot2V():
 
       url = 'http://' + hostname + ':' + port + '/static/scatterPlot2V/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/scatterPlot2V/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
@@ -728,6 +732,7 @@ def displayScatterPlot2V():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
@@ -740,6 +745,7 @@ def displayDiffPlot2V():
     success = True
     message = "ok"
     url = ''
+    dataUrl = ''
 
     # get model1, var1,  model2, var2, start time, end time, lon1, lon2, lat1, lat2
 
@@ -782,7 +788,7 @@ def displayDiffPlot2V():
       # instantiate the app. class
       c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, model2, var2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
       # call the app. function (1 means the image created is difference plot)
-      (message, imgFileName) = c1.displayScatterPlot2V(1)
+      (message, imgFileName, dataFileName) = c1.displayScatterPlot2V(1)
       # chdir back
       os.chdir(current_dir)
 
@@ -792,11 +798,14 @@ def displayDiffPlot2V():
 
       url = 'http://' + hostname + ':' + port + '/static/diffPlot2V/' + tag + '/' + imgFileName
       print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/diffPlot2V/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
 
       print 'message: ', message
       if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
         success = False
         url = ''
+        dataUrl = ''
 
     except ValueError, e:
         # chdir to current_dir in case the dir is changed to where the app is in the try block
@@ -818,6 +827,7 @@ def displayDiffPlot2V():
         'success': success,
         'message': message,
         'url': url,
+        'dataUrl': dataUrl
     })
 
 
