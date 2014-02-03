@@ -52,8 +52,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         cmdstring = string.join(cmd, ' ')
         print 'cmdstring: ', cmdstring
 
-        if 1:
-        #try:
+        try:
           proc=subprocess.Popen(cmd, cwd='.', stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
           # wait for the process to finish
           stdout_value, stderr_value = proc.communicate()
@@ -68,6 +67,11 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
           ### print 'l1: ', l1
           image_filename = ''
 
+          fst2 = 'dataFile: '
+          l2 = len(fst2)
+          ### print 'l2: ', l2
+          data_filename = ''
+
           lines = stdout_value.split('\n')
           for line in lines:
             ### print '*****: ', line
@@ -75,14 +79,18 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
               print '***** line: ', line
               image_filename = line[l1:]
 
-          print 'image_filename: ', image_filename
+            if line.find('dataFile: ') >= 0:
+              print '***** line: ', line
+              data_filename = line[l2:]
+
           image_filename = os.path.basename(image_filename)
           print 'image_filename: ', image_filename
-          return (stdout_value, image_filename)
-        # 
-        #except OSError, e:
-        #  err_mesg = 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
-        #  return (err_mesg, '')
+          data_filename = os.path.basename(data_filename)
+          print 'data_filename: ', data_filename
+          return (stdout_value, image_filename, data_filename)
+        except OSError, e:
+          err_mesg = 'The subprocess "%s" returns with an error: %s.' % (cmdstring, e)
+          return (err_mesg, '', '')
 
 
 if __name__ == '__main__':
