@@ -679,7 +679,7 @@ def displayScatterPlot2V():
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model1+var1+model2+var2+startT+endT+lat1+lat2+lon1+lon2
+      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/scatterPlot2V/' + tag
       print 'output_dir: ', output_dir
@@ -689,7 +689,7 @@ def displayScatterPlot2V():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/scatterPlot2V')
       # instantiate the app. class
-      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
+      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir, 0)
       # call the app. function (0 means the image created is scatter plot)
       ### (message, imgFileName) = c1.displayScatterPlot2V(0)
       (message, imgFileName, dataFileName) = c1.display()
@@ -747,12 +747,14 @@ def displayDiffPlot2V():
     url = ''
     dataUrl = ''
 
-    # get model1, var1,  model2, var2, start time, end time, lon1, lon2, lat1, lat2
+    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2
 
     model1 = request.args.get('model1', '')
     var1 = request.args.get('var1', '')
+    pres1 = request.args.get('pres1', '')
     model2 = request.args.get('model2', '')
     var2 = request.args.get('var2', '')
+    pres2 = request.args.get('pres2', '')
     startT = request.args.get('start_time', '')
     endT = request.args.get('end_time', '')
     lon1 = request.args.get('lon1', '')
@@ -762,8 +764,10 @@ def displayDiffPlot2V():
 
     print 'model1: ', model1
     print 'var1: ', var1
+    print 'pres1: ', pres1
     print 'model2: ', model2
     print 'var2: ', var2
+    print 'pres2: ', pres2
     print 'startT: ', startT
     print 'endT: ', endT
     print 'lon1: ', lon1
@@ -776,7 +780,7 @@ def displayDiffPlot2V():
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model1+var1+model2+var2+startT+endT+lat1+lat2+lon1+lon2
+      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/diffPlot2V/' + tag
       print 'output_dir: ', output_dir
@@ -786,9 +790,10 @@ def displayDiffPlot2V():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/scatterPlot2V')
       # instantiate the app. class
-      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, model2, var2, startT, endT, lon1, lon2, lat1, lat2, output_dir)
+      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir, 1)
       # call the app. function (1 means the image created is difference plot)
-      (message, imgFileName, dataFileName) = c1.displayScatterPlot2V(1)
+      (message, imgFileName, dataFileName) = c1.display()
+      print 'imgFileName: ', imgFileName
       # chdir back
       os.chdir(current_dir)
 
