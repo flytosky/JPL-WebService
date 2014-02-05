@@ -8,7 +8,7 @@ class call_scatterPlot2V:
     def __init__(self, 
 model1, var1, pres1,
 model2, var2, pres2,
-start_time, end_time, lonS, lonE, latS, latE, output_dir):
+start_time, end_time, lonS, lonE, latS, latE, output_dir, isDiffPlot):
 
         self.model1 = model1
         self.var1 = var1
@@ -24,7 +24,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
         self.lat2 = latE
 
         self.output_dir = output_dir
-        self.isDiffPlot = 0
+        self.isDiffPlot = isDiffPlot
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -94,9 +94,21 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir):
 
 
 if __name__ == '__main__':
+
+    """
     c1 = call_scatterPlot2V(\
-'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
-'/home/svc/cmac/trunk/services/svc/svc/static/scatterPlot2V')
+         'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
+         '/home/svc/cmac/trunk/services/svc/svc/static/scatterPlot2V', 0)
 
     mesg = c1.display()
     print 'mesg: ', mesg
+    """
+
+
+    c1 = call_scatterPlot2V(\
+         'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
+         '/home/svc/cmac/trunk/services/svc/svc/static/diffPlot2V', 1)
+
+    mesg = c1.display()
+    print 'mesg: ', mesg
+
