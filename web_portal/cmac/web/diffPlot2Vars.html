@@ -20,8 +20,22 @@
       select_var1();
       select_data2();
       select_var2();
+      // no data to download yet
+      disable_download_button();
     }
 
+    // disable download data button
+    function disable_download_button()      {
+      var x=document.getElementById("download_data");
+      x.disabled=true;
+    }
+
+    // enable download data button
+    function enable_download_button()
+    {
+      var x=document.getElementById("download_data");
+      x.disabled=false;
+    }
 
     // enable all vars1 in dropdown menu
     function reset_vars1()
@@ -199,14 +213,25 @@
       });
 
 
+      $("#download_data").click(function(event) {
+        var durl = $("#data_url").val();
+        // alert(durl);
+        window.location.assign(durl);
+      });
+
+
       $("#diffPlot2V").click(function(event) {
         // alert('****** inside diffPlot2V()!');
         Response = null;
 
+        // no data to download yet
+        disable_download_button();
+
         $("#Response").html("Calculating ...");
+        $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/diffPlot2V?model1=ukmo_hadgem2-a&var1=ts&model2=ukmo_hadgem2-a&var2=clt&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/diffPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/diffPlot2V?";
         var url = "http://" + window.location.hostname + ":8090/svc/diffPlot2V?";
@@ -228,6 +253,10 @@
 
         // alert("arglist: " + arglist);
 
+        var pres1 = $("#pres1").val();
+        arglist = arglist.concat("&pres1=");
+        arglist = arglist.concat(pres1);
+
         var d2 = $("#data2").val();
         var model2 = d2.replace("/", "_");
         model2 = model2.toLowerCase();
@@ -242,6 +271,10 @@
         arglist = arglist.concat(variable2);
 
         // alert("arglist: " + arglist);
+
+        var pres2 = $("#pres2").val();
+        arglist = arglist.concat("&pres2=");
+        arglist = arglist.concat(pres2);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
@@ -279,7 +312,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -296,6 +329,7 @@
                     text = "Error in backend: <br>" + text; 
                     // $("#Response").html("<span style='color:red'>" + text + "</span>");
                     $("#Response").html(text);
+                    $("#data_url").html(text);
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
@@ -303,11 +337,17 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='820'/>";                // alert(html);
+                var html = "<img src='"+data.url+"' width='820'/>";
+                alert(html);
                 $("#Image").html(html);
+
+                // post dataUrl to textarea and enable download button
+                $("#data_url").html(data.dataUrl);
+                enable_download_button();
             },
             error: function(xhr, textStatus, errorThrown) {
                 $("#Response").html("error!");
+                $("#data_url").html("error!");
                 // alert("xhr.status: "+xhr.status);
                 // alert("error status: "+textStatus);
             },
@@ -336,89 +376,117 @@
 </td>
 </tr>
 
+<tr>  
+<td colspan="2">  
+<center>  
+data 1  
+</center>  
+</td>  
+  
+<td colspan="2">  
+<center>  
+data 2  
+</center>  
+</td>  
+</tr>  
+
+<tr>
+<td>source:</td><td><select name="data1", id="data1" onchange="select_data1()">
+<optgroup label="Model: Historical">
+<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>GFDL/ESM2G</option>
+<option>GISS/E2-H</option>
+<option>GISS/E2-R</option>
+<option>NCAR/CAM5</option>
+<option>NCC/NORESM</option>
+<option>UKMO/HadGEM2-ES</option>
+</optgroup>
+<optgroup label="Model: AMIP">
+<option>CCCMA/CANAM4</option>
+<option>CSIRO/MK3.6</option>
+<option>GFDL/CM3</option>
+<option>IPSL/CM5A-LR</option>
+<option>MIROC/MIROC5</option>
+<option>UKMO/HadGEM2-A</option>
+</optgroup>
+<!-- <option>NASA/obs4MIPs</option>  -->
+<optgroup label="Observation">
+<option>NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<option>NASA/TRMM</option>
+<!-- <option>NASA/AIRS</option> -->
+<!-- <option>NASA/MLS</option> -->
+</optgroup>
+</select></td>
+
+<td>source:</td><td><select name="data2", id="data2" onchange="select_data2()">
+<optgroup label="Model: Historical">
+<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
+<option>GFDL/ESM2G</option>
+<option>GISS/E2-H</option>
+<option>GISS/E2-R</option>
+<option>NCAR/CAM5</option>
+<option>NCC/NORESM</option>
+<option>UKMO/HadGEM2-ES</option>
+</optgroup>
+<optgroup label="Model: AMIP">
+<option>CCCMA/CANAM4</option>
+<option>CSIRO/MK3.6</option>
+<option>GFDL/CM3</option>
+<option>IPSL/CM5A-LR</option>
+<option>MIROC/MIROC5</option>
+<option>UKMO/HadGEM2-A</option>
+</optgroup>
+<!-- <option>NASA/obs4MIPs</option>  -->
+<optgroup label="Observation">
+<option>NASA/MODIS</option>
+<option>NASA/AMSRE</option>
+<option>NASA/TRMM</option>
+<!-- <option>NASA/AIRS</option> -->
+<!-- <option>NASA/MLS</option> -->
+</optgroup>
+</select></td>
+
+</tr>
+
 <tr>
 
-<td>data source 1:</td><td><select name="data1", id="data1" onchange="select_data1()">
-<optgroup label="Model: Historical">
-<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
-<option>GFDL/ESM2G</option>
-<option>GISS/E2-H</option>
-<option>GISS/E2-R</option>
-<option>NCAR/CAM5</option>
-<option>NCC/NORESM</option>
-<option>UKMO/HadGEM2-ES</option>
-</optgroup>
-<optgroup label="Model: AMIP">
-<option>CCCMA/CANAM4</option>
-<option>CSIRO/MK3.6</option>
-<option>GFDL/CM3</option>
-<option>IPSL/CM5A-LR</option>
-<option>MIROC/MIROC5</option>
-<option>UKMO/HadGEM2-A</option>
-</optgroup>
-<!-- <option>NASA/obs4MIPs</option>  -->
-<optgroup label="Observation">
-<option>NASA/MODIS</option>
-<option>NASA/AMSRE</option>
-<option>NASA/TRMM</option>
-<!-- <option>NASA/AIRS</option> -->
-<!-- <option>NASA/MLS</option> -->
-</optgroup>
-</select></td>
-
-<td>variable name 1:</td><td><select name="var1", id="var1" onchange="select_var1()">
+<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var1()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
 <!-- <option>Specific Humidity</option> -->
 <option>Precipitation Flux</option> </select>
 
-<!--
-level1 (hPa) <input id="level1" value="200" alt="level1"/></td>
--->
-</tr>
-
-
-<td>data source 2:</td><td><select name="data2", id="data2" onchange="select_data2()">
-<optgroup label="Model: Historical">
-<option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
-<option>GFDL/ESM2G</option>
-<option>GISS/E2-H</option>
-<option>GISS/E2-R</option>
-<option>NCAR/CAM5</option>
-<option>NCC/NORESM</option>
-<option>UKMO/HadGEM2-ES</option>
-</optgroup>
-<optgroup label="Model: AMIP">
-<option>CCCMA/CANAM4</option>
-<option>CSIRO/MK3.6</option>
-<option>GFDL/CM3</option>
-<option>IPSL/CM5A-LR</option>
-<option>MIROC/MIROC5</option>
-<option>UKMO/HadGEM2-A</option>
-</optgroup>
-<!-- <option>NASA/obs4MIPs</option>  -->
-<optgroup label="Observation">
-<option>NASA/MODIS</option>
-<option>NASA/AMSRE</option>
-<option>NASA/TRMM</option>
-<!-- <option>NASA/AIRS</option> -->
-<!-- <option>NASA/MLS</option> -->
-</optgroup>
-</select></td>
-
-<td>variable name 2:</td><td><select name="var2", id="var2" onchange="select_var2()">
+<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var2()">
 <option>Total Cloud Fraction</option>
 <!-- <option>Air Temperature</option> -->
 <option>Surface Temperature</option>
 <!-- <option>Specific Humidity</option> -->
 <option>Precipitation Flux</option> </select>
 
-<!--
-level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
--->
 </tr>
 
+<tr>
+
+<td>
+atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
+</td>
+<td>
+<input id="pres1" value="200" alt="pressure"/>
+</td>
+
+<td>
+atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
+</td>
+<td>
+<input id="pres2" value="200" alt="pressure"/>
+</td>
+
+</tr>
+
+<tr>
+</tr>
 
 <tr>
 <td>start year-month:</td><td><input id="t0" value="2000-01" alt="start"/></td>
@@ -437,7 +505,11 @@ level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 </tr>
 
 <tr>
-<td colspan="4" align="center"><input id="diffPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="2" align="center"><input id="diffPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<form>  
+<td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>  
+</td>  
+</form> 
 </tr>
 
 <tr>
@@ -446,9 +518,15 @@ level2 (hPa) <input id="level2" value="200" alt="level2"/></td>
 </td>
 </tr>
 
+<tr>  
+<td colspan="4" align="center">  
+<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>  
+</td>  
+</tr>
+
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="110" rows="6">Text Here</textarea>
+<textarea id="Response" cols="89" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 
