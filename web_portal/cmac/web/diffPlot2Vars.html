@@ -312,7 +312,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -338,7 +338,7 @@
                 $("#Response").html(text);
 
                 var html = "<img src='"+data.url+"' width='820'/>";
-                alert(html);
+                // alert(html);
                 $("#Image").html(html);
 
                 // post dataUrl to textarea and enable download button
