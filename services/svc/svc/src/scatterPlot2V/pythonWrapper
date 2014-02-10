@@ -1,6 +1,7 @@
 #!/home/svc/install/epd/bin/python
 '''
-execfile('/home/svc/cmac/trunk/services/svc/svc/src/scatterPlot2V/pythonWrapper')
+execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/pythonWrapper')
+
 
 '''
 HOME='/home/svc'
@@ -152,14 +153,17 @@ class SUBSET_REGION():
     ### self.ferretCmd = '/home/bytang/install/bin/ferret' 
     self.ferretCmd = '/home/svc/install/bin/ferret' 
     self.ferretMem = 100
-    self.isDiffPlot = 0
+    self.isDiffPlot = 1
 
     #self.dataDir = '/home/zhai/cmip5' 
     #self.dataDir = '/home/bytang/cmip5' # my des dir
     ### self.dataDir = '/export/data1/data/cmip5' 
     self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
+
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
+    #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = '/home/svc/cmac/des/original'
+
     self.inFile = '' 
     self.inFile2 = '' 
 #   self.inFileBU = '' 
@@ -180,22 +184,59 @@ class SUBSET_REGION():
 #
 #   self.offset = 0.0 
 #
-    self.lon1S = -180.0
-    self.lon1E = 180.0
-#   self.dLon = 1.0
-#
-    self.lat1S = -80.0
-    self.lat1E = 80.0
-#   self.dLat = 1.0
-#
-    self.center1 = 'ukmo'
-    self.center2 = 'ukmo'
-    self.model1  = 'hadgem2-a'
-    self.model2  = 'hadgem2-a'
 
-    self.varName1='ts'
-    self.varName2='clt'
+    if 0:
+      self.lon1S = -10.5
+      self.lon1E = 20.3
+      #self.dLon = 1.0
+
+    if 0:
+      self.lon1S = -180.0
+      self.lon1E = 180.0
+      #self.dLon = 1.0
+  
+    if 0:
+      self.lat1S = -70.1
+      self.lat1E = -20.9
+      #self.dLat = 1.0
+
+    if 1:
+      self.lon1S = -180.0
+      self.lon1E = 180.0
+
+    if 1:
+      self.lat1S = -80.0
+      self.lat1E =  80.0
+
+
+#
+    if 1:
+      self.center1 = 'ukmo'
+      self.model1  = 'hadgem2-a'
+      self.varName1='ts'
+
+    if 1:
+      self.center2 = 'giss'
+      self.model2  = 'e2-r'
+      #self.varName2='rsdt'
+      self.varName2='ts'
+
+    if 0:
+      self.center2 = 'ukmo'
+      self.model2  = 'hadgem2-a'
+      self.varName2='ts'
+      #self.varName2='cli'
+
     self.nDim = 3
+
+    self.pres1 = 300
+    self.pres2 = 300
+
+    self.yearS = 1990
+    self.yearE = 1991
+
+    self.monthS = 1
+    self.monthE = 1
 
     self.dayS = 15
     self.dayE = 15
@@ -284,7 +325,7 @@ class SUBSET_REGION():
       return filesDes[0], filesNc[0]
 
     if len(filesNc)>1 and len(filesDes)==0:
-      temp1 = 'mkdes --f90 --des %s %s/%s_*.nc'%(desFn, dir0, varName)
+      temp1 = '/home/bytang/bin/mine/mkdes2 --f90 --des %s %s/%s_*.nc'%(desFn, dir0, varName)
       print temp1
       os.system(temp1)
       files2a = glob.glob(desFn)
@@ -483,6 +524,7 @@ class SUBSET_REGION():
     #if len(a2.shape)==3:
     #  a2 = a2[0, :,:]
 
+    # sometimes the 2 data may not have the save shape
     if a1.shape[-1] != a2.shape[-1]:
       min1 = min(a1.shape[-1], a2.shape[-1]) 
       a1 = a1[:, :min1] 
@@ -588,6 +630,19 @@ class SUBSET_REGION():
     lat2 = nc2.variables[dims2[-2]][:]
     nc2.close()
 
+    # sometimes the 2 data may not have the save shape
+    nLon = min( len(lon1), len(lon2) )
+    nLat = min( len(lat1), len(lat2) )
+    if len(lon1)>nLon or len(lat1)>nLat:
+      lon1 = lon1[:nLon]
+      lat1 = lat1[:nLat]
+      data1 = data1[:nLat, :nLon]
+
+    if len(lon2)>nLon or len(lat2)>nLat:
+      lon2 = lon2[:nLon]
+      lat2 = lat2[:nLat]
+      data2 = data2[:nLat, :nLon]
+
     # min/max
     if self.varName1==self.varName2:
       min1 = min2 = min(data1.min(), data2.min())
@@ -622,9 +677,26 @@ class SUBSET_REGION():
 
     # plot diff
     if self.varName1==self.varName2:
-      Mat.subplot(3,1,3)
+      ax1 = Mat.subplot(3,1,3)
       m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
-      temp1 = m2.pcolor(lon2, lat2, data2-data1 )
+
+      temp2 = data2 - data1
+      min2 = temp2.min()      
+      max2 = temp2.max()      
+      min3 = data1.min() 
+      max3 = data1.max() 
+      
+      if (max2-min2)/(max3-min3)>1.0e-6:
+        temp1 = m2.pcolor(lon2, lat2, data2-data1 )
+      else:
+        Mat.axes(ax1)
+        Mat.text(\
+              .35, \
+              .5, \
+              'The two fields are identical', \
+              size=20, \
+              ha='center')
+
       temp1 = m2.drawcoastlines()
       #change_labels(Mat.gca())
       Mat.colorbar()
@@ -846,6 +918,20 @@ class SUBSET_REGION():
     lat2 = nc2.variables[dims2[-2]][:]
     nc2.close()
 
+    # sometimes the 2 data may not have the save shape
+    nLon = min( len(lon1), len(lon2) )
+    nLat = min( len(lat1), len(lat2) )
+    if len(lon1)>nLon or len(lat1)>nLat:
+      lon1 = lon1[:nLon]
+      lat1 = lat1[:nLat]
+      data1 = data1[:nLat, :nLon]
+
+    if len(lon2)>nLon or len(lat2)>nLat:
+      lon2 = lon2[:nLon]
+      lat2 = lat2[:nLat]
+      data2 = data2[:nLat, :nLon]
+
+    # fill the missing data
     if type(data1)==type(np.ma.arange(1)):
       data1a = data1.filled(-9999.0)
     else: 
@@ -856,6 +942,7 @@ class SUBSET_REGION():
     else: 
       data2a = data2
 
+    # save the 2 variables
     NC1.save2nc(data1a, ncfile=fn, name='data1', 
        newfile=1,
        format='NETCDF3_CLASSIC',
@@ -867,9 +954,9 @@ class SUBSET_REGION():
     #print d2.shape
     #print data2.shape
     # zzzz
-    nn0 = min( d2.shape[0], data2.shape[0])
-    nn1 = min( d2.shape[1], data2.shape[1])
-    d2[:nn0,:nn1] = data2[:nn0, :nn1]
+    #nn0 = min( d2.shape[0], data2.shape[0])
+    #nn1 = min( d2.shape[1], data2.shape[1])
+    d2[:,:] = data2a
     nc1.close()
 
     print 'dataFile: %s'%fn
@@ -996,6 +1083,8 @@ if cr['plot__']       == 1:
 
   a.getUnits()
 
+  # which one has the finer resolution?
+
   # subset
   tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4, lev=a.pres1)
   tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2)
@@ -1003,6 +1092,7 @@ if cr['plot__']       == 1:
   print tempFile1
   print tempFile2
 
+ 
   a.saveData(tempFile1, tempFile2)
 
   # plot scatter
