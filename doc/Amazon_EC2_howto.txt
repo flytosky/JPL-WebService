@@ -1,0 +1,22 @@
+. To log on the EC2 web interface:
+  https://797794755098.signin.aws.amazon.com/console
+  user: lpan
+  passwd: 6@G...
+
+. Click
+  N. California (upper right)
+  Instances (left)
+  climate-sciflo-baking-ubuntu-12.04
+    (left click, and choose "start")
+
+. To login the EC2 instance:
+  ssh -i climate-default.pem ubuntu@ec2-50-18-205-217.us-west-1.compute.amazonaws.com
+  (climate-default.pem is the private key stored /Users/leipan on my laptop)
+
+. To copy more data to the EC2 data volume:
+  /mnt/xvdf/data/
+  logon to cmacws4 where we have the RAID mounted
+  create a public/private key pair, copy the public key
+  to: /home/ubuntu/.ssh/authorized_keys on the EC2 instance
+  then do scp from cmacws4
+  
