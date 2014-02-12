@@ -121,6 +121,16 @@ How to start the cmacws web services?
   ssh -p 8022 svc@cmacws3.jpl.nasa.gov
   (password: sciflo)
 . cd /home/svc/cmac/trunk/services/svc
-. ./start.sh
+  ./start.sh
+  (this is done automatically now using upstart)
 . or python run.py
+  (for debugging)
+
+
+===========================
+teamviewer connection to console server
+===========================
+. 850 763 122
+  6190
+
 
