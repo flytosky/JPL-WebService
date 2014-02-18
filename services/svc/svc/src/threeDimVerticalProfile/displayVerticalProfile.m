@@ -1,4 +1,4 @@
-function status = displayVerticalProfile(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, outputFile)
+function status = displayVerticalProfile(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime], longitude and latitude ranges
@@ -24,6 +24,10 @@ function status = displayVerticalProfile(dataFile, figFile, varName, startTime, 
 %   2012/02/06: Added more arguments to facilitate a customized regional and seasonal climatology
 %   2013/06/14: Added capability for outputing plotting data
 %
+
+if nargin < 10
+  displayOpt = 2; % only set the y to be log scale
+end
 
 if nargin < 9
   outputFile = [];
@@ -139,9 +143,18 @@ var_clim = squeeze(simpleClimatology(monthlyData,2, monthIdxAdj));
 
 [var_clim, plev] = subsetValidData(var_clim, plev);
 
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
 figure;
 y_plev = -plev;
-semilogy(var_clim, y_plev, 'ks-', 'linewidth', 2);
+if y_opt
+  semilogy(var_clim, y_plev, 'ks-', 'linewidth', 2);
+else
+  plot(var_clim, y_plev, 'ks-', 'linewidth', 2);
+end
+if x_opt || z_opt
+  set(gca, 'xscale', 'log');
+end
 grid on;
 set(gca, 'fontweight', 'bold');
 currYTick = round(y_plev/100)*100;
