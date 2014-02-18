@@ -1,4 +1,4 @@
-function status = displayTimeSeriesTwoDim(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, outputFile)
+function status = displayTimeSeriesTwoDim(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime]
@@ -22,6 +22,10 @@ function status = displayTimeSeriesTwoDim(dataFile, figFile, varName, startTime,
 %   2012/02/06: Added more arguments to facilitate a customized regional and seasonal climatology
 %
 status = -1;
+
+if nargin < 9
+  displayOpt = 0;
+end
 
 if nargin < 8
   outputFile = [];
@@ -110,6 +114,8 @@ end
 
 deltaYear = 1+floor(nYears/12);
 
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
 figure(1);
 clf;
 plot(1:nMonths, monthlyData, 's-', 'linewidth', 2);
@@ -120,6 +126,12 @@ set(gca, 'xticklabel', {yearStr{1:deltaYear:end}});
 grid on;
 ylabel(['Mean (' v_units ')']);
 title([varName ', average value over lon(' num2str(lonRange(1)) ',' num2str(lonRange(2)) ')deg, lat(' num2str(latRange(1)) ',' num2str(latRange(2)) ')deg, (' v_units ')']);
+if x_opt
+  set(gca, 'xscale', 'log');
+end
+if y_opt | z_opt
+  set(gca, 'yscale', 'log');
+end
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'monthIdx'};

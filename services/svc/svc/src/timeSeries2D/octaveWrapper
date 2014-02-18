@@ -43,6 +43,10 @@ if narg > 6
   output_dir = arg_list{7};
 end
 
+if narg > 7
+  displayOpt = str2num(arg_list{8});
+end
+
 printf("%s", arg_list{1})
 printf("%s", arg_list{2})
 printf("%s", arg_list{3})
@@ -50,6 +54,7 @@ printf("%s", arg_list{4})
 printf("%s", arg_list{5})
 printf("%s", arg_list{6})
 printf("%s", arg_list{7})
+printf("%s", arg_list{8})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -85,4 +90,4 @@ printf("figFile: %s\n", figFile)
 printf("figFilePath: %s\n", figFilePath)
 printf("dataFile: %s\n", dataFile)
 printf("dataFilePath: %s\n", dataFilePath)
-displayTimeSeriesTwoDim(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, dataFilePath);
+displayTimeSeriesTwoDim(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, dataFilePath, displayOpt);
