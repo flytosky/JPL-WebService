@@ -1,4 +1,4 @@
-function status = displayTwoDimSlice(dataFile, figFile, varName, startTime, stopTime, thisPlev, lonRange, latRange, monthIdx, outputFile)
+function status = displayTwoDimSlice(dataFile, figFile, varName, startTime, stopTime, thisPlev, lonRange, latRange, monthIdx, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime], longitude & latitude range, and seasonal months in a year
@@ -135,13 +135,26 @@ end
 monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
-[h, cb] = displayTwoDimData(lon, lat, var_clim);
+
+% x_opt, y_opt is ignored, it wuold be very rare to use log scale for longitude and latitude
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
+if z_opt
+  z = log10(var_clim + 1e-4*max(var_clim(:)));
+else
+  z = var_clim;
+end
+
+[h, cb] = displayTwoDimData(lon, lat, z);
+if z_opt
+  set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),3));
+end
+set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 plev_units = 'hPa';
 if strcmp(varName, 'ot') || strcmp(varName, 'os') 
   plev_units = 'dbar';
 end
 title(h, [varName ', at ' num2str(round(thisPlev/100)) plev_units ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
-set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'longitude', 'latitude'};

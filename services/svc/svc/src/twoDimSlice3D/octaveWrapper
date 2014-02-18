@@ -28,11 +28,6 @@ if narg > 3
   stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
 end
 
-printf("%s", arg_list{1})
-printf("%s", arg_list{2})
-printf("%s", arg_list{3})
-printf("%s", arg_list{4})
-
 if narg > 4
   plev = str2num(arg_list{5});
   printf("%s", arg_list{5})
@@ -63,6 +58,10 @@ if narg > 8
   output_dir = arg_list{9};
 end
 
+if narg > 9
+  displayOpt = str2num(arg_list{10});
+end
+
 printf("1. %s\n", arg_list{1})
 printf("2. %s\n", arg_list{2})
 printf("3. %s\n", arg_list{3})
@@ -72,6 +71,7 @@ printf("6. %s\n", arg_list{6})
 printf("7. %s\n", arg_list{7})
 printf("8. %s\n", arg_list{8})
 printf("9. %s\n", arg_list{9})
+printf("10. %s\n", arg_list{10})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -104,5 +104,5 @@ printf("figFile: %s\n", figFile);
 printf("figFilePath: %s\n", figFilePath);
 printf("dataFile: %s\n", dataFile);
 printf("dataFilePath: %s\n", dataFilePath);
-displayTwoDimSlice(dataFileFullPath, figFilePath, varName, startTime, stopTime, plev, lonRange, latRange, monthIdx, dataFilePath);
+displayTwoDimSlice(dataFileFullPath, figFilePath, varName, startTime, stopTime, plev, lonRange, latRange, monthIdx, dataFilePath, displayOpt);
 title([varName ' at ' num2str(plev/100) 'hPa, map for ' modelName]);
