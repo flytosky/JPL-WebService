@@ -691,10 +691,11 @@ class SUBSET_REGION():
       else:
         Mat.axes(ax1)
         Mat.text(\
-              .35, \
+              .5, \
               .5, \
               'The two fields are identical', \
               size=20, \
+              transform=ax1.transAxes, \
               ha='center')
 
       temp1 = m2.drawcoastlines()
