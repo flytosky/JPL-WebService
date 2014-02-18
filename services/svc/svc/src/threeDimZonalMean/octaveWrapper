@@ -57,6 +57,10 @@ if narg > 7
   output_dir = arg_list{8};
 end
 
+if narg > 8
+  displayOpt = str2num(arg_list{9});
+end
+
 printf("1. %s\n", arg_list{1})
 printf("2. %s\n", arg_list{2})
 printf("3. %s\n", arg_list{3})
@@ -65,6 +69,7 @@ printf("5. %s\n", arg_list{5})
 printf("6. %s\n", arg_list{6})
 printf("7. %s\n", arg_list{7})
 printf("8. %s\n", arg_list{8})
+printf("9. %s\n", arg_list{9})
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
@@ -97,6 +102,6 @@ printf("figFile: %s\n", figFile)
 printf("figFilePath: %s\n", figFilePath)
 printf("dataFile: %s\n", dataFile)
 printf("dataFilePath: %s\n", dataFilePath)
-displayThreeDimZonalMean(dataFileFullPath, figFilePath, varName, startTime, stopTime, latRange, plevRange, monthIdx, dataFilePath);
+displayThreeDimZonalMean(dataFileFullPath, figFilePath, varName, startTime, stopTime, latRange, plevRange, monthIdx, dataFilePath, displayOpt);
 title([varName ' zonal mean map for ' modelName ', ' seasonStr(monthIdx)]);
 

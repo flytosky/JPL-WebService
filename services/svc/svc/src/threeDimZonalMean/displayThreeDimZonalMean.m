@@ -1,4 +1,4 @@
-function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime, stopTime, latRange, plevRange, monthIdx, outputFile)
+function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime, stopTime, latRange, plevRange, monthIdx, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime], longitude and latitude ranges
@@ -13,6 +13,7 @@ function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime
 %   plevRnage	-- an optional argument to specify pressule levels for alitutde range
 %   monthIdx	-- an optional argument to specify months within a year, which is useful for computing climatology for a specific season.
 %   outputFile	-- an optional argument to specify output file for storing the plotting data in netcdf format
+%   displayOpt	-- an optional argument to specify the option for generating the figure
 %
 % Output:
 %   status	-- a status flag, 0 = okay, -1 something is not right
@@ -24,6 +25,10 @@ function status = displayThreeDimZonalMean(dataFile, figFile, varName, startTime
 %   2013/06/14:	add capability of outputing data file
 %
 status = -1;
+
+if nargin < 9
+  displayOpt = 0;
+end
 
 if nargin < 9
   outputFile = [];
@@ -147,9 +152,23 @@ var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
 
 [var_clim, lat, plev] = subsetValidData(var_clim, lat, plev);
 
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
 figure;
 %contourf(lat, -plev, var_clim, 'linewidth', 2);
-contourf(lat, -plev, var_clim', 30, 'linecolor', 'none');
+if z_opt
+  z = log10(var_clim' + 1e-4*max(var_clim(:)));
+else
+  z = var_clim';
+end
+
+if y_opt
+  y = -log10(plev);
+else
+  y = -plev;
+end
+
+contourf(lat, y, z, 30, 'linecolor', 'none');
 if ~isempty(find(isnan(var_clim(:))))
   cmap = colormap();
   cmap(1,:) = [1,1,1];
@@ -159,7 +178,11 @@ grid on;
 set(gca, 'fontweight', 'bold');
 currYTick = get(gca, 'ytick')';
 currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
-set(gca, 'yticklabel', num2str(currYTick));
+if y_opt
+  set(gca, 'yticklabel', num2str(10.^currYTick));
+else
+  set(gca, 'yticklabel', num2str(currYTick));
+end
 xlabel('Latitude (deg)');
 if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
 	ylabel('Pressure level (hPa)');
@@ -167,6 +190,9 @@ else
 	ylabel('Pressure level (dbar)');
 end
 cb = colorbar('southoutside');
+if z_opt
+  set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),2));
+end
 set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
