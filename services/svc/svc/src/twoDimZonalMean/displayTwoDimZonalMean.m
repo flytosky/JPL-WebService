@@ -1,4 +1,4 @@
-function status = displayTwoDimZonalMean(dataFile, figFile, varName, startTime, stopTime, latRange, monthIdx, outputFile)
+function status = displayTwoDimZonalMean(dataFile, figFile, varName, startTime, stopTime, latRange, monthIdx, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime]
@@ -24,6 +24,13 @@ function status = displayTwoDimZonalMean(dataFile, figFile, varName, startTime, 
 %   2013/06/14: added extra argument to specify output data file name, in netcdf format
 %
 status = -1;
+
+if nargin < 9
+  displayOpt = 0; % this flag encodes the options for display
+end
+
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
 if nargin < 8
   outputFile = [];
 end
@@ -115,6 +122,12 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 var_clim = squeeze(simpleClimatology(monthlyData,2, monthIdxAdj));
 figure;
 plot(lat, var_clim, 'ks-', 'linewidth', 2);
+if x_opt
+  set(gca, 'xscale', 'log');
+end
+if y_opt | z_opt
+  set(gca, 'yscale', 'log');
+end
 grid on;
 set(gca, 'fontweight', 'bold');
 xlabel('Latitude (deg)');
