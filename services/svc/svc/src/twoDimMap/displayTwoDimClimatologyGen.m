@@ -1,4 +1,4 @@
-function status = displayTwoDimClimatologyGen(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, outputFile)
+function status = displayTwoDimClimatologyGen(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime]
@@ -24,6 +24,10 @@ function status = displayTwoDimClimatologyGen(dataFile, figFile, varName, startT
 %   2012/02/06: Added more arguments to facilitate a customized regional and seasonal climatology
 %
 status = -1;
+
+if nargin < 10
+  displayOpt = 0;
+end
 
 if nargin < 9
   outputFile =  [];
@@ -117,9 +121,20 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 
 [real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
 
+% x_opt, y_opt is ignored, it wuold be very rare to use log scale for longitude and latitude
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
 var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
-[h, cb] = displayTwoDimData(lon, lat, var_clim);
+if z_opt
+  z = log10(var_clim + 1e-4*max(var_clim(:)));
+else
+  z = var_clim;
+end
+[h, cb] = displayTwoDimData(lon, lat, z);
 title(h, [varName ', ' date2Str(real_startTime, '/') '-' date2Str(real_stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+if z_opt
+  set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),3));
+end
 set(get(cb,'xlabel'), 'string', [long_name ' (' v_units ')'], 'FontSize', 16);
 print(gcf, figFile, '-djpeg');
 % adding title for color bar
