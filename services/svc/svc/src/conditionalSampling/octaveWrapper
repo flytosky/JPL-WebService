@@ -12,25 +12,17 @@ end
 
 % Specify the data source name, in format "modelCenter_modelName" for a GCM or "dataCenter_instrument" for observational data
 sourceName = lower(arg_list{1});
-printf ("sourceName: %s\n", sourceName);
 varName = arg_list{2};
-printf ("varName: %s\n", varName);
 
 % Specify the temporal range, start/stop time in format "yyyymm"
 startTimeStr = arg_list{3};
-printf ("startTimeStr: %s\n", startTimeStr);
 startTime = struct('year', str2num(startTimeStr(1:4)), 'month', str2num(startTimeStr(5:6)));
 
 stopTimeStr = arg_list{4};
-printf ("stopTimeStr: %s\n", stopTimeStr);
 stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
 
 % Regional boundaries: longitude and latitude boundaries
-printf ("lonRange: %s\n", arg_list{5});
 lonRange = str2num(arg_list{5});
-printf ("lonRange: %f\n", lonRange)
-
-printf ("latRange: %s\n", arg_list{6});
 latRange = str2num(arg_list{6});
 
 % pressure range for 3-d variable, using empty or negative values for 2-d variables
@@ -43,20 +35,26 @@ monthIdx = str2num(arg_list{8});
 % in format "modelCenter_modelName"  for models and "dataCenter_instrumentName" for observational data
 largeScaleSourceName = lower(arg_list{9});
 
-% variable name as specified by the CMIP5 standard output document.
+% large scale variable name as specified by the CMIP5 standard output document.
+% e.g. tos for SST, omega500 for up draft etct
 largeScaleVarName = lower(arg_list{10});
 
-% Boundary values of bins for the large scale variable
+% Boundary values of bins for sorting the large scale variable, expected to
+% be monotonically increasing
 largeScaleValueBinB = str2num(arg_list{11});
 
 % Pressure level for the large scale variable, the longitude and latitude regions are asssumed to be the same as the physical
 % variable under study.
 % using empty or negative values for 2-d variables
+% Note that the longitude, latitude, and time are the same for both the large scale variable
+% and the physical quantity to be conditionally sampled.
+
 largeScalePlev = str2num(arg_list{12});
 
 % Output directory name, required by the program.
 output_dir = arg_list{13};
 
+% Printing the argument list
 printf("1. %s\n", arg_list{1});
 printf("2. %s\n", arg_list{2});
 printf("3. %s\n", arg_list{3});
@@ -86,6 +84,3 @@ printf("dataFilePath: %s\n", dataFilePath)
 
 status = -1;
 displayConditionalSampling(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange, largeScaleDataFileFullPath, largeScaleVarName, largeScaleValueBinB, largeScalePlev, dataFilePath);
-
-title([varName ' two dimensional map for ' sourceName]);
-
