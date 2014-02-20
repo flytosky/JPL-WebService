@@ -1,5 +1,7 @@
-#!/usr/local/bin/octave -q
+#!/usr/bin/octave -q
 addpath([pwd()  '/../util/']);
+
+pkg load netcdf;
 
 arg_list = argv();
 printf ("program name: %s\n", program_name());
@@ -54,6 +56,16 @@ largeScalePlev = str2num(arg_list{12});
 % Output directory name, required by the program.
 output_dir = arg_list{13};
 
+% display option added to determine whether to use a linear or log scales in display
+% Here we encoded 3-bit information: z_bit, y_bit, x_bit
+% x-axis scale: x_bit = 0 (linear), 1 (log)
+% y-axis scale: y_bit = 0 (linear), 1 (log)
+% z-axis scale: z_bit = 0 (linear), 1 (log), it is for the physical quantity value, so
+% for a map, this represents the colormap scale.
+% So displayOpt = 6 = 110 (in binary) => z_bit = 1, y_bit = 1, x_bit = 0;
+% So displayOpt = 3 = 011 (in binary) => z_bit = 0, y_bit = 1, x_bit = 0;
+displayOpt = str2num(arg_list{14});
+
 % Printing the argument list
 printf("1. %s\n", arg_list{1});
 printf("2. %s\n", arg_list{2});
@@ -68,6 +80,7 @@ printf("10. %s\n", arg_list{10});
 printf("11. %s\n", arg_list{11});
 printf("12. %s\n", arg_list{12});
 printf("13. %s\n", arg_list{13});
+printf("14. %s\n", arg_list{14});
 
 dataFileFullPath = getDataFilePaths(sourceName, varName, startTime, stopTime);
 largeScaleDataFileFullPath = getDataFilePaths(largeScaleSourceName, largeScaleVarName, startTime, stopTime);
@@ -83,4 +96,4 @@ printf("dataFile: %s\n", dataFile)
 printf("dataFilePath: %s\n", dataFilePath)
 
 status = -1;
-displayConditionalSampling(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange, largeScaleDataFileFullPath, largeScaleVarName, largeScaleValueBinB, largeScalePlev, dataFilePath);
+displayConditionalSampling(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange, largeScaleDataFileFullPath, largeScaleVarName, largeScaleValueBinB, largeScalePlev, dataFilePath, displayOpt);
