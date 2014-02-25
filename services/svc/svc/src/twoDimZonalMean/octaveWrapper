@@ -50,10 +50,6 @@ if narg > 6
   output_dir = arg_list{7};
 end
 
-if narg > 7
-  displayOpt = str2num(arg_list{8});
-end
-
 printf("1. %s\n", arg_list{1})
 printf("2. %s\n", arg_list{2})
 printf("3. %s\n", arg_list{3})
@@ -61,7 +57,13 @@ printf("4. %s\n", arg_list{4})
 printf("5. %s\n", arg_list{5})
 printf("6. %s\n", arg_list{6})
 printf("7. %s\n", arg_list{7})
-printf("8. %s\n", arg_list{8})
+
+if narg > 7
+  displayOpt = str2num(arg_list{8});
+  printf("8. %s\n", arg_list{8})
+else
+  displayOpt = 0;
+end
 
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
