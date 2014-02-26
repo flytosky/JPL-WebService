@@ -16,10 +16,10 @@
 
     // called on load or reload
     window.onload = function() {
-      select_data1();
-      select_var1();
-      select_data2();
-      select_var2();
+      select_data1(1);
+      select_var1(1);
+      select_data1(2);
+      select_var1(2);
       // no data to download yet
       disable_download_button();
     }
@@ -38,82 +38,18 @@
       x.disabled=false;
     }
 
-    // enable all vars1 in dropdown menu
-    function reset_vars1()
-    {
-      var x=document.getElementById("var1");
-
-      x.options[0].disabled=false;
-      x.options[1].disabled=false;
-      x.options[2].disabled=false;
-      x.options[3].disabled=false;
-      x.options[4].disabled=false;
-      x.options[5].disabled=false;
-      x.options[6].disabled=false;
-      x.options[7].disabled=false;
-      x.options[8].disabled=false;
-      x.options[9].disabled=false;
-      x.options[10].disabled=false;
-      x.options[11].disabled=false;
-      x.options[12].disabled=false;
-      x.options[13].disabled=false;
-      x.options[14].disabled=false;
-      x.options[15].disabled=false;
-      x.options[16].disabled=false;
-      x.options[17].disabled=false;
-      x.options[18].disabled=false;
-      x.options[19].disabled=false;
-      x.options[20].disabled=false;
-      x.options[21].disabled=false;
-      x.options[22].disabled=false;
-      x.options[23].disabled=false;
-      x.options[24].disabled=false;
-    }
-
 
     // disable all vars1 in dropdown menu
-    function unset_vars1()
+    function unset_vars1(ID)
     {
-      var x=document.getElementById("var1");
+      var x;
 
-      x.options[0].disabled=true;
-      x.options[1].disabled=true;
-      x.options[2].disabled=true;
-      x.options[3].disabled=true;
-      x.options[4].disabled=true;
-      x.options[5].disabled=true;
-      x.options[6].disabled=true;
-      x.options[7].disabled=true;
-      x.options[8].disabled=true;
-      x.options[9].disabled=true;
-      x.options[10].disabled=true;
-      x.options[11].disabled=true;
-      x.options[12].disabled=true;
-      x.options[13].disabled=true;
-      x.options[14].disabled=true;
-      x.options[15].disabled=true;
-      x.options[16].disabled=true;
-      x.options[17].disabled=true;
-      x.options[18].disabled=true;
-      x.options[19].disabled=true;
-      x.options[20].disabled=true;
-      x.options[21].disabled=true;
-      x.options[22].disabled=true;
-      x.options[23].disabled=true;
-      x.options[24].disabled=true;
-      x.options[25].disabled=true;
-      x.options[26].disabled=true;
-      x.options[27].disabled=true;
-      x.options[28].disabled=true;
-      x.options[29].disabled=true;
-      x.options[30].disabled=true;
-    }
-
-
-    // enable all vars2 in dropdown menu
-    function reset_vars2()
-    {
-      var x=document.getElementById("var2");
+      if (ID == 1) {
+        x=document.getElementById("var1");
+      }
+      else if (ID == 2) {
+        x=document.getElementById("var2");
+      }
 
       x.options[0].disabled=true;
       x.options[1].disabled=true;
@@ -150,279 +86,406 @@
 
 
     // disable pressure level box for 2D var
-    function disable_pres1()
+    function disable_pres1(ID)
     {
-      var x=document.getElementById("pres1");
-        x.value = "N/A"
-        x.disabled=true;
+      var x;
+      if (ID == 1) {
+        x=document.getElementById("pres1");
+      }
+      else if (ID == 2) {
+        x=document.getElementById("pres2");
+      }
+
+      x.value = "N/A";
+      x.disabled=true;
     }
 
     // enable pressure level box for 3D var
-    function enable_pres1()
+    function enable_pres1(ID)
     {
-      var x=document.getElementById("pres1");
-        x.value = "200"
-        x.disabled=false;
+      var x;
+      if (ID == 1) {
+        x=document.getElementById("pres1");
+      }
+      else if (ID == 2) {
+        x=document.getElementById("pres2");
+      }
+
+      x.value = "200";
+      x.disabled=false;
     }
 
-    // form variable1 string based on "var" dropdown selection
-    function select_var1()
+    // form variable1 or variable2 string based on "var" dropdown selection
+    function select_var1(ID)
     {
-      var var_string = $("#var1").val();
+      var var_string;
+
+      if (ID == 1) {
+        var_string = $("#var1").val();
+      }
+      else if (ID == 2) {
+        var_string = $("#var2").val();
+      }
+
       // alert("var_string: " + var_string)
 
       // disable the download button because of this change  
       disable_download_button();  
   
       if (var_string == "Total Cloud Fraction") { 
-        variable1 = "clt";  // a 2D var
+        if (ID == 1) {
+          variable1 = "clt";  // a 2D var
+        }
+        else if (ID == 2) {
+          variable2 = "clt";  // a 2D var
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
         // alert("variable1: " + variable1)
       }
       else if (var_string == "Surface Temperature") {
-        variable1 = "ts";  
+        if (ID == 1) {
+          variable1 = "ts";  
+        }
+        else if (ID == 2) {
+          variable2 = "ts";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Sea Surface Temperature") { 
-        variable1 = "tos";  
+        if (ID == 1) {
+          variable1 = "tos";  
+        }
+        else if (ID == 2) {
+          variable2 = "tos";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Precipitation Flux") { 
-        variable1 = "pr";  
+        if (ID == 1) {
+          variable1 = "pr";  
+        }
+        else if (ID == 2) {
+          variable2 = "pr";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Eastward Near-Surface Wind") { 
-        variable1 = "uas";  
+        if (ID == 1) {
+          variable1 = "uas";  
+        }
+        else if (ID == 2) {
+          variable2 = "uas";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Northward Near-Surface Wind") {  
-        variable1 = "vas";  
+        if (ID == 1) {
+          variable1 = "vas";  
+        }
+        else if (ID == 2) {
+          variable2 = "vas";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Near-Surface Wind Speed") { 
-        variable1 = "sfcWind";  
+        if (ID == 1) {
+          variable1 = "sfcWind";  
+        }
+        else if (ID == 2) {
+          variable2 = "sfcWind";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Sea Surface Height") { 
-        variable1 = "zos";  
+        if (ID == 1) {
+          variable1 = "zos";  
+        }
+        else if (ID == 2) {
+          variable2 = "zos";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Leaf Area Index") { 
-        variable1 = "lai";  
+        if (ID == 1) {
+          variable1 = "lai";  
+        }
+        else if (ID == 2) {
+          variable2 = "lai";  
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
-      else if (var_string == "Equivalent Water Height Over Land")  
-        variable1 = "zl";  
-      else if (var_string == "Equivalent Water Height Over Ocean")
-        variable1 = "zo";
+      else if (var_string == "Equivalent Water Height Over Land") {
+        if (ID == 1) {
+          variable1 = "zl";  
+        }
+        else if (ID == 2) {
+          variable2 = "zl";  
+        }
+        // disable pressure level box for 2D var
+        disable_pres1(ID);
+      }
+      else if (var_string == "Equivalent Water Height Over Ocean") {
+        if (ID == 1) {
+          variable1 = "zo";
+        }
+        else if (ID == 2) {
+          variable2 = "zo";
+        }
+        // disable pressure level box for 2D var
+        disable_pres1(ID);
+      }
       else if (var_string == "Ocean Heat Content Anomaly within 700 m Depth") {
-        variable1 = "ohc700";
-        // enable pressure level box for 3D var
-        // enable_pres1()
-      }
-      else if (var_string == "Ocean Heat Content Anomaly within 2000 m Depth")
-        variable1 = "ohc2000";
-      else if (var_string == "Surface Downwelling Longwave Radiation") {
-        variable1 = "rlds";
+        if (ID == 1) {
+          variable1 = "ohc700";
+        }
+        else if (ID == 2) {
+          variable2 = "ohc700";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
+      }
+      else if (var_string == "Ocean Heat Content Anomaly within 2000 m Depth") {
+        if (ID == 1) {
+          variable1 = "ohc2000";
+        }
+        else if (ID == 2) {
+          variable2 = "ohc2000";
+        }
+        // disable pressure level box for 2D var
+        disable_pres1(ID);
+      }
+      else if (var_string == "Surface Downwelling Longwave Radiation") {
+        if (ID == 1) {
+          variable1 = "rlds";
+        }
+        else if (ID == 2) {
+          variable2 = "rlds";
+        }
+        // disable pressure level box for 2D var
+        disable_pres1(ID);
       }
       else if (var_string == "Surface Downwelling Shortwave Radiation") {
-        variable1 = "rlus";
+        if (ID == 1) {
+          variable1 = "rlus";
+        }
+        else if (ID == 2) {
+          variable2 = "rlus";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Surface Upwelling Longwave Radiation") {
-        variable1 = "rsds";
+        if (ID == 1) {
+          variable1 = "rsds";
+        }
+        else if (ID == 2) {
+          variable2 = "rsds";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Surface Upwelling Shortwave Radiation") {
-        variable1 = "rsus";
+        if (ID == 1) {
+          variable1 = "rsus";
+        }
+        else if (ID == 2) {
+          variable2 = "rsus";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Surface Downwelling Clear-Sky Longwave Radiation") {
-        variable1 = "rldscs";
+        if (ID == 1) {
+          variable1 = "rldscs";
+        }
+        else if (ID == 2) {
+          variable2 = "rldscs";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Surface Downwelling Clear-Sky Shortwave Radiation") {
-        variable1 = "rsdscs";
+        if (ID == 1) {
+          variable1 = "rsdscs";
+        }
+        else if (ID == 2) {
+          variable2 = "rsdscs";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Surface Upwelling Clear-Sky Shortwave Radiation") {
-        variable1 = "rsuscs";
+        if (ID == 1) {
+          variable1 = "rsuscs";
+        }
+        else if (ID == 2) {
+          variable2 = "rsuscs";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "TOA Incident Shortwave Radiation") {
-        variable1 = "rsdt";
+        if (ID == 1) {
+          variable1 = "rsdt";
+        }
+        else if (ID == 2) {
+          variable2 = "rsdt";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "TOA Outgoing Clear-Sky Longwave Radiation") {
-        variable1 = "rlutcs";
+        if (ID == 1) {
+          variable1 = "rlutcs";
+        }
+        else if (ID == 2) {
+          variable2 = "rlutcs";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "TOA Outgoing Longwave Radiation") {
-        variable1 = "rlut";
+        if (ID == 1) {
+          variable1 = "rlut";
+        }
+        else if (ID == 2) {
+          variable2 = "rlut";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "TOA Outgoing Clear-Sky Shortwave Radiation") {
-        variable1 = "rsutcs";
+        if (ID == 1) {
+          variable1 = "rsutcs";
+        }
+        else if (ID == 2) {
+          variable2 = "rsutcs";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "TOA Outgoing Shortwave Radiation") {
-        variable1 = "rsut";
+        if (ID == 1) {
+          variable1 = "rsut";
+        }
+        else if (ID == 2) {
+          variable2 = "rsut";
+        }
         // disable pressure level box for 2D var
-        disable_pres1()
+        disable_pres1(ID);
       }
       else if (var_string == "Air Temperature") {
-        variable = "ta";
+        if (ID == 1) {
+          variable1 = "ta";
+        }
+        else if (ID == 2) {
+          variable2 = "ta";
+        }
         // enable pressure level box for 3D var
-        enable_pres1()
+        enable_pres1(ID);
       }
       else if (var_string == "Specific Humidity") {
-        variable = "hus";
+        if (ID == 1) {
+          variable1 = "hus";
+        }
+        else if (ID == 2) {
+          variable2 = "hus";
+        }
         // enable pressure level box for 3D var
-        enable_pres1()
+        enable_pres1(ID);
       }
       else if (var_string == "Cloud Ice Water Content") {
-        variable = "cli";
+        if (ID == 1) {
+          variable1 = "cli";
+        }
+        else if (ID == 2) {
+          variable2 = "cli";
+        }
         // enable pressure level box for 3D var
-        enable_pres1()
+        enable_pres1(ID);
       }
       else if (var_string == "Cloud Liquid Water Content") {
-        variable = "clw";
+        if (ID == 1) {
+          variable1 = "clw";
+        }
+        else if (ID == 2) {
+          variable2 = "clw";
+        }
         // enable pressure level box for 3D var
-        enable_pres1()
+        enable_pres1(ID);
       }
       else if (var_string == "Ocean Temperature") {
-        variable = "ot";
+        if (ID == 1) {
+          variable1 = "ot";
+        }
+        else if (ID == 2) {
+          variable2 = "ot";
+        }
         // enable pressure level box for 3D var
-        enable_pres1()
+        enable_pres1(ID);
       }
       else if (var_string == "Ocean Salinity") {
-        variable = "os";
+        if (ID == 1) {
+          variable1 = "os";
+        }
+        else if (ID == 2) {
+          variable2 = "os";
+        }
         // enable pressure level box for 3D var
-        enable_pres1()
+        enable_pres1(ID);
       }
 
       // alert("variable1: " + variable1)
     }
 
 
-    // form variable2 string based on "var" dropdown selection
-    function select_var2()
-    {
-      var var_string = $("#var2").val();
-      // alert("var_string: " + var_string)
-
-      // disable the download button because of this change  
-      disable_download_button();  
-  
-      if (var_string == "Total Cloud Fraction")  
-        variable2 = "clt";  
-      else if (var_string == "Surface Temperature")  
-        variable2 = "ts";  
-      else if (var_string == "Sea Surface Temperature")  
-        variable2 = "tos";  
-      else if (var_string == "Precipitation Flux")  
-        variable2 = "pr";  
-      else if (var_string == "Eastward Near-Surface Wind")  
-        variable2 = "uas";  
-      else if (var_string == "Northward Near-Surface Wind")  
-        variable2 = "vas";  
-      else if (var_string == "Near-Surface Wind Speed")  
-        variable2 = "sfcWind";  
-      else if (var_string == "Sea Surface Height")  
-        variable2 = "zos";  
-      else if (var_string == "Leaf Area Index")  
-        variable2 = "lai";  
-      else if (var_string == "Equivalent Water Height Over Land")  
-        variable2 = "zl";  
-      else if (var_string == "Equivalent Water Height Over Ocean")
-        variable2 = "zo";
-      else if (var_string == "Ocean Heat Content Anomaly within 700 m Depth") {
-        variable2 = "ohc700";
-      }
-      else if (var_string == "Ocean Heat Content Anomaly within 2000 m Depth")
-        variable2 = "ohc2000";
-      else if (var_string == "Surface Downwelling Longwave Radiation")
-        variable2 = "rlds";
-      else if (var_string == "Surface Downwelling Shortwave Radiation")
-        variable2 = "rlus";
-      else if (var_string == "Surface Upwelling Longwave Radiation")
-        variable2 = "rsds";
-      else if (var_string == "Surface Upwelling Shortwave Radiation")
-        variable2 = "rsus";
-      else if (var_string == "Surface Downwelling Clear-Sky Longwave Radiation")
-        variable2 = "rldscs";
-      else if (var_string == "Surface Downwelling Clear-Sky Shortwave Radiation")
-        variable2 = "rsdscs";
-      else if (var_string == "Surface Upwelling Clear-Sky Shortwave Radiation")
-        variable2 = "rsuscs";
-      else if (var_string == "TOA Incident Shortwave Radiation")
-        variable2 = "rsdt";
-      else if (var_string == "TOA Outgoing Clear-Sky Longwave Radiation")
-        variable2 = "rlutcs";
-      else if (var_string == "TOA Outgoing Longwave Radiation")
-        variable2 = "rlut";
-      else if (var_string == "TOA Outgoing Clear-Sky Shortwave Radiation")
-        variable2 = "rsutcs";
-      else if (var_string == "TOA Outgoing Shortwave Radiation")
-        variable2 = "rsut";
-
-
-      // alert("variable2: " + variable2)
-    }
-
-
     // set up "var1" dropdown based status of "data1" dropdown
-    function select_data1()
+    function select_data1(ID)
     {
-      var data_string = $("#data1").val();
-      var x=document.getElementById("var1");
+      var data_string;
+      var x;
+
+      if (ID == 1) {
+        data_string = $("#data1").val();
+        x = document.getElementById("var1");
+      }
+      else if (ID == 2) {
+        data_string = $("#data2").val();
+        x = document.getElementById("var2");
+      }
+
+      // alert(ID);
+      // alert(data_string);
 
       // disable the download button because of this change
       disable_download_button();
 
-      // enable all options in "var1" dropdown first
-      // reset_vars1();
-
-      // alert(data_string);
-
       // disable corresponding "var" options
       if (data_string == "NASA/AMSRE") {
 
-        unset_vars1(); // disable all options in "var" dropdown first
+        unset_vars1(ID); // disable all options in "var" dropdown first
 
         x.options[3].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[3].disabled=false;
 
       }
       else if (data_string == "NASA/MODIS") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[1].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[1].disabled=false;
         x.options[8].disabled=false;
@@ -430,30 +493,30 @@
       }
       else if (data_string == "NASA/TRMM") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[0].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[0].disabled=false;
 
       }
       else if (data_string == "NASA/GPCP") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[0].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[0].disabled=false;
 
       }
       else if (data_string == "NASA/QuikSCAT") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[4].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[4].disabled=false;
         x.options[5].disabled=false;
@@ -462,7 +525,7 @@
       }
       else if (data_string == "NASA/AVISO") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[7].selected=true;
         disable_pres1(); // the selected one is 2D
@@ -472,10 +535,10 @@
       }
       else if (data_string == "NASA/GRACE") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[9].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[9].disabled=false;
         x.options[10].disabled=false;
@@ -483,10 +546,10 @@
       }
       else if (data_string == "NOAA/NODC") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[11].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[11].disabled=false;
         x.options[12].disabled=false;
@@ -494,10 +557,10 @@
       }
       else if (data_string == "NASA/CERES") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[13].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[13].disabled=false;
         x.options[14].disabled=false;
@@ -521,10 +584,10 @@
       }
       else if (data_string == "NASA/AIRS") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[25].selected=true;
-        enable_pres1(); // the selected one is 3D
+        enable_pres1(ID); // the selected one is 3D
 
         x.options[25].disabled=false;
         x.options[26].disabled=false;
@@ -532,10 +595,10 @@
       }
       else if (data_string == "NASA/MLS") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[25].selected=true;
-        enable_pres1(); // the selected one is 3D
+        enable_pres1(ID); // the selected one is 3D
 
         x.options[25].disabled=false;
         x.options[26].disabled=false;
@@ -543,14 +606,16 @@
       }
       else if (data_string == "ARGO/ARGO") {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[29].selected=true;
-        enable_pres1(); // the selected one is 3D
+        enable_pres1(ID); // the selected one is 3D
 
         x.options[29].disabled=false;
         x.options[30].disabled=false;
 
+        // alert("in ARGO ...");
+        // alert(data_string);
       }
       else if (data_string == "CCCMA/CANESM2" || data_string == "GFDL/ESM2G" ||
                data_string == "GISS/E2-H" || data_string == "GISS/E2-R" ||
@@ -561,10 +626,10 @@
                data_string == "MIROC/MIROC5" || data_string == "UKMO/HadGEM2-A"
               ) {
 
-        unset_vars1();
+        unset_vars1(ID);
 
         x.options[0].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[0].disabled=false;
         x.options[1].disabled=false;
@@ -596,322 +661,7 @@
       }
 
       // form variable string
-      select_var1();
-    }
-
-
-    // set up "var2" dropdown based status of "data2" dropdown
-    function select_data2()
-    {
-      var data_string = $("#data2").val();
-      var x=document.getElementById("var2");
-
-      // disable the download button because of this change
-      disable_download_button();
-
-      // enable all options in "var2" dropdown first
-      reset_vars2();
-
-      // alert(data_string);
-
-      // disable corresponding "var" options
-      if (data_string == "NASA/AMSRE") {
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-
-        x.options[3].selected=true;
-      }
-      else if (data_string == "NASA/MODIS") {
-        x.options[0].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-
-        x.options[1].selected=true;
-        //x.options[8].selected=true;
-      }
-      else if (data_string == "NASA/TRMM") {
-        x.options[0].selected=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-      }
-      else if (data_string == "NASA/GPCP") {
-        x.options[0].selected=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-      }
-      else if (data_string == "NASA/QuikSCAT") {
-
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-
-        x.options[4].selected=true;
-        //x.options[5].selected=true;
-        //x.options[6].selected=true;
-      }
-      else if (data_string == "NASA/AVISO") {
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-
-        x.options[7].selected=true;
-      }
-      else if (data_string == "NASA/GRACE") {
-
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-
-        x.options[9].selected=true;
-        //x.options[10].selected=true;
-      }
-      else if (data_string == "NOAA/NODC") {
-
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-
-        x.options[11].selected=true;
-        //x.options[12].selected=true;
-      }
-      else if (data_string == "NASA/CERES") {
-
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-
-        x.options[13].selected=true;
-      }
-      else if (data_string == "CCCMA/CANESM2") {
-     
-        x.options[0].disabled=true;
-        x.options[1].disabled=true;
-        x.options[2].disabled=true;
-        x.options[3].disabled=true;
-        x.options[4].disabled=true;
-        x.options[5].disabled=true;
-        x.options[6].disabled=true;
-        x.options[7].disabled=true;
-        x.options[8].disabled=true;
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-        x.options[13].disabled=true;
-        x.options[14].disabled=true;
-        x.options[15].disabled=true;
-        x.options[16].disabled=true;
-        x.options[17].disabled=true;
-        x.options[18].disabled=true;
-        x.options[19].disabled=true;
-        x.options[20].disabled=true;
-        x.options[21].disabled=true;
-        x.options[22].disabled=true;
-        x.options[23].disabled=true;
-        x.options[24].disabled=true;
-        x.options[25].disabled=true;
-        x.options[26].disabled=true;
-        x.options[27].disabled=true;
-        x.options[28].disabled=true;
-        x.options[29].disabled=true;
-        x.options[30].disabled=true;
-       
-        x.options[25].selected=true;
-        x.options[25].disabled=false;
-        x.options[26].disabled=false;
-        x.options[27].disabled=false;
-        x.options[28].disabled=false;
-      
-      }
-      // for all other models
-      else {
-        x.options[9].disabled=true;
-        x.options[10].disabled=true;
-        x.options[11].disabled=true;
-        x.options[12].disabled=true;
-
-        x.options[0].selected=true;
-      }
-
-
-      // form variable string
-      select_var2();
+      select_var1(ID);
     }
 
 
@@ -1101,7 +851,7 @@ data 2
 </tr>
 
 <tr>
-<td>source:</td><td><select name="data1", id="data1" onchange="select_data1()">
+<td>source:</td><td><select name="data1", id="data1" onchange="select_data1(1)">
 <optgroup label="Model: Historical">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/ESM2G</option>
@@ -1136,7 +886,7 @@ data 2
 </optgroup>
 </select></td>
 
-<td>source:</td><td><select name="data2", id="data2" onchange="select_data2()">
+<td>source:</td><td><select name="data2", id="data2" onchange="select_data1(2)">
 <optgroup label="Model: Historical">
 <option selected="CCCMA/CANESM2">CCCMA/CANESM2</option>
 <option>GFDL/ESM2G</option>
@@ -1175,7 +925,7 @@ data 2
 
 <tr>
 
-<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var1()">
+<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var1(1)">
 <option>Precipitation Flux</option>
 <option>Total Cloud Fraction</option>
 <option>Surface Temperature</option>
@@ -1211,7 +961,7 @@ data 2
 </td>
 
 
-<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var2()">
+<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var1(2)">
 <option>Precipitation Flux</option>
 <option>Total Cloud Fraction</option>
 <option>Surface Temperature</option>
