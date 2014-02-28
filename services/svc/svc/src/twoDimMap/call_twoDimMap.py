@@ -5,7 +5,7 @@ import os
 from os.path import basename
 
 class call_twoDimMap:
-    def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, months, output_dir):
+    def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, months, output_dir, displayOpt):
         self.model = model
         self.var = var
         self.start_time = start_time
@@ -16,6 +16,7 @@ class call_twoDimMap:
         self.lat2 = lat2
         self.months = months
         self.output_dir = output_dir
+        self.displayOpt = displayOpt
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -30,7 +31,7 @@ class call_twoDimMap:
         # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
         inputs = self.model + ' ' + self.var + ' ' + self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.months + ' ' + self.output_dir
+                 self.months + ' ' + self.output_dir + ' ' + self.displayOpt
         print 'inputs: ', inputs
         command = './octaveWrapper ' +  inputs
         cmd = command.split(' ')
@@ -79,7 +80,7 @@ class call_twoDimMap:
 if __name__ == '__main__':
     ### c1 = call_twoDimMap('ukmo_hadgem2-a', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
     ### c1 = call_twoDimMap('cccma_canam4', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
-    c1 = call_twoDimMap('ncc_noresm', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+    c1 = call_twoDimMap('ncc_noresm', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6', './', '7')
     ### c1 = call_twoDimMap('ukmo_hadgem2-es', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
 
     mesg = c1.displayTwoDimMap()
