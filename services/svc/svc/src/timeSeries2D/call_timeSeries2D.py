@@ -5,7 +5,7 @@ import os
 from os.path import basename
 
 class call_timeSeries2D:
-    def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, output_dir):
+    def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, output_dir, displayOpt):
         self.model = model
         self.var = var
         self.start_time = start_time
@@ -15,6 +15,7 @@ class call_timeSeries2D:
         self.lat1 = lat1
         self.lat2 = lat2
         self.output_dir = output_dir
+        self.displayOpt = displayOpt
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -28,7 +29,7 @@ class call_timeSeries2D:
         # example:  ./octaveWrapper ukmo_hadgem2-a clt 199001 199512 '0 100' '0 20' ./tmp/
         inputs = self.model + ' ' + self.var + ' ' + self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.output_dir
+                 self.output_dir + ' ' + self.displayOpt
         print 'inputs: ', inputs
         command = './octaveWrapper ' +  inputs
         cmd = command.split(' ')
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     #c1 = call_timeSeries2D('cccma_canam4', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
 #    c1 = call_timeSeries2D('ncc_noresm', 'ts', '196001', '199512', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
 #    c1 = call_timeSeries2D('nasa_amsre', 'tos', '200001', '200912', '0', '100', '-29', '29', '/home/zhai/working/cmac/trunk/services/svc/svc/src/timeSeries2D')
-    c1 = call_timeSeries2D('nasa_quikscat', 'sfcWind', '200001', '200912', '0', '100', '-29', '29', './')
+    c1 = call_timeSeries2D('nasa_quikscat', 'sfcWind', '200001', '200912', '0', '100', '-29', '29', './', '7')
 
     mesg = c1.display_timeSeries2D()
     print 'mesg: ', mesg

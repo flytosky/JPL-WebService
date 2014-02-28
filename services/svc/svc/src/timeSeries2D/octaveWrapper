@@ -11,7 +11,7 @@ narg = length(arg_list);
 if narg < 2
   error('Insufficient argument, need a model and a variable name!'); 
 end
-modelName = lower(arg_list{1});
+sourceName = lower(arg_list{1});
 varName = arg_list{2};
 
 startTime = struct('year', 1980, 'month', 1);
@@ -43,10 +43,6 @@ if narg > 6
   output_dir = arg_list{7};
 end
 
-if narg > 7
-  displayOpt = str2num(arg_list{8});
-end
-
 printf("%s", arg_list{1})
 printf("%s", arg_list{2})
 printf("%s", arg_list{3})
@@ -54,36 +50,20 @@ printf("%s", arg_list{4})
 printf("%s", arg_list{5})
 printf("%s", arg_list{6})
 printf("%s", arg_list{7})
-printf("%s", arg_list{8})
-
-[center,model] = strtok(modelName, '_');
-model = model(2:end); % get rid of '_'
-
-dataDir = [getDataRootDirectory()  center '/' model '/']; 
-
-dataFiles = dir([dataDir '/' varName '_*.nc']);
-
-nDataFiles = length(dataFiles);
-
-if nDataFiles < 1
-  error(['Variable: ' varName ' for data source: ' modelName ' not found!']); 
+if narg > 7
+  displayOpt = str2num(arg_list{8});
+  printf("%s", arg_list{8})
+else
+  displayOpt = 0;
 end
 
-dataFileFullPath = [];
-idx = 1;
-for ii = 1:nDataFiles
-  thisFile = [dataDir '/' dataFiles(ii).name];
-  if dataFileRelevant(thisFile, startTime, stopTime)
-    dataFileFullPath{idx} = thisFile;
-    idx = idx + 1;
-  end
-end
+dataFileFullPath = getDataFilePaths(sourceName, varName, startTime, stopTime);
 
 lonStr = ['lon' num2str(lonRange(1)) '_' num2str(lonRange(2)) 'deg'];
 latStr = ['lat' num2str(latRange(1)) '_' num2str(latRange(2)) 'deg'];
 
-figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.jpeg'];
-dataFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.nc'];
+figFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.jpeg'];
+dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.nc'];
 figFilePath = [output_dir '/' figFile];
 dataFilePath = [output_dir '/' dataFile];
 printf("figFile: %s\n", figFile)
