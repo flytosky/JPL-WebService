@@ -5,7 +5,7 @@ import os
 from os.path import basename
 
 class call_twoDimSlice3D:
-    def __init__(self, model, var, start_time, end_time, pressure_level, lon1, lon2, lat1, lat2, months, output_dir):
+    def __init__(self, model, var, start_time, end_time, pressure_level, lon1, lon2, lat1, lat2, months, output_dir, displayOpt):
         self.model = model
         self.var = var
         self.start_time = start_time
@@ -17,6 +17,7 @@ class call_twoDimSlice3D:
         self.lat2 = lat2
         self.months = months
         self.output_dir = output_dir
+        self.displayOpt = displayOpt
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -31,7 +32,7 @@ class call_twoDimSlice3D:
         # example: ./octaveWrapper ukmo_hadgem2-es hus 198501 199512 80000 '70 105' '0 30' '5,6,7,8'
         inputs = self.model + ' ' + self.var + ' ' + self.start_time + ' ' + self.end_time + ' ' + \
                  self.pressure_level + ' ' +self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.months + ' ' + self.output_dir
+                 self.months + ' ' + self.output_dir + ' ' + self.displayOpt
         print 'inputs: ', inputs
         command = './octaveWrapper ' +  inputs
         cmd = command.split(' ')
@@ -78,7 +79,7 @@ class call_twoDimSlice3D:
 
 
 if __name__ == '__main__':
-    c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'hus', '199001', '201212', '20000', '0', '30', '-29', '29', '4,5,6', './')
+    c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'hus', '199001', '201212', '20000', '0', '30', '-29', '29', '4,5,6', './', '7')
 
     mesg = c1.displayTwoDimSlice3D()
     print 'mesg: ', mesg

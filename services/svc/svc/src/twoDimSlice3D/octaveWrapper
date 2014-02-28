@@ -12,7 +12,7 @@ narg = length(arg_list);
 if narg < 2
   error('Insufficient argument, need a model and a variable name!'); 
 end
-modelName = lower(arg_list{1});
+sourceName = lower(arg_list{1});
 varName = arg_list{2};
 
 startTime = struct('year', 1980, 'month', 1);
@@ -75,31 +75,10 @@ else
   displayOpt = 0;
 end
 
-[center,model] = strtok(modelName, '_');
-model = model(2:end); % get rid of '_'
+dataFileFullPath = getDataFilePaths(sourceName, varName, startTime, stopTime);
 
-dataDir = [getDataRootDirectory()  center '/' model '/break']; 
-
-dataFiles = dir([dataDir '/' varName '_*.nc']);
-
-nDataFiles = length(dataFiles);
-
-if nDataFiles < 1
-  error(['Variable: ' varName ' for data source: ' modelName ' not found!']); 
-end
-
-dataFileFullPath = [];
-idx = 1;
-for ii = 1:nDataFiles
-  thisFile = [dataDir '/' dataFiles(ii).name];
-  if dataFileRelevant(thisFile, startTime, stopTime)
-    dataFileFullPath{idx} = thisFile;
-    idx = idx + 1;
-  end
-end
-
-figFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.jpeg'];
-dataFile = [modelName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.nc'];
+figFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.jpeg'];
+dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' seasonStr(monthIdx) '.nc'];
 figFilePath = [output_dir '/' figFile];
 dataFilePath = [output_dir '/' dataFile];
 printf("figFile: %s\n", figFile);
@@ -107,4 +86,4 @@ printf("figFilePath: %s\n", figFilePath);
 printf("dataFile: %s\n", dataFile);
 printf("dataFilePath: %s\n", dataFilePath);
 displayTwoDimSlice(dataFileFullPath, figFilePath, varName, startTime, stopTime, plev, lonRange, latRange, monthIdx, dataFilePath, displayOpt);
-title([varName ' at ' num2str(plev/100) 'hPa, map for ' modelName]);
+title([varName ' at ' num2str(plev/100) 'hPa, map for ' sourceName]);
