@@ -16,4 +16,7 @@ fid = fopen(fileName);
 
 dataDir = fscanf(fid, '%s');
 
+% append "cmip5" so that "dataDir" is the root of data directory 
+dataDir = [dataDir '/cmip5/'];
+
 fclose(fid);
