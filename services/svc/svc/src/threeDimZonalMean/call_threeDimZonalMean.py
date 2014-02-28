@@ -5,7 +5,7 @@ import os
 from os.path import basename
 
 class call_threeDimZonalMean:
-    def __init__(self, model, var, start_time, end_time, lat1, lat2, pres1, pres2, months, output_dir):
+    def __init__(self, model, var, start_time, end_time, lat1, lat2, pres1, pres2, months, output_dir, displayOpt):
         self.model = model
         self.var = var
         self.start_time = start_time
@@ -16,6 +16,7 @@ class call_threeDimZonalMean:
         self.pres2 = pres2
         self.months = months
         self.output_dir = output_dir
+        self.displayOpt = displayOpt
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -30,7 +31,7 @@ class call_threeDimZonalMean:
         # example: ./octaveWrapper gfdl_cm3 cli 197501 199512 '-60 60' '900, 200' '5,6,7,8' ./tmp
         inputs = self.model + ' ' + self.var + ' ' + self.start_time + ' ' + self.end_time + ' ' + \
                  self.lat1 + ',' + self.lat2 + ' ' + self.pres1 + ',' + self.pres2 + ' ' + \
-                 self.months + ' ' + self.output_dir
+                 self.months + ' ' + self.output_dir + ' ' + self.displayOpt
         print 'inputs: ', inputs
         command = './octaveWrapper ' +  inputs
         cmd = command.split(' ')
@@ -77,7 +78,7 @@ class call_threeDimZonalMean:
 
 
 if __name__ == '__main__':
-    c1 = call_threeDimZonalMean('gfdl_cm3', 'cli', '197501', '199512', '-60', '60', '900', '200', '5,6,7,8', '/home/svc/cmac/trunk/services/threeDimZonalMean/threeDimZonalMean/static/')
+    c1 = call_threeDimZonalMean('gfdl_cm3', 'cli', '197501', '199512', '-60', '60', '900', '200', '5,6,7,8', '/home/svc/cmac/trunk/services/threeDimZonalMean/threeDimZonalMean/static/', '7')
 
     mesg = c1.displayThreeDimZonalMean()
     print 'mesg: ', mesg
