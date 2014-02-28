@@ -1,6 +1,6 @@
 function dataFileFullPath = getDataFilePaths(sourceName, varName, startTime, stopTime)
 
-dataRootDir = getDataRootDirectory();
+dataRootDir = [getDataRootDirectory() '/cmip5/'];
 
 [center,model] = strtok(sourceName, '_');
 model = model(2:end); % get rid of '_'
