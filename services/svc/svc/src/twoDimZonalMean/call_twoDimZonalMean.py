@@ -5,7 +5,7 @@ import os
 from os.path import basename
 
 class call_twoDimZonalMean:
-    def __init__(self, model, var, start_time, end_time, lat1, lat2, months, output_dir):
+    def __init__(self, model, var, start_time, end_time, lat1, lat2, months, output_dir, displayOpt):
         self.model = model
         self.var = var
         self.start_time = start_time
@@ -14,6 +14,7 @@ class call_twoDimZonalMean:
         self.lat2 = lat2
         self.months = months
         self.output_dir = output_dir
+        self.displayOpt = displayOpt
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -28,7 +29,7 @@ class call_twoDimZonalMean:
         # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
         inputs = self.model + ' ' + self.var + ' ' + self.start_time + ' ' + self.end_time + ' ' + \
                  self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.months + ' ' + self.output_dir
+                 self.months + ' ' + self.output_dir + ' ' + self.displayOpt
         print 'inputs: ', inputs
         command = './octaveWrapper ' +  inputs
         cmd = command.split(' ')
@@ -82,7 +83,7 @@ if __name__ == '__main__':
     ### c1 = call_twoDimZonalMean('cccma_canam4', 'ts', '199001', '199512', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
     ### c1 = call_twoDimZonalMean('ncc_noresm', 'ts', '199001', '199512', '-29', '29', '4,5,6', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
 #    c1 = call_twoDimZonalMean('ukmo_hadgem2-es', 'ts', '199001', '199512', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimZonalMean/twoDimZonalMean/static/')
-    c1 = call_twoDimZonalMean('nasa_quikscat', 'sfcWind', '200301', '200912', '-29', '29', '4,5,6,10,12', '/tmp/');
+    c1 = call_twoDimZonalMean('nasa_quikscat', 'sfcWind', '200301', '200912', '-29', '29', '4,5,6,10,12', './', '7');
 
     mesg = c1.displayTwoDimZonalMean()
     print 'mesg: ', mesg
