@@ -42,7 +42,7 @@ if nargin < 7
 end
 
 if nargin < 6
-  latRange = [0, 360];
+  lonRange = [0, 360];
 end
 
 nMonths = numberOfMonths(startTime, stopTime);
