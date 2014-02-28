@@ -5,7 +5,7 @@ import os
 from os.path import basename
 
 class call_threeDimVerticalProfile:
-    def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, months, output_dir):
+    def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, months, output_dir, displayOpt):
         self.model = model
         self.var = var
         self.start_time = start_time
@@ -16,6 +16,7 @@ class call_threeDimVerticalProfile:
         self.lat2 = lat2
         self.months = months
         self.output_dir = output_dir
+        self.displayOpt = displayOpt
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -30,7 +31,7 @@ class call_threeDimVerticalProfile:
         # example: ./octaveWrapper ncc_noresm cli 197501 199512 '0 180' '-30 30' '5,6,7,8' ./tmp
         inputs = self.model + ' ' + self.var + ' ' + self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.months + ' ' + self.output_dir
+                 self.months + ' ' + self.output_dir + ' ' + self.displayOpt
         print 'inputs: ', inputs
         command = './octaveWrapper ' +  inputs
         cmd = command.split(' ')
@@ -77,7 +78,7 @@ class call_threeDimVerticalProfile:
 
 
 if __name__ == '__main__':
-    c1 = call_threeDimVerticalProfile('ncc_noresm', 'cli', '197501', '199512', '0', '180', '-30', '30', '5,6,7,8', './')
+    c1 = call_threeDimVerticalProfile('ncc_noresm', 'cli', '197501', '199512', '0', '180', '-30', '30', '5,6,7,8', './', '7')
 
     mesg = c1.displayThreeDimVerticalProfile()
     print 'mesg: ', mesg
