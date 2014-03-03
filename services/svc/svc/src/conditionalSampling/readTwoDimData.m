@@ -22,25 +22,26 @@ twoDimData.data = [];
 nFiles = length(dataFiles);
 
 for fileI = 1:nFiles
-  dataFile = dataFiles{fileI};
-  fd = netcdf(dataFile, 'r');
+  thisFile = dataFiles{fileI};
   if isempty(twoDimData.data)
-    lon = fd{'lon'}(:);
-    lat = fd{'lat'}(:);
+    lon = ncread(thisFile, 'lon');
+    lat = ncread(thisFile, 'lat');
     [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
     nLon = length(lon);
     nLat = length(lat);
 
-    twoDimData.name = fd{varName}.long_name;
-    twoDimData.units = fd{varName}.units;
-    twoDimData.data = nan(nMonths, nLat, nLon, 'single');
+    twoDimData.name = ncreadatt(thisFile, varName, 'long_name');
+    twoDimData.units = ncreadatt(thisFile, varName, 'units');
+    twoDimData.data = nan(nLon, nLat, nMonths, 'single');
 
     % Check 3-d
     if ~noVertDim
-      varinfo = ncvar(fd);
+      fileInfo = ncinfo(thisFile);
+      varinfo = fileInfo.Variables;
+
       plevVarName = [];
       for ii = 1:length(varinfo)
-        varNameList{ii} = ncname(varinfo{ii});
+        varNameList{ii} = [varinfo(ii).Name];
         if strcmp('plev', varNameList{ii})
           plevVarName = 'plev';
           break;
@@ -52,7 +53,7 @@ for fileI = 1:nFiles
         noVertDim = true;
         warning('No variable for pressure level found, assuming two dimensional field');
       else
-        plev = readPressureLevels(fd, plevVarName);
+        plev = readPressureLevels(thisFile, plevVarName);
         if length(pRange) == 1
           [mV, pIdx] = min(abs(plev - pRange));
         else
@@ -61,13 +62,20 @@ for fileI = 1:nFiles
       end
     end
   end
-  v = fd{varName}(:);
-  if(~isempty(fd{varName}.missing_value))
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
   end
 
-  twoDimData.v_units = fd{varName}.units;
-  [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile);
+  twoDimData.v_units = ncreadatt(thisFile, varName, 'units');
+
+  [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(thisFile);
 
   file_start_time{fileI} = startTime_thisFile;
   file_stop_time{fileI} = stopTime_thisFile;
@@ -75,7 +83,11 @@ for fileI = 1:nFiles
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  if noVertDim
+    nMonths_thisFile = size(v,3);
+  else
+    nMonths_thisFile = size(v,4);
+  end
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -91,11 +103,11 @@ for fileI = 1:nFiles
   end
 
   if noVertDim
-    twoDimData.data(monthIdx1:monthIdx2, :, :) = v(idx2Data_start:idx2Data_stop,latIdx,lonIdx);
+    twoDimData.data(:, :, monthIdx1:monthIdx2) = v(lonIdx, latIdx, idx2Data_start:idx2Data_stop);
   else
-    twoDimData.data(monthIdx1:monthIdx2, :, :) = squeeze(meanExcludeNaN(v(idx2Data_start:idx2Data_stop, pIdx, latIdx,lonIdx), 2));
+    twoDimData.data(:, :, monthIdx1:monthIdx2) = squeeze(meanExcludeNaN(v(lonIdx, latIdx, pIdx, idx2Data_start:idx2Data_stop), 3));
   end
-  ncclose(fd);
+  clear v;
 end
 
 twoDimData.lon = lon;

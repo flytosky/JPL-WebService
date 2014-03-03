@@ -25,11 +25,10 @@ nLon = length(lon);
 nLat = length(lat);
 
 for fileI = 1:nFiles
-  dataFile = dataFiles{fileI};
-  fd = netcdf(dataFile, 'r');
+  thisFile = dataFiles{fileI};
   if isempty(twoDimData.data)
-    lon_data = fd{'lon'}(:);
-    lat_data = fd{'lat'}(:);
+    lon_data = ncread(thisFile, 'lon');
+    lat_data = ncread(thisFile, 'lat');
 
     if isvector(lon_data) & isvector(lat_data)
       % Let us determine whether 
@@ -45,20 +44,22 @@ for fileI = 1:nFiles
     else
       opt = '2d_interp_irreg';
       [nLon_data, nLat_data] = size(lon_data);
-      lonlon = repmat(lon(:)', nLat, 1);
-      latlat = repmat(lat(:), 1, nLon);
+      lonlon = repmat(lon(:), 1, nLat);
+      latlat = repmat(lat(:)', nLon, 1);
     end
 
-    twoDimData.name = fd{varName}.long_name;
-    twoDimData.units = fd{varName}.units;
-    twoDimData.data = nan(nMonths, nLat, nLon, 'single');
+    twoDimData.name = ncreadatt(thisFile, varName, 'long_name');
+    twoDimData.units = ncreadatt(thisFile, varName, 'units');
+    twoDimData.data = nan(nLon, nLat, nMonths, 'single');
 
     % Check 3-d
     if ~noVertDim
-      varinfo = ncvar(fd);
+      fileInfo = ncinfo(thisFile);
+      varinfo = fileInfo.Variables;
+
       plevVarName = [];
       for ii = 1:length(varinfo)
-        varNameList{ii} = ncname(varinfo{ii});
+        varNameList{ii} = [varinfo(ii).Name];
         if strcmp('plev', varNameList{ii})
           plevVarName = 'plev';
           break;
@@ -79,13 +80,18 @@ for fileI = 1:nFiles
       end
     end
   end
-  v = fd{varName}(:);
-  if(~isempty(fd{varName}.missing_value))
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
   end
 
-  twoDimData.v_units = fd{varName}.units;
-  [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile);
+  twoDimData.v_units = ncreadatt(thisFile, varName, 'units');
+  [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(thisFile);
 
   file_start_time{fileI} = startTime_thisFile;
   file_stop_time{fileI} = stopTime_thisFile;
@@ -93,7 +99,11 @@ for fileI = 1:nFiles
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  if noVertDim
+    nMonths_thisFile = size(v,3);
+  else
+    nMonths_thisFile = size(v,4);
+  end
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -109,26 +119,38 @@ for fileI = 1:nFiles
   end
 
   if noVertDim
-    tmpData = v(idx2Data_start:idx2Data_stop,:,:);
+    tmpData = v(:, :, idx2Data_start:idx2Data_stop);
   else
-    tmpData = reshape(meanExcludeNaN(v(idx2Data_start:idx2Data_stop, pIdx, :,:), 2), [], nLon_data, nLat_data);
+    tmpData = reshape(meanExcludeNaN(v(:,:,pIdx,idx2Data_start:idx2Data_stop), 3), nLon_data, nLat_data, []);
   end
 
   switch opt
     case '2d_interp_reg',
+      disp('regridding a regular 2-d grid');
+      tic;
       for monthI = monthIdx1:monthIdx2
-        twoDimData.data(monthI,:,:) = twoDimInterpOnSphere(lon_data, lat_data, squeeze(tmpData(monthI - monthIdx1 + 1, :, :)), lon, lat, 'linear');
+        twoDimData.data(:, :, monthI) = twoDimInterpOnSphere(lon_data, lat_data, squeeze(tmpData(:, :, monthI - monthIdx1 + 1)), lon, lat, 'linear');
       end
+      toc;
     case '2d_interp_irreg',
+      disp('regridding an irregular 2-d grid');
+      tic;
       for monthI = monthIdx1:monthIdx2
-        twoDimData.data(monthI,:,:) = griddata(lon_data, lat_data, squeeze(tmpData(monthI - monthIdx1 + 1, :, :)), lonlon, latlat, 'linear');
+        twoDimData.data(:, :, monthI) = griddata(lon_data, lat_data, squeeze(tmpData(:,:,monthI - monthIdx1 + 1)), lonlon, latlat, 'linear');
       end
+      toc;
     case 'subidx',
-      twoDimData.data(monthIdx1:monthIdx2, :, :) = tmpData(:,latIdx, lonIdx);
+      disp('subindexing a regular 2-d grid');
+      tic;
+      twoDimData.data(:, :, monthIdx1:monthIdx2) = tmpData(lonIdx, latIdx, :);
+      toc;
     otherwise, % treating as sub indexing
-      twoDimData.data(monthIdx1:monthIdx2, :, :) = tmpData(:,latIdx, lonIdx);
+      disp(['Other option: ' opt ', using sub indexing']);
+      tic;
+      twoDimData.data(:, :, monthIdx1:monthIdx2) = tmpData(lonIdx, latIdx, :);
+      toc;
   end
-  ncclose(fd);
+  clear v;
 end
 
 twoDimData.lon = lon;

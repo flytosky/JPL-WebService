@@ -1,4 +1,4 @@
-function status = displayConditionalSampling(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange, largeScaleDataFile, largeScaleVarName, largeScaleValueBinB, largeScalePlev, outputFile)
+function status = displayConditionalSampling(dataFile, figFile, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange, largeScaleDataFile, largeScaleVarName, largeScaleValueBinB, largeScalePlev, outputFile, displayOpt)
 %
 % This function extracts relevant data from the data file list according
 % the specified temporal range [startTime, stopTime]
@@ -24,6 +24,10 @@ function status = displayConditionalSampling(dataFile, figFile, varName, startTi
 %
 status = -1;
 
+if nargin < 15
+  displayOpt = 0;
+end
+
 % Need to read out first the data to be sorted
 nMonths = numberOfMonths(startTime, stopTime);
 
@@ -31,17 +35,12 @@ printf('number of month = %d\n', nMonths);
 
 monthlyData = [];
 
-% This loads the large scale variabe data
-largeScaleVarData = readTwoDimData(largeScaleDataFile, largeScaleVarName, startTime, stopTime, lonRange, latRange, largeScalePlev);
-
-[idxArrayForEachBin, binCenterValues, nSamples] = generateIdxForBins(largeScaleValueBinB, largeScaleVarData.data);
-nBins = length(binCenterValues);
-
 % Let us first assume the same grid
 % We now sort the large scale variable aaccording to the bin
 % sorted data mean and stddev for each bin
 v_sorted_m = [];
 v2_sorted_m = [];
+nBins = length(largeScaleValueBinB) - 1;
 n_sorted = zeros(nBins,1);
 v_sorted_std = [];
 
@@ -57,23 +56,39 @@ file_start_time = {};
 file_stop_time = {};
 
 for fileI = 1:nFiles
-  fd = netcdf(dataFile{fileI}, 'r');
+  thisFile = dataFile{fileI};
 
   if isempty(v_sorted_m)
-    lon = fd{'lon'}(:);
-    lat = fd{'lat'}(:);
+    lon = ncread(thisFile, 'lon');
+    lat = ncread(thisFile, 'lat');
 
     [lon, lat, lonIdx, latIdx] = subIdxLonAndLat(lon, lat, lonRange, latRange);
     nLon = length(lon);
     nLat = length(lat);
 
+    % This loads the large scale variabe data
+    %largeScaleVarData = readTwoDimData(largeScaleDataFile, largeScaleVarName, startTime, stopTime, lonRange, latRange, largeScalePlev);
+    largeScaleVarData = readAndRegridTwoDimData(largeScaleDataFile, largeScaleVarName, startTime, stopTime, lon, lat, largeScalePlev);
+    nBinB = length(largeScaleValueBinB);
+    if nBinB == 0
+      largeScaleValueBinB = generateBinB(largeScaleVarData.data(:), 10);
+    elseif nBinB == 1
+      largeScaleValueBinB = generateBinB(largeScaleVarData.data(:), nBinB-1);
+    elseif nBinB == 2
+      largeScaleValueBinB = linspace(largeScaleValueBinB(1), largeScaleValueBinB(2), 10 + 1);
+    end
+
+    [idxArrayForEachBin, binCenterValues, nSamples] = generateIdxForBins(largeScaleValueBinB, largeScaleVarData.data);
+
     if isempty(plevRange)
       dataIsTwoDim = true;
+      nP = 1;
     elseif max(plevRange) <= 0
       dataIsTwoDim = true;
+      nP = 1;
     else
       dataIsTwoDim = false;
-      plev = readPressureLevels(fd, 'plev');
+      plev = readPressureLevels(thisFile, 'plev');
       if length(plevRange) == 1
         [mV, mIdx] = min(abs(plevRange - plev));
       else
@@ -83,7 +98,7 @@ for fileI = 1:nFiles
       nP = length(plev);
     end
 
-    long_name = fd{varName}.long_name;
+    long_name = ncreadatt(thisFile, varName, 'long_name');
 
     if dataIsTwoDim
       v_sorted_m = zeros(nBins, 1);
@@ -96,12 +111,17 @@ for fileI = 1:nFiles
     end
   end
 
-  v = single(fd{varName}(:));
-  if(~isempty(fd{varName}.missing_value))
-    v(abs(v - fd{varName}.missing_value) < 1) = NaN;
+  v = single(ncread(thisFile, varName));
+  if hasAttribute(thisFile, varName, 'missing_value')
+    missingValue = ncreadatt(thisFile, varName, 'missing_value');
+    v(abs(v - missingValue) < 1) = NaN;
+  end
+  if hasAttribute(thisFile, varName, '_FillValue')
+    missingValue = ncreadatt(thisFile, varName, '_FillValue');
+    v(abs(v - missingValue) < 1) = NaN;
   end
 
-  v_units = fd{varName}.units;
+  v_units = ncreadatt(thisFile, varName, 'units');
 
   [startTime_thisFile, stopTime_thisFile] = parseDateInFileName(dataFile{fileI});
 
@@ -111,7 +131,11 @@ for fileI = 1:nFiles
   monthIdx1 = numberOfMonths(startTime, startTime_thisFile);
   monthIdx2 = numberOfMonths(startTime, stopTime_thisFile);
 
-  nMonths_thisFile = size(v,1);
+  if dataIsTwoDim 
+    nMonths_thisFile = size(v,3);
+  else
+    nMonths_thisFile = size(v,4);
+  end
 
   idx2Data_start = 1;
   idx2Data_stop = nMonths_thisFile;
@@ -128,9 +152,9 @@ for fileI = 1:nFiles
 
   for pI = 1:nP
     if dataIsTwoDim
-      thisTwoDimSlice = v(idx2Data_start:idx2Data_stop,latIdx,lonIdx);
+      thisTwoDimSlice = v(lonIdx, latIdx, idx2Data_start:idx2Data_stop);
     else
-      thisTwoDimSlice = v(idx2Data_start:idx2Data_stop, mIdx(pI), latIdx,lonIdx);
+      thisTwoDimSlice = v(lonIdx, latIdx, mIdx(pI), idx2Data_start:idx2Data_stop);
     end
     for binI = 1:nBins
       idx_in_thisFile = (find(idxArrayForEachBin{binI} > (monthIdx1-1)*nLat*nLon & idxArrayForEachBin{binI} <= monthIdx2*nLat*nLon));
@@ -141,7 +165,7 @@ for fileI = 1:nFiles
       v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)).^2);
     end
   end
-  ncclose(fd);
+  clear v;
 end
 
 for binI = 1:nBins
@@ -161,12 +185,26 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 % We now determine the relevant time range used for this climatology calculation
 [real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
 
+[x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+
 figure;
 if dataIsTwoDim
-  [ax, h1, h2] = plotyy(binCenterValues, v_sorted_m, binCenterValues, n_sorted);
-  set(h1, 'linesytle', 'ks-', 'linewidth', 2, 'markersize', 6);
-  set(h2, 'linesytle', 'g--', 'linewidth', 3);
-  xlabel([largeScaleVarName '(' largeScaleVarData ')' ]);
+  if y_opt | z_opt
+    if x_opt
+      [ax, h1, h2] = plotyy(binCenterValues, v_sorted_m, binCenterValues, n_sorted, 'loglog', 'loglog');
+    else
+      [ax, h1, h2] = plotyy(binCenterValues, v_sorted_m, binCenterValues, n_sorted, 'semilogy', 'semilogy');
+    end
+  else
+    if x_opt
+      [ax, h1, h2] = plotyy(binCenterValues, v_sorted_m, binCenterValues, n_sorted, 'semilogx', 'semilogx');
+    else
+      [ax, h1, h2] = plotyy(binCenterValues, v_sorted_m, binCenterValues, n_sorted, 'plot', 'plot');
+    end
+  end
+  set(h1, 'linestyle', '-', 'marker', 's', 'color', 'k', 'linewidth', 2, 'markersize', 6);
+  set(h2, 'linestyle', '--', 'color', 'g', 'linewidth', 3);
+  xlabel([largeScaleVarName '(' largeScaleVarData.units ')' ]);
   ylabel(ax(1),[varName '(' v_units ')']);
   ylabel(ax(2),'Number of samples');
   set(ax(1), 'fontweight', 'bold');
@@ -174,7 +212,20 @@ if dataIsTwoDim
   grid on;
   title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ', sorted by ' largeScaleVarName ], 'fontsize', 13, 'fontweight', 'bold');
 else
-  contourf(binCenterValues, -plev, v_sorted_m', 30, 'linecolor', 'none');
+  if z_opt
+    z = log10(v_sorted_m' + 1e-4*(max(v_sorted_m(:)))); % to have dynamic range of 10^4
+  else
+    z = v_sorted_m';
+  end
+
+  if y_opt
+    y = - log10(plev);
+  else
+    y = - plev;
+  end
+
+  contourf(binCenterValues, y, z, 30, 'linecolor', 'none');
+
   if ~isempty(find(isnan(v_sorted_m(:))))
     cmap = colormap();
     cmap(1,:) = [1,1,1];
@@ -184,29 +235,50 @@ else
   set(gca, 'fontweight', 'bold');
   currYTick = get(gca, 'ytick')';
   currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
-  set(gca, 'yticklabel', num2str(currYTick));
+  if y_opt
+    set(gca, 'yticklabel', num2str(10.^(currYTick-2))); % Pa -> hPa
+  else
+    set(gca, 'yticklabel', num2str(currYTick/100)); % Pa -> hPa
+  end
   xlabel(largeScaleVarData.v_units);
   if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
         ylabel('Pressure level (hPa)');
   else
         ylabel('Pressure level (dbar)');
   end
+  
   cb = colorbar('southoutside');
+  if z_opt
+    set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),3));
+  end
   set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
+
   title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' sorted by ' largeScaleVarName ], 'fontsize', 13, 'fontweight', 'bold');
 end
 print(gcf, figFile, '-djpeg');
 % adding title for color bar
 
-data.dimNames = {'plev', [largeScaleVarName 'Bin']};
-data.nDim = 2;
-data.dimSize = [length(plev), nBins];
-data.dimVars = {plev, binCenterValues};
-data.var = v_sorted_m;
-data.varName = varName;
-data.dimVarUnits = {'Pa', largeScaleVarData.v_units};
-data.varUnits = v_units;
-data.varLongName = long_name;
+if dataIsTwoDim
+  data.dimNames = {[largeScaleVarName 'Bin']};
+  data.nDim = 1;
+  data.dimSize = [nBins];
+  data.dimVars = {binCenterValues};
+  data.var = v_sorted_m;
+  data.varName = varName;
+  data.dimVarUnits = {largeScaleVarData.v_units};
+  data.varUnits = v_units;
+  data.varLongName = long_name;
+else
+  data.dimNames = {[largeScaleVarName 'Bin'], 'plev'};
+  data.nDim = 2;
+  data.dimSize = [nBins, length(plev)];
+  data.dimVars = {binCenterValues, plev};
+  data.var = v_sorted_m;
+  data.varName = varName;
+  data.dimVarUnits = {largeScaleVarData.v_units, 'Pa'};
+  data.varUnits = v_units;
+  data.varLongName = long_name;
+end
 
 status = 0;
 

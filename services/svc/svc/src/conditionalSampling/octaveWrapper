@@ -45,6 +45,15 @@ largeScaleVarName = lower(arg_list{10});
 % be monotonically increasing
 largeScaleValueBinB = str2num(arg_list{11});
 
+% Assuming the last element specifying the number of nBins
+nBinB = length(largeScaleValueBinB);
+
+if nBinB > 3 && nBinB == (largeScaleValueBinB(end)+2)
+  largeScaleValueBinB = largeScaleValueBinB(1:(nBinB-1));
+elseif nBinB == 3
+  largeScaleValueBinB = linspace(largeScaleValueBinB(1), largeScaleValueBinB(2), largeScaleValueBinB(3)+1);
+end
+
 % Pressure level for the large scale variable, the longitude and latitude regions are asssumed to be the same as the physical
 % variable under study.
 % using empty or negative values for 2-d variables
