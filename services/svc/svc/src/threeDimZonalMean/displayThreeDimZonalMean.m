@@ -154,8 +154,6 @@ var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
 
 [x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
 
-figure;
-%contourf(lat, -plev, var_clim, 'linewidth', 2);
 if z_opt
   z = log10(var_clim' + 1e-4*max(var_clim(:)));
 else
@@ -168,6 +166,8 @@ else
   y = -plev;
 end
 
+figure;
+%contourf(lat, -plev, var_clim, 'linewidth', 2);
 contourf(lat, y, z, 30, 'linecolor', 'none');
 if ~isempty(find(isnan(var_clim(:))))
   cmap = colormap();
