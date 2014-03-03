@@ -8,6 +8,7 @@ HOME='/home/svc'
 
 cr = {
 #                              1  2   3  4
+    # zzzz
 'import_':              1,   # 0  1   1  0
 # parameters_
 # def_change_labels:     # not working
@@ -161,6 +162,7 @@ class SUBSET_REGION():
     self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
 
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
+    # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = '/home/svc/cmac/des/original'
 
@@ -207,7 +209,6 @@ class SUBSET_REGION():
     if 1:
       self.lat1S = -80.0
       self.lat1E =  80.0
-
 
 #
     if 1:
@@ -996,10 +997,7 @@ if cr['command_arg']       == 1:
     # arg 3
     if 1:
       ii += 1
-      try:
-        a.pres1 = float(argv[ii])
-      except ValueError:
-        a.pres1 = -1
+      a.pres1 = float(argv[ii])
       if a.pres1>0 and (a.varName1 not in oceanVar):
         a.pres1 *= 100.0
 
@@ -1024,10 +1022,7 @@ if cr['command_arg']       == 1:
     # arg 6
     if 1:
       ii += 1
-      try:
-        a.pres2 = float(argv[ii])
-      except ValueError:
-        a.pres2 = -1
+      a.pres2 = float(argv[ii])
       if a.pres2>0 and (a.varName2 not in oceanVar):
         a.pres2 *= 100.0
 
@@ -1071,6 +1066,24 @@ if cr['command_arg']       == 1:
       # arg 12
       ii += 1
       a.isDiffPlot = int(argv[ii])
+
+  # use data.cfg to set the data root dir.
+  try:
+    temp1 = open('../../../data.cfg').read() 
+    if temp1[-1]=='\n':
+      temp1 = temp1[:-1]
+    if temp1[-1]=='/':
+      temp1 = temp1[:-1]
+    if os.path.isdir(temp1):
+      #a.dataDir = temp1 + '/cmip5' # should change to this when data.cfg is without 'cmip5'
+      a.dataDir = temp1
+        
+  except:
+    pass
+  '''
+/home/bytang/projects/cmac/trunk/services/svc/data.cfg
+/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V
+'''
 
 if cr['plot__']       == 1:
   # get file names
