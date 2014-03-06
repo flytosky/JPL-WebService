@@ -8,7 +8,6 @@ HOME='/home/svc'
 
 cr = {
 #                              1  2   3  4
-    # zzzz
 'import_':              1,   # 0  1   1  0
 # parameters_
 # def_change_labels:     # not working
@@ -162,7 +161,6 @@ class SUBSET_REGION():
     self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
 
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
-    # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = '/home/svc/cmac/des/original'
 
@@ -210,26 +208,18 @@ class SUBSET_REGION():
       self.lat1S = -80.0
       self.lat1E =  80.0
 
+
 #
     if 1:
       self.center1 = 'ukmo'
       self.model1  = 'hadgem2-a'
       self.varName1='ts'
 
-    if 0:
+    if 1:
       self.center2 = 'giss'
       self.model2  = 'e2-r'
       #self.varName2='rsdt'
       self.varName2='ts'
-
-    if 1:
-      self.center2 = 'gfdl'
-      #self.model2  = 'esm2g'
-      self.model2  = 'cm3'
-      #self.varName2='rsdt'
-      self.varName2='ta'  # working
-      self.varName2='clw' # not working
-      self.varName2='lai' # not working
 
     if 0:
       self.center2 = 'ukmo'
@@ -1006,7 +996,10 @@ if cr['command_arg']       == 1:
     # arg 3
     if 1:
       ii += 1
-      a.pres1 = float(argv[ii])
+      try:
+        a.pres1 = float(argv[ii])
+      except ValueError:
+        a.pres1 = -1
       if a.pres1>0 and (a.varName1 not in oceanVar):
         a.pres1 *= 100.0
 
@@ -1031,7 +1024,10 @@ if cr['command_arg']       == 1:
     # arg 6
     if 1:
       ii += 1
-      a.pres2 = float(argv[ii])
+      try:
+        a.pres2 = float(argv[ii])
+      except ValueError:
+        a.pres2 = -1
       if a.pres2>0 and (a.varName2 not in oceanVar):
         a.pres2 *= 100.0
 
