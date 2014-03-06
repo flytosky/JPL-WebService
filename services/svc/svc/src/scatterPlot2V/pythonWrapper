@@ -216,11 +216,20 @@ class SUBSET_REGION():
       self.model1  = 'hadgem2-a'
       self.varName1='ts'
 
-    if 1:
+    if 0:
       self.center2 = 'giss'
       self.model2  = 'e2-r'
       #self.varName2='rsdt'
       self.varName2='ts'
+
+    if 1:
+      self.center2 = 'gfdl'
+      #self.model2  = 'esm2g'
+      self.model2  = 'cm3'
+      #self.varName2='rsdt'
+      self.varName2='ta'  # working
+      self.varName2='clw' # not working
+      self.varName2='lai' # not working
 
     if 0:
       self.center2 = 'ukmo'
@@ -230,8 +239,8 @@ class SUBSET_REGION():
 
     self.nDim = 3
 
-    self.pres1 = 300
-    self.pres2 = 300
+    self.pres1 = 3000
+    self.pres2 = 3000
 
     self.yearS = 1990
     self.yearE = 1991
@@ -1075,8 +1084,8 @@ if cr['command_arg']       == 1:
     if temp1[-1]=='/':
       temp1 = temp1[:-1]
     if os.path.isdir(temp1):
-      #a.dataDir = temp1 + '/cmip5' # should change to this when data.cfg is without 'cmip5'
-      a.dataDir = temp1
+      a.dataDir = temp1 + '/cmip5' # should change to this when data.cfg is without 'cmip5'
+      #a.dataDir = temp1
         
   except:
     pass
