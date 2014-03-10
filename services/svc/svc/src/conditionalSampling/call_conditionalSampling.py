@@ -6,26 +6,27 @@ from os.path import basename
 
 class call_conditionalSampling:
     def __init__(self, data_source, var, start_time, end_time, lon1, lon2, lat1, lat2, pres1, pres2, months, env_var_source, env_var, bin_min, bin_max, bin_n, env_var_plev, output_dir, displayOpt):
-        self.data_source = data_source
-        self.var = var
-        self.start_time = start_time
-        self.end_time = end_time
-        self.lon1 = lon1
-        self.lon2 = lon2
-        self.lat1 = lat1
-        self.lat2 = lat2
-        self.pres1 = pres1
-        self.pres2 = pres2
-        self.months = months
-        self.env_var_source = env_var_source
-        self.env_var = env_var
-        self.bin_min = bin_min
-        self.bin_max = bin_max
-        self.bin_n = bin_n
-        self.env_var_plev = env_var_plev
-        self.output_dir = output_dir
-        self.displayOpt = displayOpt
-
+        self.data_source = data_source		# for e.g. "NCAR_cam5" or "nasa_airs", etc
+        self.var = var				# CMIP5 variable names, e.g. 'ta', 'hus', 'clt'
+        self.start_time = start_time		# start time in format 'yyyymm'
+        self.end_time = end_time		# end time in format 'yyyymm'
+        self.lon1 = lon1			# longitude range, min, units = deg
+        self.lon2 = lon2			# longitude range, max, units = deg
+        self.lat1 = lat1			# latitude range, min, units = deg
+        self.lat2 = lat2			# latitude range, max, units = deg
+        self.pres1 = pres1			# pressure level 1 for pressure range 
+        self.pres2 = pres2			# pressure level 2 for pressure range 
+        self.months = months			# month index to specify season, e.g. 6,7,8 for boreal summer
+        self.env_var_source = env_var_source	# large scale environmental variable data source, e.g. "NCAR_cam5"
+        self.env_var = env_var			# large scale environmental variable CMIP5 name, e.g. 'ts', 'tos'
+        self.bin_min = bin_min			# min value of bin boundary for sorting large scale env var
+        self.bin_max = bin_max			# max value of bin boundary for sorting large scale env var
+        self.bin_n = bin_n			# number of bins to be used
+        self.env_var_plev = env_var_plev	# pressure level for env var if it is 3-d
+        self.output_dir = output_dir		# output directory for figure and data file
+        self.displayOpt = displayOpt		# display option, if in binary, the last 3 bits = [z y x]
+						# z = map scale, y = vertical axis, x = horizontal axis
+						# 1 = log, 0 = lin
 
     def displayConditionalSampling(self):
 
