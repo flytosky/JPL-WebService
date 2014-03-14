@@ -506,6 +506,8 @@
         
     }
 
+
+
     $(document).ready(function(){
 
       $("a").click(function(event){
@@ -645,6 +647,14 @@
         arglist = arglist.concat("&months=");
         arglist = arglist.concat(month_str);
         // alert("arglist: " + arglist);
+
+        arglist = arglist.concat("&scale=");
+        var z = document.getElementById("radioLin").checked;
+        // alert(z);
+        if (z == true)
+          arglist = arglist.concat('0');
+        else
+          arglist = arglist.concat('4');
 
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
@@ -830,6 +840,17 @@ Select a data source (model or observation), a variable name, a time range, and 
 <tr>
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
+</tr>
+
+<tr>
+<td colspan="1">
+color scale: 
+</td>
+<td colspan="3">
+<form> <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear 
+<input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic 
+</form>
+</td>
 </tr>
 
 <tr>
