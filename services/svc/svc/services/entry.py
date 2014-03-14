@@ -97,6 +97,7 @@ def displayTwoDimMap():
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
+    scale = request.args.get('scale', '')
 
     print 'model: ', model
     print 'var: ', var
@@ -107,13 +108,14 @@ def displayTwoDimMap():
     print 'lat1: ', lat1
     print 'lat2: ', lat2
     print 'months: ', months
+    print 'scale: ', scale
 
     # get where the input file and output file are
     current_dir = os.getcwd()
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+months
+      seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+months+scale
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/twoDimMap/' + tag
       print 'output_dir: ', output_dir
@@ -123,7 +125,7 @@ def displayTwoDimMap():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/twoDimMap')
       # instantiate the app. class
-      c1 = call_twoDimMap.call_twoDimMap(model, var, startT, endT, lon1, lon2, lat1, lat2, months, output_dir)
+      c1 = call_twoDimMap.call_twoDimMap(model, var, startT, endT, lon1, lon2, lat1, lat2, months, output_dir, scale)
       # call the app. function
       (message, imgFileName, dataFileName) = c1.displayTwoDimMap()
       # chdir back
