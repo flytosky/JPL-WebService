@@ -113,6 +113,10 @@ Sort data by a given variable condition (e.g. sort cloud water path data in orde
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/diffPlot2Vars.html">Difference Plot of Two Variables Service</a>.
 </p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/conditionalSampling.html">Conditional Sampling Service</a>.
+</p>
 </ul>
 
 </ol>
