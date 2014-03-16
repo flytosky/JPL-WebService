@@ -1072,9 +1072,6 @@ pressure level:
 
 
 
-
-
-
 <tr>
 <td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
 <td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
@@ -1084,6 +1081,51 @@ pressure level:
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
+
+
+
+
+
+<tr>
+<td colspan="1">
+Display Option:
+</td>
+<td colspan="1">
+<form>X-axis (sampling variable)<br>scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+<input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
+</form>
+</td>
+<td colspan="1">
+<form>Y-axis (sampled variable or pressure)<br>scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+<input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
+</form>
+<td colspan="1">
+<form>Z-axis (color)<br>scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+<input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
+</form>
+</td>
+</tr>
+
+
+
+
+<tr>
+<td colspan="1">
+Sampling Variable Binning Specification:
+</td>
+<td colspan="3">
+<form>default: <input type="radio" name="default1" value="" id="radioDef" checked>
+customized: <input type="radio" name="default1" value="" id="radioCus">
+Min: <input id="min1" value="" alt="start"/> 
+Max: <input id="max1" value="" alt="end"/>
+number of bins: <input id="bins1" value="" alt=""/>
+</form> 
+</td>
+
+</tr>
+
+
+
 
 <tr>
 <td colspan="2" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
@@ -1102,13 +1144,13 @@ pressure level:
 
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+<textarea readonly id="data_url" cols="150" rows="2">Data URL Here</textarea>
 </td>
 </tr>
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="89" rows="6">Service Response Text Here</textarea>
+<textarea id="Response" cols="150" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 
