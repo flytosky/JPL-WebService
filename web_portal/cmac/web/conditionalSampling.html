@@ -16,12 +16,100 @@
 
     // called on load or reload
     window.onload = function() {
+      select_all_months();
       select_data1(1);
       select_var1(1);
       select_data1(2);
       select_var1(2);
       // no data to download yet
       disable_download_button();
+      setDefault();
+    }
+
+    // select all months in the checkboxes
+    function select_all_months()
+    {
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+        document.getElementById('Dec').checked = true;
+    }
+
+    // see if no month is selected
+    function no_month_check()
+    {
+        if (document.getElementById('Jan').checked == false &&
+           document.getElementById('Feb').checked == false &&
+           document.getElementById('Mar').checked == false &&
+           document.getElementById('Apr').checked == false &&
+           document.getElementById('May').checked == false &&
+           document.getElementById('Jun').checked == false &&
+           document.getElementById('Jul').checked == false &&
+           document.getElementById('Aug').checked == false &&
+           document.getElementById('Sep').checked == false &&
+           document.getElementById('Oct').checked == false &&
+           document.getElementById('Nov').checked == false &&
+           document.getElementById('Dec').checked == false) {
+           // alert("No month check!");
+           return true;
+          }
+        else
+           return false;
+    }
+
+    // unselect all months in the checkboxes
+    function reset_months()
+    {
+        document.getElementById('Jan').checked = false;
+        document.getElementById('Feb').checked = false;
+        document.getElementById('Mar').checked = false;
+        document.getElementById('Apr').checked = false;
+        document.getElementById('May').checked = false;
+        document.getElementById('Jun').checked = false;
+        document.getElementById('Jul').checked = false;
+        document.getElementById('Aug').checked = false;
+        document.getElementById('Sep').checked = false;
+        document.getElementById('Oct').checked = false;
+        document.getElementById('Nov').checked = false;
+        document.getElementById('Dec').checked = false;
+    }
+
+    // disable customized input text boxes
+    function setDefault()
+    {
+       // alert("in setDefault() ... ");
+       x=document.getElementById("min1");
+       y=document.getElementById("max1");
+       z=document.getElementById("bins1");
+       x.value = "N/A";
+       x.disabled=true;
+       y.value = "N/A";
+       y.disabled=true;
+       z.value = "N/A";
+       z.disabled=true;
+    }
+
+    // enable customized input text boxes
+    function setCustomized()
+    {
+       alert("in setCustomized() ... ");
+       x=document.getElementById("min1");
+       y=document.getElementById("max1");
+       z=document.getElementById("bins1");
+       x.value = "";
+       x.disabled=false;
+       y.value = "";
+       y.disabled=false;
+       z.value = "";
+       z.disabled=false;
     }
 
     // disable download data button
@@ -664,6 +752,55 @@
       select_var1(ID);
     }
 
+    // select checkboxes based on "months" dropdown
+    function select_months()
+    {
+      var s1=document.getElementById("months");
+      // alert(s1.selectedIndex);
+      // alert(s1.options[s1.selectedIndex].value);
+
+      // disable the download button because of this change
+      disable_download_button();
+
+      // "select none"
+      if (s1.selectedIndex == 1) {
+        reset_months();
+      }
+      // "select all"
+      if (s1.selectedIndex == 0) {
+        select_all_months();
+      }
+      // "summer"
+      if (s1.selectedIndex == 2) {
+        reset_months();
+        document.getElementById('Jun').checked = true;
+        document.getElementById('Jul').checked = true;
+        document.getElementById('Aug').checked = true;
+      }
+      // "autumn"
+      if (s1.selectedIndex == 3) {
+        reset_months();
+        document.getElementById('Sep').checked = true;
+        document.getElementById('Oct').checked = true;
+        document.getElementById('Nov').checked = true;
+      }
+      // "winter"
+      if (s1.selectedIndex == 4) {
+        reset_months();
+        document.getElementById('Dec').checked = true;
+        document.getElementById('Jan').checked = true;
+        document.getElementById('Feb').checked = true;
+      }
+      // "spring"
+      if (s1.selectedIndex == 5) {
+        reset_months();
+        document.getElementById('Mar').checked = true;
+        document.getElementById('Apr').checked = true;
+        document.getElementById('May').checked = true;
+      }
+
+    }
+
 
     $(document).ready(function(){
 
@@ -680,21 +817,29 @@
       });
 
 
-      $("#scatterPlot2V").click(function(event) {
-        // alert('****** inside scatterPlot2V()!');
+      $("#conditionalSamp").click(function(event) {
+        // alert('****** inside conditionalSamp()!');
         Response = null;
 
         // no data to download yet
         disable_download_button();
 
+        // flag error if no month box is checked
+        if (no_month_check()) {
+           // $("#Response").html("<span style='color:red'>Error: please check at least one month.</span>");
+           $("#Response").html("Error: please check at least one month.");
+           $("#Image").html("");
+           return;
+        }
+
         $("#Response").html("Calculating ...");
         $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/conditionalSamp?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
-        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
-        var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/conditionalSamp?";
+        var url = "http://" + window.location.hostname + ":8090/svc/conditionalSamp?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -713,28 +858,6 @@
 
         // alert("arglist: " + arglist);
 
-        var pres1 = $("#pres1").val();
-        arglist = arglist.concat("&pres1=");
-        arglist = arglist.concat(pres1);
-
-        var d2 = $("#data2").val();
-        var model2 = d2.replace("/", "_");
-        model2 = model2.toLowerCase();
-
-        arglist = arglist.concat("&model2=");
-        arglist = arglist.concat(model2);
-
-        // alert("arglist: " + arglist);
-
-        var v2 = $("#var2").val();
-        arglist = arglist.concat("&var2=");
-        arglist = arglist.concat(variable2);
-
-        // alert("arglist: " + arglist);
-
-        var pres2 = $("#pres2").val();
-        arglist = arglist.concat("&pres2=");
-        arglist = arglist.concat(pres2);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
@@ -747,8 +870,6 @@
 
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
-
-        // alert("arglist: " + arglist);
 
         var lon0 = $("#lon0").val();
         var lon1 = $("#lon1").val();
@@ -767,7 +888,118 @@
         arglist = arglist.concat("&lat2=");
         arglist = arglist.concat(lat1);
 
+        alert("arglist: " + arglist);
+
+
+        var press_range = $("#pres1").val();
+        alert("press_range: " + press_range);
+        // split the range into two pressures
+        var res = press_range.split(",");
+        alert("res: " + res);
+        var pres1 = res[0].trim();
+        var pres2 = res[1].trim();
+        arglist = arglist.concat("&pres1=");
+        arglist = arglist.concat(pres1);
+        arglist = arglist.concat("&pres2=");
+        arglist = arglist.concat(pres2);
+
+        alert("arglist: " + arglist);
+
+
+        var s1 = document.getElementById('months');
+
+        // get months checked by client
+        var month_str = "";
+
+        var mm = document.getElementById('Jan');
+        if (mm.checked == true)
+          month_str = month_str.concat(",1");
+
+        var mm = document.getElementById('Feb');
+        if (mm.checked == true)
+          month_str = month_str.concat(",2");
+
+        var mm = document.getElementById('Mar');
+        if (mm.checked == true)
+          month_str = month_str.concat(",3");
+
+        var mm = document.getElementById('Apr');
+        if (mm.checked == true)
+          month_str = month_str.concat(",4");
+
+        var mm = document.getElementById('May');
+        if (mm.checked == true)
+          month_str = month_str.concat(",5");
+          var mm = document.getElementById('Jun');
+        if (mm.checked == true)
+          month_str = month_str.concat(",6");
+
+        var mm = document.getElementById('Jul');
+        if (mm.checked == true)
+          month_str = month_str.concat(",7");
+
+        var mm = document.getElementById('Aug');
+        if (mm.checked == true)
+          month_str = month_str.concat(",8");
+
+        var mm = document.getElementById('Sep');
+        if (mm.checked == true)
+          month_str = month_str.concat(",9");
+
+        var mm = document.getElementById('Oct');
+        if (mm.checked == true)
+          month_str = month_str.concat(",10");
+
+        var mm = document.getElementById('Nov');
+        if (mm.checked == true)
+          month_str = month_str.concat(",11");
+
+        var mm = document.getElementById('Dec');
+        if (mm.checked == true)
+          month_str = month_str.concat(",12");
+
+        // remove the leading ','
+        month_str = month_str.substr(1);
+        // alert(month_str);
+
+        arglist = arglist.concat("&months=");
+        arglist = arglist.concat(month_str);
+
+        alert("arglist: " + arglist);
+
+
+
+
+
+
+        var d2 = $("#data2").val();
+        var model2 = d2.replace("/", "_");
+        model2 = model2.toLowerCase();
+
+        arglist = arglist.concat("&model2=");
+        arglist = arglist.concat(model2);
+
         // alert("arglist: " + arglist);
+
+        var v2 = $("#var2").val();
+        arglist = arglist.concat("&var2=");
+        arglist = arglist.concat(variable2);
+
+        // alert("arglist: " + arglist);
+
+        var plev = $("#pres2").val();
+        if (plev == "N/A")
+          plev = "";
+        arglist = arglist.concat("&plev=");
+        arglist = arglist.concat(plev);
+
+
+
+        alert("arglist: " + arglist);
+
+
+
+
 
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
@@ -1025,9 +1257,6 @@ pressure level:
 </tr>
 
 
-
-
-
 <tr>
 <td>select months:</td>
 <td><select name="months" id="months" onchange="select_months()">
@@ -1067,11 +1296,6 @@ pressure level:
 </tr>
 
 
-
-
-
-
-
 <tr>
 <td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
 <td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
@@ -1081,9 +1305,6 @@ pressure level:
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
-
-
-
 
 
 <tr>
@@ -1107,17 +1328,17 @@ Display Option:
 </tr>
 
 
-
-
 <tr>
 <td colspan="1">
 Sampling Variable Binning Specification:
 </td>
-<td colspan="3">
-<form>default: <input type="radio" name="default1" value="" id="radioDef" checked>
-customized: <input type="radio" name="default1" value="" id="radioCus">
-Min: <input id="min1" value="" alt="start"/> 
-Max: <input id="max1" value="" alt="end"/>
+<td colspan="1">
+<form>default: <input onclick="setDefault()" type="radio" name="default1" value="" id="radioDef" checked>
+</td>
+<td colspan="2">
+customized: <input onclick="setCustomized()" type="radio" name="default1" value="" id="radioCus">
+Min: <input id="min1" value="" alt=""/> 
+Max: <input id="max1" value="" alt=""/>
 number of bins: <input id="bins1" value="" alt=""/>
 </form> 
 </td>
@@ -1125,10 +1346,8 @@ number of bins: <input id="bins1" value="" alt=""/>
 </tr>
 
 
-
-
 <tr>
-<td colspan="2" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="2" align="center"><input id="conditionalSamp" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 <form>
 <td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
 </td>
