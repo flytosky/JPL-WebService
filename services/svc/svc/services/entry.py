@@ -13,6 +13,7 @@ from svc.src.twoDimZonalMean import call_twoDimZonalMean
 from svc.src.threeDimZonalMean import call_threeDimZonalMean
 from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
 from svc.src.scatterPlot2V import call_scatterPlot2V
+from svc.src.conditionalSampling import call_conditionalSampling
 
 from flask import current_app
 from functools import update_wrapper
@@ -837,4 +838,117 @@ def displayDiffPlot2V():
         'dataUrl': dataUrl
     })
 
+
+@app.route('/svc/conditionalSamp', methods=["GET"])
+@crossdomain(origin='*')
+def displayConditionalSamp():
+    """Run displayConditionalSamp"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+    dataUrl = ''
+
+    # get model1, var1, start time, end time, lon1, lon2, lat1, lat2, pres1, pres2, months, model2, var2, bin_min, bin_max, bin_n, env_var_plev, displayOpt
+
+    model1 = request.args.get('model1', '')
+    var1 = request.args.get('var1', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    pres1 = request.args.get('pres1', '')
+    pres2 = request.args.get('pres2', '')
+    months = request.args.get('months', '')
+    model2 = request.args.get('model2', '')
+    var2 = request.args.get('var2', '')
+    bin_min = request.args.get('bin_min', '')
+    bin_max = request.args.get('bin_max', '')
+    bin_n = request.args.get('bin_n', '')
+    env_var_plev = request.args.get('env_var_plev', '')
+    displayOpt = request.args.get('displayOpt', '')
+
+    print 'model1: ', model1
+    print 'var1: ', var1
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'pres1: ', pres1
+    print 'pres2: ', pres2
+    print 'months: ', months
+    print 'model2: ', model2
+    print 'var2: ', var2
+    print 'bin_min: ', bin_min
+    print 'bin_max: ', bin_max
+    print 'bin_n: ', bin_n
+    print 'env_var_plev: ', env_var_plev
+    print 'displayOpt: ', displayOpt
+
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
+    try:
+      seed_str = model1+var1+startT+endT+lat1+lat2+lon1+lon2+pres1+pres2+months+model2+var2+bin_min+bin_max+bin_n+env_var_plev+displayOpt
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/conditionalSamp/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/conditionalSamp')
+      # instantiate the app. class
+
+      # c1 = call_conditionalSampling.call_conditionalSampling('giss_e2-r', 'clw', '200101', '200212', '0', '360', '-30', '30', '20000', '90000', '5,6,7,8', 'giss_e2-r', 'tos', '294','305','20', '',  './', '6')
+
+      c1 = call_conditionalSampling.call_conditionalSampling(model1, var1, startT, endT, lon1, lon2, lat1, lat2, pres1, pres2, months, model2, var2, bin_min, bin_max, bin_n, env_var_plev, output_dir, displayOpt)
+      # call the app. function
+      (message, imgFileName, dataFileName) = c1.display()
+      print 'imgFileName: ', imgFileName
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      url = 'http://' + hostname + ':' + port + '/static/conditionalSamp/' + tag + '/' + imgFileName
+      print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/conditionalSamp/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+        dataUrl = ''
+
+    except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+    except Exception, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+        'dataUrl': dataUrl
+    })
 
