@@ -894,10 +894,31 @@
         var press_range = $("#pres1").val();
         alert("press_range: " + press_range);
         // split the range into two pressures
-        var res = press_range.split(",");
-        alert("res: " + res);
-        var pres1 = res[0].trim();
-        var pres2 = res[1].trim();
+        var splitty = press_range.split(",");
+        var pres1;
+        var pres2;
+        if (splitty.length != 2) {
+          alert("pressure level range needs to be two values separated by comma.");
+          return; 
+        }
+        else {
+          pres1 = splitty[0];
+          pres2 = splitty[1];
+
+          alert("variable1: " + variable1);
+         
+          // when variable is the 3D Ocean Salinity or Ocean Temperature
+          if (variable1 == 'ot' || variable1 == 'os') {
+            pres1 = pres1 * 10000;  // convert from dbar on GUI
+            pres2 = pres2 * 10000;  // convert from dbar on GUI
+          } 
+          // when variable1 is 2D
+          else {
+            pres1 = pres1 * 100;  // convert from hPa on GUI
+            pres2 = pres2 * 100;  // convert from hPa on GUI
+          }
+        }
+
         arglist = arglist.concat("&pres1=");
         arglist = arglist.concat(pres1);
         arglist = arglist.concat("&pres2=");
