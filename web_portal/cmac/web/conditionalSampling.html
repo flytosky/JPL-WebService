@@ -100,7 +100,7 @@
     // enable customized input text boxes
     function setCustomized()
     {
-       alert("in setCustomized() ... ");
+       // alert("in setCustomized() ... ");
        x=document.getElementById("min1");
        y=document.getElementById("max1");
        z=document.getElementById("bins1");
@@ -199,7 +199,7 @@
         x=document.getElementById("pres2");
       }
 
-      x.value = "200";
+      x.value = "200, 900";
       x.disabled=false;
     }
 
@@ -1233,14 +1233,14 @@ Environmental Variable (sampling variable)
 <tr>
 
 <td>
-pressure range:
+atmosphere pressure range (hPa) <br> or ocean pressure range (dbar):
 </td>
 <td>
 <input id="pres1" value="200, 900" alt="pressure"/>
 </td>
 
 <td>
-pressure level:
+atmosphere pressure level (hPa) <br> or ocean pressure level (dbar):
 </td>
 <td>
 <input id="pres2" value="200" alt="pressure"/>
@@ -1308,20 +1308,26 @@ pressure level:
 
 
 <tr>
-<td colspan="1">
-Display Option:
+<td colspan="1" rowspan="3">
+display option:
 </td>
-<td colspan="1">
-<form>X-axis (sampling variable)<br>scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+<td colspan="3">
+<form>X-axis (sampling variable) scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
 <input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
 </form>
 </td>
-<td colspan="1">
-<form>Y-axis (sampled variable or pressure)<br>scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+</tr>
+
+<tr>
+<td colspan="3">
+<form>Y-axis (sampled variable or pressure) scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
 <input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
 </form>
-<td colspan="1">
-<form>Z-axis (color)<br>scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+</tr>
+
+<tr>
+<td colspan="3">
+<form>Z-axis (color) scale: <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
 <input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
 </form>
 </td>
@@ -1329,13 +1335,15 @@ Display Option:
 
 
 <tr>
-<td colspan="1">
-Sampling Variable Binning Specification:
+<td colspan="1" rowspan="2">
+sampling variable binning specification:
 </td>
-<td colspan="1">
+<td colspan="3">
 <form>default: <input onclick="setDefault()" type="radio" name="default1" value="" id="radioDef" checked>
 </td>
-<td colspan="2">
+</tr>
+<tr>
+<td colspan="3">
 customized: <input onclick="setCustomized()" type="radio" name="default1" value="" id="radioCus">
 Min: <input id="min1" value="" alt=""/> 
 Max: <input id="max1" value="" alt=""/>
