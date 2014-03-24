@@ -1,0 +1,15 @@
+. 2D Var Map
+  above Get Plot, create a new row,
+  Color Scale: Linear (default) or Log
+
+1  1  1 -> log
+0  0  0 -> linear
+
+Z      Y     X
+color lat   lon
+
+1 0 0 = 4 -> log
+0 0 0 = 0 -> linear
+
+. conditional Sampling
+  designed (from Seungwon)
