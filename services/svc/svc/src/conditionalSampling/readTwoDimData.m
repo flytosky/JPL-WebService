@@ -14,7 +14,7 @@ printf('number of month = %d\n', nMonths);
 if isempty(pRange)
   noVertDim = true;
 else
-  noVerDim = (max(pRange) <= 0);
+  noVertDim = (max(pRange) <= 0);
 end
 
 twoDimData.data = [];
