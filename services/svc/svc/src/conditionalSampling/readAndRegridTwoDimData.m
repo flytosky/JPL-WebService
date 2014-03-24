@@ -14,7 +14,7 @@ printf('number of month = %d\n', nMonths);
 if isempty(pRange)
   noVertDim = true;
 else
-  noVerDim = (max(pRange) <= 0);
+  noVertDim = (max(pRange) <= 0);
 end
 
 twoDimData.data = [];
@@ -71,7 +71,7 @@ for fileI = 1:nFiles
         noVertDim = true;
         warning('No variable for pressure level found, assuming two dimensional field');
       else
-        plev = readPressureLevels(fd, plevVarName);
+        plev = readPressureLevels(thisFile, plevVarName);
         if length(pRange) == 1
           [mV, pIdx] = min(abs(plev - pRange));
         else
@@ -121,7 +121,7 @@ for fileI = 1:nFiles
   if noVertDim
     tmpData = v(:, :, idx2Data_start:idx2Data_stop);
   else
-    tmpData = reshape(meanExcludeNaN(v(:,:,pIdx,idx2Data_start:idx2Data_stop), 3), nLon_data, nLat_data, []);
+    tmpData = squeeze(meanExcludeNaN(v(:,:,pIdx,idx2Data_start:idx2Data_stop), 3));
   end
 
   switch opt
