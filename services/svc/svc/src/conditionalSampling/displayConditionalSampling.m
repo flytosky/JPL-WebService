@@ -6,13 +6,19 @@ function status = displayConditionalSampling(dataFile, figFile, varName, startTi
 % Input:
 %   dataFile	-- a list of relevant data files
 %   figFile	-- the name of the output file for storing the figure to be displayed
-%   varName	-- the physical variable of interest, or to be displayed
-%   startTime	-- the start time of the temporal window over which the climatology is computed
-%   stopTime	-- the stop time of the temporal window over which the climatology is computed
-%   lonRnage	-- an optional argument to specify box boundary along longitude
-%   latRnage	-- an optional argument to specify box boundary along latitude
-%   monthIdx	-- an optional argument to specify months within a year, which is useful for computing climatology for a specific season.
-%   outputData	-- an optional argument to determine whether to generate a data file
+%   varName	-- the physical variable of interest, or to be displayed, CMIP5 variable name used in netcdf file
+%   startTime	-- the start time of the temporal window over which the climatology is computed, string 'yyyymm'
+%   stopTime	-- the stop time of the temporal window over which the climatology is computed, string 'yyyymm'
+%   lonRnage	-- longitude boundary specification, expect [min, max] (deg)
+%   latRnage	-- latitude boundary specification, expect [min, max] (deg)
+%   monthIdx	-- specify months within a year, which is useful for computing climatology for a specific season.
+%   plevRange	-- presssure level range in units of (Pa)
+%   largeScaleDataFile	-- a list of relevant large scale data files
+%   largeScaleVarName	-- CMIP5 name for the large scale variable
+%   largeScaleValueBinB	-- bin boundary specification, either as a vector of bin boundaries or [min,max,nBin]
+%   largeScalePlev	-- pressure level for the large scale variable, e.g. vertical velocity at 50000Pa
+%   outputFile	-- a data file for storing plotting data in netcdf format
+%   displayOpt	-- flags to specify display scale, linear vs logarithmic, 3-bits, in the order (z,y,x), 0=lin, 1=log, 
 %
 % Output:
 %   status	-- a status flag, 0 = okay, -1 something is not right
@@ -30,6 +36,7 @@ end
 
 % Need to read out first the data to be sorted
 nMonths = numberOfMonths(startTime, stopTime);
+monthList = monthListWithin(startTime, stopTime, monthIdx);
 
 printf('number of month = %d\n', nMonths);
 
@@ -67,11 +74,10 @@ for fileI = 1:nFiles
     nLat = length(lat);
 
     % This loads the large scale variabe data
-    %largeScaleVarData = readTwoDimData(largeScaleDataFile, largeScaleVarName, startTime, stopTime, lonRange, latRange, largeScalePlev);
     largeScaleVarData = readAndRegridTwoDimData(largeScaleDataFile, largeScaleVarName, startTime, stopTime, lon, lat, largeScalePlev);
     nBinB = length(largeScaleValueBinB);
-    if nBinB == 0
-      largeScaleValueBinB = generateBinB(largeScaleVarData.data(:), 10);
+    if nBinB <= 0
+      largeScaleValueBinB = generateBinB(largeScaleVarData.data(:), 20);
     elseif nBinB == 1
       largeScaleValueBinB = generateBinB(largeScaleVarData.data(:), nBinB-1);
     elseif nBinB == 2
@@ -149,34 +155,39 @@ for fileI = 1:nFiles
     idx2Data_stop = idx2Data_stop - (monthIdx2 - nMonths);
     monthIdx2 = nMonths;
   end
+  monthListThisFile = find(monthList >= monthIdx1 & monthList <= monthIdx2);
+  nMonthInThisFile = length(monthListThisFile);
 
-  for pI = 1:nP
-    if dataIsTwoDim
-      thisTwoDimSlice = v(lonIdx, latIdx, idx2Data_start:idx2Data_stop);
-    else
-      thisTwoDimSlice = v(lonIdx, latIdx, mIdx(pI), idx2Data_start:idx2Data_stop);
-    end
-    for binI = 1:nBins
-      idx_in_thisFile = (find(idxArrayForEachBin{binI} > (monthIdx1-1)*nLat*nLon & idxArrayForEachBin{binI} <= monthIdx2*nLat*nLon));
-      if pI == 1
-        n_sorted(binI,1) = n_sorted(binI,1) + length(idx_in_thisFile);
+  for monthI = 1:nMonthInThisFile
+    thisMonth = monthListThisFile(monthI);
+    for pI = 1:nP
+      if dataIsTwoDim
+        thisTwoDimSlice = v(lonIdx, latIdx, idx2Data_start:idx2Data_stop);
+      else
+        thisTwoDimSlice = v(lonIdx, latIdx, mIdx(pI), idx2Data_start:idx2Data_stop);
       end
-      v_sorted_m(binI,pI) = v_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)));
-      v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)).^2);
+      for binI = 1:nBins
+        idx_in_thisFile = (find(idxArrayForEachBin{binI} > (thisMonth-1)*nLat*nLon & idxArrayForEachBin{binI} <= thisMonth*nLat*nLon));
+        if pI == 1
+          n_sorted(binI,1) = n_sorted(binI,1) + length(idx_in_thisFile);
+        end
+        v_sorted_m(binI,pI) = v_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)));
+        v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)).^2);
+      end
     end
   end
   clear v;
 end
 
 for binI = 1:nBins
-  if n_sorted(binI) ~= nSamples(binI)
-    warning('Inconsistent indexing, number of data points do not match!');
-    keyboard;
-  else
+  %if n_sorted(binI) ~= nSamples(binI)
+  %  warning('Inconsistent indexing, number of data points do not match!');
+  %  keyboard;
+  %else
     v_sorted_m(binI,:) = v_sorted_m(binI,:) / n_sorted(binI);
     v2_sorted_m(binI,:) = v2_sorted_m(binI,:) / n_sorted(binI);
     v_sorted_std(binI,:) = sqrt((v2_sorted_m(binI,:) - v_sorted_m(binI,:).^2) / (n_sorted(binI) - 1));
-  end
+  %end
 end
 
 % We now determine the relevant months within a year using monthIdx and start month
@@ -224,9 +235,9 @@ else
     y = - plev;
   end
 
-  [z_valid, x_valid, y_valid] = subsetValidData(z, binCenterValues, y);
+  [z_valid, y_valid, x_valid] = subsetValidData(z, y, binCenterValues);
 
-  contourf(x_valid, y_valid, z_valid', 15, 'linecolor', 'none');
+  contourf(x_valid, y_valid, z_valid, 15, 'linecolor', 'none');
 
   if ~isempty(find(isnan(v_sorted_m(:))))
     cmap = colormap();
