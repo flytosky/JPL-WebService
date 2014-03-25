@@ -51,7 +51,11 @@ nBinB = length(largeScaleValueBinB);
 if nBinB > 3 && nBinB == (largeScaleValueBinB(end)+2)
   largeScaleValueBinB = largeScaleValueBinB(1:(nBinB-1));
 elseif nBinB == 3
-  largeScaleValueBinB = linspace(largeScaleValueBinB(1), largeScaleValueBinB(2), largeScaleValueBinB(3)+1);
+  if largeScaleValueBinB(3) < 0
+    largeScaleValueBinB = [];
+  else
+    largeScaleValueBinB = linspace(largeScaleValueBinB(1), largeScaleValueBinB(2), largeScaleValueBinB(3)+1);
+  end
 end
 
 % Pressure level for the large scale variable, the longitude and latitude regions are asssumed to be the same as the physical
