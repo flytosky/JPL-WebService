@@ -86,7 +86,7 @@ if __name__ == '__main__':
     # c1 = call_conditionalSampling('cccma_canesm2', 'ts', '200101', '200212', '0', '360', '-90', '90', '', '', '5,6,7,8', 'cccma_canesm2', 'tos', '294','305','20', '',  './', '0')
     ### c1 = call_conditionalSampling('giss_e2-r', 'clw', '200101', '200212', '0', '360', '-30', '30', '20000', '90000', '5,6,7,8', 'giss_e2-r', 'tos', '294','305','20', '-1',  './', '6')
 
-    c1 = call_conditionalSampling('giss_e2-r', 'cli', '200001', '200202', '0', '360', '-30', '30', '20000', '90000', '3,4,5', 'giss_e2-r', 'ta', '294','305','20', '20000',  './', '3')
+    c1 = call_conditionalSampling('giss_e2-r', 'cli', '200001', '200202', '0', '360', '-30', '30', '20000', '90000', '3,4,5', 'giss_e2-r', 'ta', '200','230','20', '20000',  './', '6')
 
     mesg = c1.displayConditionalSampling()
     print 'mesg: ', mesg
