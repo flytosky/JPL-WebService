@@ -47,7 +47,6 @@ monthlyData = [];
 % sorted data mean and stddev for each bin
 v_sorted_m = [];
 v2_sorted_m = [];
-nBins = length(largeScaleValueBinB) - 1;
 v_sorted_std = [];
 
 dataIsTwoDim = false;
@@ -86,6 +85,7 @@ for fileI = 1:nFiles
     nBinB = length(largeScaleValueBinB);
     nBins = nBinB - 1;
     n_sorted = zeros(nBins,1);
+
     [idxArrayForEachBin, binCenterValues, nSamples] = generateIdxForBins(largeScaleValueBinB, largeScaleVarData.data);
 
     if isempty(plevRange)
@@ -190,10 +190,8 @@ for binI = 1:nBins
     v2_sorted_m(binI,:) = v2_sorted_m(binI,:) / n_sorted(binI);
     v_sorted_std(binI,:) = sqrt((v2_sorted_m(binI,:) - v_sorted_m(binI,:).^2) / (n_sorted(binI) - 1));
   %end
-end
 
-% We now determine the relevant months within a year using monthIdx and start month
-monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
+end
 
 % We now determine the relevant time range used for this climatology calculation
 [real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
