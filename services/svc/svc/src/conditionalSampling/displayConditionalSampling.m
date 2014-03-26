@@ -224,7 +224,7 @@ if dataIsTwoDim
   title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ', sorted by ' largeScaleVarName ], 'fontsize', 13, 'fontweight', 'bold');
 else
   if z_opt
-    z = log10(v_sorted_m + 1e-4*(max(v_sorted_m(:)))); % to have dynamic range of 10^4
+    z = log10(v_sorted_m' + 1e-4*(max(v_sorted_m(:)))); % to have dynamic range of 10^4
   else
     z = v_sorted_m';
   end
