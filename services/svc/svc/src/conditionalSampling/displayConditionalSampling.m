@@ -48,7 +48,6 @@ monthlyData = [];
 v_sorted_m = [];
 v2_sorted_m = [];
 nBins = length(largeScaleValueBinB) - 1;
-n_sorted = zeros(nBins,1);
 v_sorted_std = [];
 
 dataIsTwoDim = false;
@@ -84,6 +83,9 @@ for fileI = 1:nFiles
       largeScaleValueBinB = linspace(largeScaleValueBinB(1), largeScaleValueBinB(2), 10 + 1);
     end
 
+    nBinB = length(largeScaleValueBinB);
+    nBins = nBinB - 1;
+    n_sorted = zeros(nBins,1);
     [idxArrayForEachBin, binCenterValues, nSamples] = generateIdxForBins(largeScaleValueBinB, largeScaleVarData.data);
 
     if isempty(plevRange)
