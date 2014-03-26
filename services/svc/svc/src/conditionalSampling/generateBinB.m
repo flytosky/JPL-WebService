@@ -18,7 +18,9 @@ nAvgSample = floor(N/nBin);
 
 binB = data_valid_sorted([1+(0:(nBin-1))*nAvgSample, N]);
 
-if nAvgSample < 1.5*n_min;
+binB = binB(:)';
+
+if nAvgSample < 1.5*n_min
   return;
 end
 
