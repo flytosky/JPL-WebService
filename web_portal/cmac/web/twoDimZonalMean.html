@@ -641,6 +641,14 @@
         arglist = arglist.concat(month_str);
         // alert("arglist: " + arglist);
 
+        arglist = arglist.concat("&scale=");
+        var y = document.getElementById("radioLin").checked;
+        // alert(y);
+        if (y == true)
+          arglist = arglist.concat('0');
+        else
+          arglist = arglist.concat('2');
+
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
@@ -821,6 +829,17 @@ Select a data source (model or observation), a variable name, and a time range b
 <td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
 <td>end lat (deg):</td><td><input id="lat1" value="90"/></td>
 </tr>
+
+<tr>               
+<td colspan="1">   
+variable scale:       
+</td>              
+<td colspan="3">   
+<form> <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
+<input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
+</form>        
+</td>          
+</tr> 
 
 <tr>
 <td colspan="2" align="center"><input id="twodvarzonalmean" type="submit" value="            Get  Plot            " style="height:28px"/></td>
