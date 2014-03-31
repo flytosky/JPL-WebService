@@ -87,7 +87,7 @@ def displayTwoDimMap():
     url = ''
     dataUrl = ''
 
-    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months
+    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months, scale
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -370,7 +370,7 @@ def displayTwoDimZonalMean():
     url = ''
     dataUrl = ''
 
-    # get model, var, start time, end time, lat1, lat2, months
+    # get model, var, start time, end time, lat1, lat2, months, scale
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -379,6 +379,7 @@ def displayTwoDimZonalMean():
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
+    scale = request.args.get('scale', '')
 
     print 'model: ', model
     print 'var: ', var
@@ -387,13 +388,14 @@ def displayTwoDimZonalMean():
     print 'lat1: ', lat1
     print 'lat2: ', lat2
     print 'months: ', months
+    print 'scale: ', scale
 
     # get where the input file and output file are
     current_dir = os.getcwd()
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model+var+startT+endT+lat1+lat2+months
+      seed_str = model+var+startT+endT+lat1+lat2+months+scale
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/twoDimZonalMean/' + tag
       print 'output_dir: ', output_dir
@@ -403,7 +405,7 @@ def displayTwoDimZonalMean():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/twoDimZonalMean')
       # instantiate the app. class
-      c1 = call_twoDimZonalMean.call_twoDimZonalMean(model, var, startT, endT, lat1, lat2, months, output_dir)
+      c1 = call_twoDimZonalMean.call_twoDimZonalMean(model, var, startT, endT, lat1, lat2, months, output_dir, scale)
       # call the app. function
       ### print 'before the call to c1.displayTwoDimZonalMean() ...'
       (message, imgFileName, dataFileName) = c1.displayTwoDimZonalMean()
@@ -839,7 +841,7 @@ def displayDiffPlot2V():
     })
 
 
-@app.route('/svc/conditionalSamp', methods=["GET"])
+@app.route('/svc/conditionalSampling', methods=["GET"])
 @crossdomain(origin='*')
 def displayConditionalSamp():
     """Run displayConditionalSamp"""
@@ -897,20 +899,20 @@ def displayConditionalSamp():
     try:
       seed_str = model1+var1+startT+endT+lat1+lat2+lon1+lon2+pres1+pres2+months+model2+var2+bin_min+bin_max+bin_n+env_var_plev+displayOpt
       tag = md5.new(seed_str).hexdigest()
-      output_dir = current_dir + '/svc/static/conditionalSamp/' + tag
+      output_dir = current_dir + '/svc/static/conditionalSampling/' + tag
       print 'output_dir: ', output_dir
       if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
       # chdir to where the app is
-      os.chdir(current_dir+'/svc/src/conditionalSamp')
+      os.chdir(current_dir+'/svc/src/conditionalSampling')
       # instantiate the app. class
 
       # c1 = call_conditionalSampling.call_conditionalSampling('giss_e2-r', 'clw', '200101', '200212', '0', '360', '-30', '30', '20000', '90000', '5,6,7,8', 'giss_e2-r', 'tos', '294','305','20', '',  './', '6')
 
       c1 = call_conditionalSampling.call_conditionalSampling(model1, var1, startT, endT, lon1, lon2, lat1, lat2, pres1, pres2, months, model2, var2, bin_min, bin_max, bin_n, env_var_plev, output_dir, displayOpt)
       # call the app. function
-      (message, imgFileName, dataFileName) = c1.display()
+      (message, imgFileName, dataFileName) = c1.displayConditionalSampling()
       print 'imgFileName: ', imgFileName
       # chdir back
       os.chdir(current_dir)
@@ -919,9 +921,9 @@ def displayConditionalSamp():
       print 'hostname: ', hostname
       print 'port: ', port
 
-      url = 'http://' + hostname + ':' + port + '/static/conditionalSamp/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/conditionalSampling/' + tag + '/' + imgFileName
       print 'url: ', url
-      dataUrl = 'http://' + hostname + ':' + port + '/static/conditionalSamp/' + tag + '/' + dataFileName
+      dataUrl = 'http://' + hostname + ':' + port + '/static/conditionalSampling/' + tag + '/' + dataFileName
       print 'dataUrl: ', dataUrl
 
       print 'message: ', message
