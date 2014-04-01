@@ -370,6 +370,27 @@
         arglist = arglist.concat(month_str);
         // alert("arglist: " + arglist);
 
+        arglist = arglist.concat("&scale=");
+        var y = document.getElementById("radioLin").checked;
+        var yval;
+        var x = document.getElementById("radioLin2").checked;
+        var xval;
+        // alert(y);
+        if (y == true)
+          yval = 0;
+        else
+          yval = 2;
+
+        if (x == true)
+          xval = 0;
+        else
+          xval = 1;
+
+        var scale1 =  yval + xval;
+        var scale1_str =  scale1.toString();
+
+        arglist = arglist.concat(scale1_str);
+
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
@@ -527,6 +548,28 @@
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
+
+
+<tr><td colspan="1">
+pressure level scale:</td>
+<td colspan="1"><form> <input type="radio" name="scale1" value="linear" id="radioLin">linear
+<input type="radio" name="scale1" value="logarithmic" id="radioLog" checked>logarithmic
+</form>
+</td>
+<td colspan="1">
+variable scale:
+</td>
+<td colspan="1">
+<form> <input type="radio" name="scale2" value="linear" id="radioLin2" checked>linear
+<input type="radio" name="scale2" value="logarithmic" id="radioLog2">logarithmic
+</form>
+</td>
+</tr>
+
+
+
+
+
 
 <tr>
 <td colspan="2" align="center"><input id="threedvertical" type="submit" value="            Get  Plot            " style="height:28px"/></td>
