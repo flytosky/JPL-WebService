@@ -464,7 +464,7 @@ def displayThreeDimZonalMean():
     url = ''
     dataUrl = ''
 
-    # get model, var, start time, end time, lat1, lat2, pres1, pres2, months
+    # get model, var, start time, end time, lat1, lat2, pres1, pres2, months, scale
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -475,6 +475,7 @@ def displayThreeDimZonalMean():
     pres1 = request.args.get('pres1', '')
     pres2 = request.args.get('pres2', '')
     months = request.args.get('months', '')
+    scale = request.args.get('scale', '')
 
     print 'model: ', model
     print 'var: ', var
@@ -485,13 +486,14 @@ def displayThreeDimZonalMean():
     print 'pres1: ', pres1
     print 'pres2: ', pres2
     print 'months: ', months
+    print 'scale: ', scale
 
     # get where the input file and output file are
     current_dir = os.getcwd()
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model+var+startT+endT+lat1+lat2+pres1+pres2+months
+      seed_str = model+var+startT+endT+lat1+lat2+pres1+pres2+months+scale
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/threeDimZonalMean/' + tag
       print 'output_dir: ', output_dir
@@ -501,7 +503,7 @@ def displayThreeDimZonalMean():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/threeDimZonalMean')
       # instantiate the app. class
-      c1 = call_threeDimZonalMean.call_threeDimZonalMean(model, var, startT, endT, lat1, lat2, pres1, pres2, months, output_dir)
+      c1 = call_threeDimZonalMean.call_threeDimZonalMean(model, var, startT, endT, lat1, lat2, pres1, pres2, months, output_dir, scale)
       # call the app. function
       ### (message, imgFileName) = c1.displayThreeDimZonalMean()
       (message, imgFileName, dataFileName) = c1.displayThreeDimZonalMean()
