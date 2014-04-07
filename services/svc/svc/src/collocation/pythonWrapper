@@ -1,0 +1,295 @@
+#!/home/svc/install/epd/bin/python
+'''
+execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation/pythonWrapper')
+
+
+'''
+HOME='/home/svc'
+
+cr = {
+#                              1  2   3  4
+    # zzzz
+'import_':              1,   # 0  1   1  0
+# parameters_
+# def_change_labels:     # not working
+# class_SUBSET_REGION():
+  # def_saveData(self):
+'init_class':           1,   # 1  1
+'command_arg':          1,   # 1  1
+'set_xml_time':         1,   # 1  1
+'coll__':               1,   # 1  1
+'plot__':               0,   # 1  1
+'':        0,   # 1  1
+'':        0,   # 1  1
+'':        0,   # 1  1
+'':        0,   # 1  1
+'':        0,   # 1  1
+}
+
+#if cr['set_xml_time']       == 1:
+#if cr['']       == 1:
+#if cr['']       == 1:
+#if cr['']       == 1:
+#if cr['']       == 1:
+#if cr['']       == 1:
+
+# 1 -- 
+# 
+
+if cr['import_']       == 1:
+  import os, sys,  time
+  import tempfile
+  #import math
+  import glob
+  #import pickle
+
+  import numpy as np      
+  from netCDF4 import Dataset
+  import netCDF4 as nC4
+  import NC_btang_v4 as NC1
+
+  import matplotlib 
+  matplotlib.use('Agg')  
+  import matplotlib.pylab as Mat
+  Mat.ioff()
+  #from mpl_toolkits.basemap import NetCDFFile
+  from mpl_toolkits.basemap import Basemap
+
+t00 = time.time()
+
+# parameters_
+collDir = '/home/bytang/projects/collocation'
+sys.path.append('%s/dev'%collDir)
+
+'''
+xmlFile = {
+'cloudsat':'mls_h2o_config_.xml'
+'cloudsat':'mls_h2o_config_.xml'
+'''
+
+num2month = {
+1: 'JAN',
+2: 'FEB',
+3: 'MAR',
+4: 'APR',
+5: 'MAY',
+6: 'JUN',
+7: 'JUL',
+8: 'AUG',
+9: 'SEP',
+10: 'OCT',
+11: 'NOV',
+12: 'DEC',
+}
+
+
+# class_SUBSET_REGION():
+class SUBSET_REGION():
+  #== def___init__
+  def __init__(self):
+    #self.dataDir = '/home/zhai/cmip5' 
+    #self.dataDir = '/home/bytang/cmip5' # my des dir
+    ### self.dataDir = '/export/data1/data/cmip5' 
+    self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
+
+    ### self.desDir = '/home/bytang/projects/cmac/des/original'
+    # zzzz
+    #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
+    self.desDir = '/home/svc/cmac/des/original'
+
+    self.sourceData = 'mls-h2o'
+    self.targetData = 'cloudsat'
+
+    self.dateS = '20080501'
+    self.timeS = '000000'
+
+    self.dateE = '20080501'
+    self.timeE = '010000'
+
+#   self.verbose = 0
+ 
+  #== def_derived
+  def derived(self):
+    pass
+
+  # def_saveData(self):
+  def saveData(self, tempFile1, tempFile2):
+    fn = '%s/data_compare.nc'%self.outDir
+
+    # load data
+    nc1 = Dataset(tempFile1, 'r')
+    data1a = nc1.variables['DATA1']
+    dims1 = data1a.dimensions
+    data1 = data1a[:]
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+    nc1.close()
+
+    nc2 = Dataset(tempFile2, 'r')
+    data2a = nc2.variables['DATA2']
+    dims2 = data2a.dimensions
+    data2 = data2a[:]
+    lon2 = nc2.variables[dims2[-1]][:]
+    lat2 = nc2.variables[dims2[-2]][:]
+    nc2.close()
+
+    # sometimes the 2 data may not have the save shape
+    nLon = min( len(lon1), len(lon2) )
+    nLat = min( len(lat1), len(lat2) )
+    if len(lon1)>nLon or len(lat1)>nLat:
+      lon1 = lon1[:nLon]
+      lat1 = lat1[:nLat]
+      data1 = data1[:nLat, :nLon]
+
+    if len(lon2)>nLon or len(lat2)>nLat:
+      lon2 = lon2[:nLon]
+      lat2 = lat2[:nLat]
+      data2 = data2[:nLat, :nLon]
+
+    # fill the missing data
+    if type(data1)==type(np.ma.arange(1)):
+      data1a = data1.filled(-9999.0)
+    else: 
+      data1a = data1
+
+    if type(data2)==type(np.ma.arange(1)):
+      data2a = data2.filled(-9999.0)
+    else: 
+      data2a = data2
+
+    # save the 2 variables
+    NC1.save2nc(data1a, ncfile=fn, name='data1', 
+       newfile=1,
+       format='NETCDF3_CLASSIC',
+       missing_value=-9999.0,
+       axisorder='yx', axislib=NC1.axislib0, axisarray=[lat1, lon1])
+
+    nc1 = Dataset(fn, 'r+')
+    d2 = nc1.createVariable('data2', 'float32', ('lat', 'lon'))
+    #print d2.shape
+    #print data2.shape
+    # zzzz
+    #nn0 = min( d2.shape[0], data2.shape[0])
+    #nn1 = min( d2.shape[1], data2.shape[1])
+    d2[:,:] = data2a
+    nc1.close()
+
+    print 'dataFile: %s'%fn
+    
+if cr['init_class']       == 1:
+  a = SUBSET_REGION()
+
+if cr['command_arg']       == 1:
+
+  # sourceData targetData dateS timeS  DateE timeE 
+
+  if len(sys.argv)>1:
+    argv = sys.argv
+
+    print 'len(argv) = ',
+    print len(argv)
+    print 'argv: '
+    for i in argv:
+      pass
+      #print i
+
+    ii = 1
+    a.sourceData = argv[ii]
+
+    ii = 2
+    a.targetData = argv[ii]
+
+    ii = 3
+    a.yearS = int(argv[ii][:4])
+    a.monthS = int(argv[ii][4:6])
+    a.dayS = int(argv[ii][6:8])
+
+    ii = 4
+    a.hourS = int(argv[ii][:2])
+    a.minuteS = int(argv[ii][2:4])
+    a.secendS = int(argv[ii][4:6])
+
+    ii = 5
+    a.yearE = int(argv[ii][:4])
+    a.monthE = int(argv[ii][4:6])
+    a.dayE = int(argv[ii][6:8])
+
+    ii = 6
+    a.hourE = int(argv[ii][:2])
+    a.minuteE = int(argv[ii][2:4])
+    a.secendE = int(argv[ii][4:6])
+
+  # use data.cfg to set the data root dir.
+  try:
+    temp1 = open('../../../data.cfg').read() 
+    if temp1[-1]=='\n':
+      temp1 = temp1[:-1]
+    if temp1[-1]=='/':
+      temp1 = temp1[:-1]
+    if os.path.isdir(temp1):
+      a.dataDir = temp1 + '/cmip5' # should change to this when data.cfg is without 'cmip5'
+      #a.dataDir = temp1
+        
+  except:
+    dfadfdf
+    pass
+  '''
+/home/bytang/projects/cmac/trunk/services/svc/data.cfg
+/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V
+'''
+
+if cr['set_xml_time']       == 1:
+  # time str 
+  timeSStr = '%02d/%02d/%04d %02d:%02d:%02d'%( 
+     self.yearS,
+     self.monthS,
+     self.dayS,
+     self.hourS,
+     self.minuteS,
+     self.secondS,
+)
+  timeEStr = '%02d/%02d/%04d %02d:%02d:%02d'%( 
+     self.yearE,
+     self.monthE,
+     self.dayE,
+     self.hourE,
+     self.minuteE,
+     self.secondE,
+)
+
+  # replace source
+  fn = '%s/input/%s_config__.xml'%(collDir, sourceData)
+  lines = open(fn).read()
+
+  lines = lines.replace('__timeS__', timeSstr
+  lines = lines.replace('__timeE__', timeEstr
+
+  fn = '%s/input/%s_config_.xml'%(collDir, sourceData)
+  fid = open(fn, 'w')
+  fid.write(lines)
+  fid.close()
+
+  # replace target
+  fn = '%s/input/%s_config__.xml'%(collDir, targetData)
+  lines = open(fn).read()
+
+  lines = lines.replace('__timeS__', timeSstr
+  lines = lines.replace('__timeE__', timeEstr
+
+  fn = '%s/input/%s_config_.xml'%(collDir, targetData)
+  fid = open(fn, 'w')
+  fid.write(lines)
+  fid.close()
+
+if cr['coll__']       == 1:
+  import pdriver1
+
+  #config_file, tgt_config_file
+  config_file = '%s/input/%s_config_.xml'%(collDir, sourceData)
+  tgt_config_file = '%s/input/%s_config_.xml'%(collDir, targetData)
+
+  pdriver1.coll(self.sourceData, self.targetData)
+
+if cr['plot__']       == 1:
+  pass
+
