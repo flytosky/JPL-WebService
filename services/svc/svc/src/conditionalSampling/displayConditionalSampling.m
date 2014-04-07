@@ -160,21 +160,22 @@ for fileI = 1:nFiles
   monthListThisFile = find(monthList >= monthIdx1 & monthList <= monthIdx2);
   nMonthInThisFile = length(monthListThisFile);
 
+  timeIdx = idx2Data_start:idx2Data_stop;
   for monthI = 1:nMonthInThisFile
     thisMonth = monthListThisFile(monthI);
     for pI = 1:nP
       if dataIsTwoDim
-        thisTwoDimSlice = v(lonIdx, latIdx, idx2Data_start:idx2Data_stop);
+        thisTwoDimSlice = v(lonIdx, latIdx, timeIdx(monthI));
       else
-        thisTwoDimSlice = v(lonIdx, latIdx, mIdx(pI), idx2Data_start:idx2Data_stop);
+        thisTwoDimSlice = v(lonIdx, latIdx, mIdx(pI), timeIdx(monthI));
       end
       for binI = 1:nBins
-        idx_in_thisFile = (find(idxArrayForEachBin{binI} > (thisMonth-1)*nLat*nLon & idxArrayForEachBin{binI} <= thisMonth*nLat*nLon));
+        idx_in_thisFile = mod(idxArrayForEachBin{binI}(find(idxArrayForEachBin{binI} > (thisMonth-1)*nLat*nLon & idxArrayForEachBin{binI} <= thisMonth*nLat*nLon))-1, nLat*nLon) + 1;
         if pI == 1
           n_sorted(binI,1) = n_sorted(binI,1) + length(idx_in_thisFile);
         end
-        v_sorted_m(binI,pI) = v_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)));
-        v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(thisTwoDimSlice(idxArrayForEachBin{binI}(idx_in_thisFile)).^2);
+        v_sorted_m(binI,pI) = v_sorted_m(binI,pI) + sum(thisTwoDimSlice(idx_in_thisFile));
+        v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(thisTwoDimSlice(idx_in_thisFile).^2);
       end
     end
   end
