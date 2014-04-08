@@ -8,41 +8,24 @@ class call_collocation:
     def __init__(self, 
 sourceData = 'mls-h2o',
 targetData = 'cloudsat',
-dateS = '20080501',
-timeS = '000000',
-dateE = '20080501',
-timeE = '010000',
+timeS = '2008-05-01T00:00:00',
+timeE = '2008-05-01T01:00:00',
 output_dir = '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/'):
 
         self.sourceData = sourceData
         self.targetData = targetData 
 
-        self.dateS = dateS
         self.timeS = timeS
-
-        self.dateE = dateE
         self.timeE = timeE
-
         self.output_dir = output_dir
 
-        # temporary fix
-        # This application level knowledge may not belong here
-        #if self.model1 == 'NASA_AMSRE' and self.var == 'ts':
-        #  self.var = 'tos'
-
     def display(self):
-
-        ### print 'current dir: ', os.getcwd()
-        # inputs: model name, variable name, start-year-mon, end-year-mon, 'start lon, end lon', 'start lat, end lat', 'mon list'
-        # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
-                 #'%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
         inputs = \
-                 self.sourceData + ' ' \
-                 self.targetData + ' ' \
-                 self.dateS + ' ' \
-                 self.timeS + ' ' \
-                 self.dateE + ' ' \
-                 self.timeE 
+                 self.sourceData + ' ' + \
+                 self.targetData + ' ' + \
+                 self.timeS + ' ' + \
+                 self.timeE + ' ' + \
+                 self.output_dir 
 
         print 'inputs: ', inputs
         #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
@@ -84,4 +67,6 @@ if __name__ == '__main__':
     c1 = call_collocation()
 
     mesg = c1.display()
-    print 'mesg: ', mesg
+    #print 'mesg: ' 
+    #mesg = mesg.split('\n')
+    for m in mesg: print m

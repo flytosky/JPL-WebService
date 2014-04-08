@@ -3,6 +3,17 @@
 execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation/pythonWrapper')
 
 
+import sys
+sys.path.append('/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation')
+import call_collocation 
+call_collocation(
+'mls-h2o',
+'cloudsat',
+'2008-05-01T00:00:00',
+'2008-05-01T01:00:00',
+'/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/'):
+
+
 '''
 HOME='/home/svc'
 
@@ -13,7 +24,6 @@ cr = {
 # parameters_
 # def_change_labels:     # not working
 # class_SUBSET_REGION():
-  # def_saveData(self):
 'init_class':           1,   # 1  1
 'command_arg':          1,   # 1  1
 'set_xml_time':         1,   # 1  1
@@ -100,11 +110,11 @@ class SUBSET_REGION():
     self.sourceData = 'mls-h2o'
     self.targetData = 'cloudsat'
 
-    self.dateS = '20080501'
-    self.timeS = '000000'
+    self.timeS = '2008-05-01T00:00:00'
+    self.timeE = '2008-05-01T01:00:00'
 
-    self.dateE = '20080501'
-    self.timeE = '010000'
+    self.outDir = '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/'
+
 
 #   self.verbose = 0
  
@@ -112,70 +122,7 @@ class SUBSET_REGION():
   def derived(self):
     pass
 
-  # def_saveData(self):
-  def saveData(self, tempFile1, tempFile2):
-    fn = '%s/data_compare.nc'%self.outDir
-
-    # load data
-    nc1 = Dataset(tempFile1, 'r')
-    data1a = nc1.variables['DATA1']
-    dims1 = data1a.dimensions
-    data1 = data1a[:]
-    lon1 = nc1.variables[dims1[-1]][:]
-    lat1 = nc1.variables[dims1[-2]][:]
-    nc1.close()
-
-    nc2 = Dataset(tempFile2, 'r')
-    data2a = nc2.variables['DATA2']
-    dims2 = data2a.dimensions
-    data2 = data2a[:]
-    lon2 = nc2.variables[dims2[-1]][:]
-    lat2 = nc2.variables[dims2[-2]][:]
-    nc2.close()
-
-    # sometimes the 2 data may not have the save shape
-    nLon = min( len(lon1), len(lon2) )
-    nLat = min( len(lat1), len(lat2) )
-    if len(lon1)>nLon or len(lat1)>nLat:
-      lon1 = lon1[:nLon]
-      lat1 = lat1[:nLat]
-      data1 = data1[:nLat, :nLon]
-
-    if len(lon2)>nLon or len(lat2)>nLat:
-      lon2 = lon2[:nLon]
-      lat2 = lat2[:nLat]
-      data2 = data2[:nLat, :nLon]
-
-    # fill the missing data
-    if type(data1)==type(np.ma.arange(1)):
-      data1a = data1.filled(-9999.0)
-    else: 
-      data1a = data1
-
-    if type(data2)==type(np.ma.arange(1)):
-      data2a = data2.filled(-9999.0)
-    else: 
-      data2a = data2
-
-    # save the 2 variables
-    NC1.save2nc(data1a, ncfile=fn, name='data1', 
-       newfile=1,
-       format='NETCDF3_CLASSIC',
-       missing_value=-9999.0,
-       axisorder='yx', axislib=NC1.axislib0, axisarray=[lat1, lon1])
-
-    nc1 = Dataset(fn, 'r+')
-    d2 = nc1.createVariable('data2', 'float32', ('lat', 'lon'))
-    #print d2.shape
-    #print data2.shape
-    # zzzz
-    #nn0 = min( d2.shape[0], data2.shape[0])
-    #nn1 = min( d2.shape[1], data2.shape[1])
-    d2[:,:] = data2a
-    nc1.close()
-
-    print 'dataFile: %s'%fn
-    
+   
 if cr['init_class']       == 1:
   a = SUBSET_REGION()
 
@@ -200,24 +147,15 @@ if cr['command_arg']       == 1:
     a.targetData = argv[ii]
 
     ii = 3
-    a.yearS = int(argv[ii][:4])
-    a.monthS = int(argv[ii][4:6])
-    a.dayS = int(argv[ii][6:8])
+    a.timeS = argv[ii]
 
     ii = 4
-    a.hourS = int(argv[ii][:2])
-    a.minuteS = int(argv[ii][2:4])
-    a.secendS = int(argv[ii][4:6])
+    a.timeE = argv[ii]
 
     ii = 5
-    a.yearE = int(argv[ii][:4])
-    a.monthE = int(argv[ii][4:6])
-    a.dayE = int(argv[ii][6:8])
-
-    ii = 6
-    a.hourE = int(argv[ii][:2])
-    a.minuteE = int(argv[ii][2:4])
-    a.secendE = int(argv[ii][4:6])
+    a.outDir = argv[ii]
+    print 'a.outDir: ',
+    print a.outDir
 
   # use data.cfg to set the data root dir.
   try:
@@ -231,7 +169,7 @@ if cr['command_arg']       == 1:
       #a.dataDir = temp1
         
   except:
-    dfadfdf
+    #dfadfdf
     pass
   '''
 /home/bytang/projects/cmac/trunk/services/svc/data.cfg
@@ -239,56 +177,76 @@ if cr['command_arg']       == 1:
 '''
 
 if cr['set_xml_time']       == 1:
+  # get detail time
+  #  0123456789012345678
+  # '2001-01-01T10:01:00'
+  a.yearS = int(a.timeS[:4])
+  a.monthS = int(a.timeS[5:7])
+  a.dayS = int(a.timeS[8:10])
+
+  a.hourS = int(a.timeS[11:13])
+  a.minuteS = int(a.timeS[14:16])
+  a.secondS = int(a.timeS[17:19])
+
+  a.yearE = int(a.timeE[:4])
+  a.monthE = int(a.timeE[5:7])
+  a.dayE = int(a.timeE[8:10])
+
+  a.hourE = int(a.timeE[11:13])
+  a.minuteE = int(a.timeE[14:16])
+  a.secondE = int(a.timeE[17:19])
+
   # time str 
   timeSStr = '%02d/%02d/%04d %02d:%02d:%02d'%( 
-     self.yearS,
-     self.monthS,
-     self.dayS,
-     self.hourS,
-     self.minuteS,
-     self.secondS,
+     a.monthS,
+     a.dayS,
+     a.yearS,
+     a.hourS,
+     a.minuteS,
+     a.secondS,
 )
   timeEStr = '%02d/%02d/%04d %02d:%02d:%02d'%( 
-     self.yearE,
-     self.monthE,
-     self.dayE,
-     self.hourE,
-     self.minuteE,
-     self.secondE,
+     a.monthE,
+     a.dayE,
+     a.yearE,
+     a.hourE,
+     a.minuteE,
+     a.secondE,
 )
 
   # replace source
-  fn = '%s/input/%s_config__.xml'%(collDir, sourceData)
+  fn = '%s/input/%s_config__.xml'%(collDir, a.sourceData)
   lines = open(fn).read()
 
-  lines = lines.replace('__timeS__', timeSstr
-  lines = lines.replace('__timeE__', timeEstr
+  lines = lines.replace('__timeS__', timeSStr)
+  lines = lines.replace('__timeE__', timeEStr)
 
-  fn = '%s/input/%s_config_.xml'%(collDir, sourceData)
+  fn = '%s/input/%s_config_.xml'%(collDir, a.sourceData)
   fid = open(fn, 'w')
   fid.write(lines)
   fid.close()
 
   # replace target
-  fn = '%s/input/%s_config__.xml'%(collDir, targetData)
+  fn = '%s/input/%s_config__.xml'%(collDir, a.targetData)
   lines = open(fn).read()
 
-  lines = lines.replace('__timeS__', timeSstr
-  lines = lines.replace('__timeE__', timeEstr
+  lines = lines.replace('__timeS__', timeSStr)
+  lines = lines.replace('__timeE__', timeEStr)
 
-  fn = '%s/input/%s_config_.xml'%(collDir, targetData)
+  fn = '%s/input/%s_config_.xml'%(collDir, a.targetData)
   fid = open(fn, 'w')
   fid.write(lines)
   fid.close()
 
 if cr['coll__']       == 1:
+  
   import pdriver1
 
   #config_file, tgt_config_file
-  config_file = '%s/input/%s_config_.xml'%(collDir, sourceData)
-  tgt_config_file = '%s/input/%s_config_.xml'%(collDir, targetData)
+  config_file = '%s/input/%s_config_.xml'%(collDir, a.sourceData)
+  tgt_config_file = '%s/input/%s_config_.xml'%(collDir, a.targetData)
 
-  pdriver1.coll(self.sourceData, self.targetData)
+  pdriver1.coll(config_file, tgt_config_file)
 
 if cr['plot__']       == 1:
   pass
