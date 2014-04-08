@@ -183,7 +183,7 @@ def display_timeSeries2D():
     url = ''
     dataUrl = ''
 
-    # get model, var, start time, end time, lon1, lon2, lat1, lat2
+    # get model, var, start time, end time, lon1, lon2, lat1, lat2, scale
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -193,6 +193,7 @@ def display_timeSeries2D():
     lon2 = request.args.get('lon2', '')
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
+    scale = request.args.get('scale', '')
 
     print 'model: ', model
     print 'var: ', var
@@ -202,13 +203,14 @@ def display_timeSeries2D():
     print 'lon2: ', lon2
     print 'lat1: ', lat1
     print 'lat2: ', lat2
+    print 'scale: ', scale
 
     # get where the input file and output file are
     current_dir = os.getcwd()
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2
+      seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+scale
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/timeSeries2D/' + tag
       print 'output_dir: ', output_dir
@@ -218,7 +220,7 @@ def display_timeSeries2D():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/timeSeries2D')
       # instantiate the app. class
-      c1 = call_timeSeries2D.call_timeSeries2D(model, var, startT, endT, lon1, lon2, lat1, lat2, output_dir)
+      c1 = call_timeSeries2D.call_timeSeries2D(model, var, startT, endT, lon1, lon2, lat1, lat2, output_dir, scale)
       # call the app. function
       (message, imgFileName, dataFileName) = c1.display_timeSeries2D()
       # chdir back
