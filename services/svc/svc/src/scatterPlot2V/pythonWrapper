@@ -8,10 +8,12 @@ HOME='/home/svc'
 
 cr = {
 #                              1  2   3  4
+    # zzzz
 'import_':              1,   # 0  1   1  0
 # parameters_
 # def_change_labels:     # not working
 # class_SUBSET_REGION():
+  # def_noDataExit()
   # def_getFileName
   # def_getUnits(self):
   # def_checkTime
@@ -161,6 +163,7 @@ class SUBSET_REGION():
     self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
 
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
+    # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = '/home/svc/cmac/des/original'
 
@@ -208,18 +211,26 @@ class SUBSET_REGION():
       self.lat1S = -80.0
       self.lat1E =  80.0
 
-
 #
     if 1:
       self.center1 = 'ukmo'
       self.model1  = 'hadgem2-a'
       self.varName1='ts'
 
-    if 1:
+    if 0:
       self.center2 = 'giss'
       self.model2  = 'e2-r'
       #self.varName2='rsdt'
       self.varName2='ts'
+
+    if 1:
+      self.center2 = 'gfdl'
+      #self.model2  = 'esm2g'
+      self.model2  = 'cm3'
+      #self.varName2='rsdt'
+      self.varName2='ta'  # working
+      self.varName2='clw' # not working
+      self.varName2='lai' # not working
 
     if 0:
       self.center2 = 'ukmo'
@@ -243,54 +254,17 @@ class SUBSET_REGION():
 
     self.outDir = '.'
   
-    # the resolution of subsampling
-#   self.dLon1 = None
-#   self.dLat1 = None
-#
-#   self.maxFigureSize=8.0  # will not work for other size
-#   self.vmin = None
-#   self.vmax = None
-#   self.landMask = None
-#   self.cmap1 = Mat.get_cmap('gist_rainbow_r')
-#   self.boxes=None
-#   self.offset=0.0
-#   self.lonName='LON'
-#   self.latName='LAT'
-#   self.jplLogo='/hosts/ourocean2/data9/btang/blending_02/JPL-logo.png'
-    #self.nasaInsignia = '/hosts/ourocean2/data9/btang/blending_02/NASA-logo.png'
-#   self.nasaInsignia = ''
-#   self.nPixel=800  # only used to calc dLon1/dLat1 if they are not given.
-#
-#   self.dataDaysFile = '' 
-#   self.iceFile = '' 
-#   self.landFile = '' 
-#   self.resolutionMask = 0
-#
-#   self.ferretMem = 500
-#   self.tmpDir = '/tmp'
- 
-#   self.isChangeName = 1
-#   self.interp = ''
-#   self.dpi = None
- 
-#   self.grayLand   = (0.40, 0.40, 0.40)
- 
-#   self.grayNoData = (1.00, 1.00, 1.00)
-#   self.grayIce    = (0.85, 0.85, 1.00)
-#
-#   #self.grayIce    = (1.00, 1.00, 1.00)
-#   #self.grayNoData = (0.85, 0.85, 0.85)
- 
-#   self.titleFontSize = None
-#   self.axisFontSize = None
- 
-#   self.markedPoints = None
- 
-#   self.verbose = 0
- 
+    self.noData = None
+
   #== def_derived
   def derived(self):
     pass
+
+  # def_noDataExit()
+  def noDataExit(self, msg):
+    print "No Data !!!"
+    print msg
+    sys.exit(1)
 
   # def_getFileName(self, center, model, varName):
   def getFileName(self, center, model, varName):
@@ -315,21 +289,30 @@ class SUBSET_REGION():
       print filesNc
       print filesDes
 
+    if len(filesNc)==0:
+      self.noDataExit('no *.nc file.')
+      
+
     if len(filesDes)>1:
       print 'more than 1 des files:'
       for f in filesDes:
         print f
+
+      self.noDataExit('more than 1 *.des files.')
       return None
 
     if len(filesNc)>1 and len(filesDes)==1:
       return filesDes[0], filesNc[0]
 
     if len(filesNc)>1 and len(filesDes)==0:
-      temp1 = '/home/bytang/bin/mine/mkdes2 --f90 --des %s %s/%s_*.nc'%(desFn, dir0, varName)
-      print temp1
-      os.system(temp1)
-      files2a = glob.glob(desFn)
-      return files2a[0], filesNc[0]
+      try:
+        temp1 = '/home/bytang/bin/mine/mkdes2 --f90 --des %s %s/%s_*.nc'%(desFn, dir0, varName)
+        print temp1
+        os.system(temp1)
+        files2a = glob.glob(desFn)
+        return files2a[0], filesNc[0]
+      except:
+        self.noDataExit('failed to generate the des file.')
       
     if len(filesNc)==1:
       return filesNc[0], filesNc[0]
@@ -349,6 +332,7 @@ class SUBSET_REGION():
     nc1.close()
 
   # def_checkTime
+  # not used yet
   def checkTime(self, ncFile, varName):
     # open file
     nc1 = Dataset(ncFile, 'r')
@@ -387,14 +371,19 @@ class SUBSET_REGION():
       temp1 = os.path.isfile(ncFile1)
     except:
       print 'Subsetting failed; file not there: %s'%(ncFile1)
+      self.noData = 1
       tempFile = None
       return tempFile
     
     if not os.path.isfile(ncFile1):
       print 'Subsetting failed; file not there: %s'%(ncFile1)
+      self.noData = 1
       tempFile = None
       return tempFile
       
+    if self.noData ==1:
+      self.noDataExit('in subsetting: nc file is not there.')
+     
     tempFile = tempfile.mkstemp(suffix='.nc', dir=self.outDir)
 
     tmpFileJnl = tempfile.mkstemp(suffix='.jnl', dir=self.outDir)
@@ -493,7 +482,7 @@ class SUBSET_REGION():
     try:
       os.system(temp1)
     except:
-      tempFile = None
+      self.noDataExit('subsetting: failed to run ferret')
 
     #os.remove(tmpFileJnl)
 
