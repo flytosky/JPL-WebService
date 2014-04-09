@@ -157,7 +157,7 @@ if x_opt || z_opt
 end
 grid on;
 set(gca, 'fontweight', 'bold');
-currYTick = round(y_plev/100)*100;
+currYTick = pressureLevelTicks(min(y_plev), max(y_plev), 100);
 set(gca, 'ytick', currYTick);
 currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
 set(gca, 'yticklabel', num2str(currYTick));
