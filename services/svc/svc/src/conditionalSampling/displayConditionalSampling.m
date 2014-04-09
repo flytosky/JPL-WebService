@@ -198,6 +198,7 @@ end
 [real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
 
 [x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
+titleStr = [long_name ', sorted by ' largeScaleVarData.name ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/')];
 
 figure;
 if dataIsTwoDim
@@ -216,13 +217,13 @@ if dataIsTwoDim
   end
   set(h1, 'linestyle', '-', 'marker', 's', 'color', 'k', 'linewidth', 2, 'markersize', 6);
   set(h2, 'linestyle', '--', 'color', 'g', 'linewidth', 3);
-  xlabel([largeScaleVarName '(' largeScaleVarData.units ')' ]);
+  xlabel([largeScaleVarData.name '(' largeScaleVarData.units ')' ]);
   ylabel(ax(1),[varName '(' v_units ')']);
   ylabel(ax(2),'Number of samples');
   set(ax(1), 'fontweight', 'bold');
   set(ax(2), 'fontweight', 'bold');
   grid on;
-  title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ', sorted by ' largeScaleVarName ], 'fontsize', 13, 'fontweight', 'bold');
+  title(titleStr, 'fontsize', 13, 'fontweight', 'bold');
 else
   if z_opt
     z = log10(v_sorted_m' + 1e-4*(max(v_sorted_m(:)))); % to have dynamic range of 10^4
@@ -254,7 +255,7 @@ else
   else
     set(gca, 'yticklabel', num2str(currYTick/100)); % Pa -> hPa
   end
-  xlabel(largeScaleVarData.v_units);
+  xlabel([largeScaleVarData.name '(' largeScaleVarData.units ')' ]);
   if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
         ylabel('Pressure level (hPa)');
   else
@@ -267,7 +268,7 @@ else
   end
   set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
 
-  title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' sorted by ' largeScaleVarName ], 'fontsize', 13, 'fontweight', 'bold');
+  title(titleStr, 'fontsize', 13, 'fontweight', 'bold');
 end
 print(gcf, figFile, '-djpeg');
 % adding title for color bar
