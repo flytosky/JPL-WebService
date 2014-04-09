@@ -112,10 +112,12 @@ for fileI = 1:nFiles
       v_sorted_m = zeros(nBins, 1);
       v2_sorted_m = zeros(nBins, 1);
       v_sorted_std = zeros(nBins, 1);
+      n_sorted_valid = zeros(nBins, 1);
     else
       v_sorted_m = zeros(nBins, nP, 'single');
       v2_sorted_m = zeros(nBins, nP, 'single');
       v_sorted_std = zeros(nBins, nP, 'single');
+      n_sorted_valid = zeros(nBins, nP);
     end
   end
 
@@ -174,25 +176,32 @@ for fileI = 1:nFiles
         if pI == 1
           n_sorted(binI,1) = n_sorted(binI,1) + length(idx_in_thisFile);
         end
-        v_sorted_m(binI,pI) = v_sorted_m(binI,pI) + sum(thisTwoDimSlice(idx_in_thisFile));
-        v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(thisTwoDimSlice(idx_in_thisFile).^2);
+        dataInThisBin = thisTwoDimSlice(idx_in_thisFile);
+        dataValidIdx = find(isfinite(dataInThisBin));
+        n_sorted_valid(binI,pI) = n_sorted_valid(binI,pI) + length(dataValidIdx);
+        v_sorted_m(binI,pI) = v_sorted_m(binI,pI) + sum(dataInThisBin(dataValidIdx));
+        v2_sorted_m(binI,pI) = v2_sorted_m(binI,pI) + sum(dataInThisBin(dataValidIdx).^2);
       end
     end
   end
   clear v;
 end
 
-for binI = 1:nBins
+%for binI = 1:nBins
   %if n_sorted(binI) ~= nSamples(binI)
   %  warning('Inconsistent indexing, number of data points do not match!');
   %  keyboard;
   %else
-    v_sorted_m(binI,:) = v_sorted_m(binI,:) / n_sorted(binI);
-    v2_sorted_m(binI,:) = v2_sorted_m(binI,:) / n_sorted(binI);
-    v_sorted_std(binI,:) = sqrt((v2_sorted_m(binI,:) - v_sorted_m(binI,:).^2) / (n_sorted(binI) - 1));
+%    v_sorted_m(binI,:) = v_sorted_m(binI,:) / n_sorted_valid(binI,:);
+%    v2_sorted_m(binI,:) = v2_sorted_m(binI,:) / n_sorted_valid(binI,:);
+%    v_sorted_std(binI,:) = sqrt((v2_sorted_m(binI,:) - v_sorted_m(binI,:).^2) ./ (n_sorted_valid(binI,:) - 1));
   %end
 
-end
+%end
+v_sorted_m = v_sorted_m ./ n_sorted_valid;
+v2_sorted_m = v2_sorted_m ./ n_sorted_valid;
+v_sorted_std = sqrt((v2_sorted_m - v_sorted_m.^2) ./ (n_sorted_valid - 1));
+
 
 % We now determine the relevant time range used for this climatology calculation
 [real_startTime, real_stopTime] = findRealTimeRange(file_start_time, file_stop_time, startTime, stopTime);
@@ -237,7 +246,13 @@ else
     y = - plev;
   end
 
-  [z_valid, y_valid, x_valid] = subsetValidData(z, y, binCenterValues);
+  if x_opt
+    x = log10(binCenterValues);
+  else
+    x = binCenterValues;
+  end
+
+  [z_valid, y_valid, x_valid] = subsetValidData(z, y, x);
 
   contourf(x_valid, y_valid, z_valid, 15, 'linecolor', 'none');
 
@@ -254,6 +269,10 @@ else
     set(gca, 'yticklabel', num2str(10.^(currYTick-2))); % Pa -> hPa
   else
     set(gca, 'yticklabel', num2str(currYTick/100)); % Pa -> hPa
+  end
+  if x_opt
+    currXTick = get(gca, 'xtick')';
+    set(gca, 'xticklabel', num2str(10.^(currXTick))); % 
   end
   xlabel([largeScaleVarData.name '(' largeScaleVarData.units ')' ]);
   if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
