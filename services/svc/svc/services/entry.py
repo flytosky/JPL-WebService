@@ -709,6 +709,13 @@ def displayScatterPlot2V():
       # chdir back
       os.chdir(current_dir)
 
+      ind1 = message.find('No Data')
+      if ind1>0:
+        message1 = message[ind1:(ind1+200)]
+        message1a = message1.split('\n')
+        print message1a[0]
+        print message1a[1]
+     
       hostname, port = get_host_port("host.cfg")
       print 'hostname: ', hostname
       print 'port: ', port
