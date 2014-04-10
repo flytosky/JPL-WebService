@@ -10,6 +10,11 @@ wrapper \
 call_collocation.py \
 $cmac4:/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation
 
+aa=pythonWrapper
+cd /home/svc/cmac/trunk/services/svc/svc/src/collocation
+#mv $aa temp1
+rsync -av /home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation/$aa .
+
 
 import sys
 sys.path.append('/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation')
@@ -78,8 +83,12 @@ if cr['import_']       == 1:
 t00 = time.time()
 
 # parameters_
-collDir = '/home/bytang/projects/collocation'
-sys.path.append('%s/dev'%collDir)
+# zzzz
+#collDir = '/home/bytang/projects/collocation'   # for running in my own space
+collDir = '/home/svc/cmac/trunk/services/svc/svc/src/collocation'  # for deployment
+
+collCodeDir = '/home/bytang/projects/collocation'
+sys.path.append('%s/dev'%collCodeDir)
 
 '''
 xmlFile = {
