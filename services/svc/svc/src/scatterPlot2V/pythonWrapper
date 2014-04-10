@@ -284,6 +284,7 @@ class SUBSET_REGION():
     desFn = '%s/%s_%s_%s.des'%(desDir, center, model, varName)
     filesDes = glob.glob(desFn)
     if 1:
+      print dir0
       print 'filesNc, filesDes:'
       print center, model, varName
       print filesNc
@@ -485,6 +486,12 @@ class SUBSET_REGION():
       self.noDataExit('subsetting: failed to run ferret')
 
     #os.remove(tmpFileJnl)
+
+    if not os.path.isfile(tempFile[1]):
+      self.noDataExit('subsetting: ferret failed to generate a nc file.')
+
+    if os.stat(tempFile[1]).st_size<10:
+      self.noDataExit('subsetting: ferret failed to generate a nc file.')
 
     return tempFile[1]
 
@@ -1073,6 +1080,7 @@ if cr['command_arg']       == 1:
       #a.dataDir = temp1
         
   except:
+    print 'failed to read data.cfg.'
     pass
   '''
 /home/bytang/projects/cmac/trunk/services/svc/data.cfg
