@@ -117,6 +117,10 @@ Sort data by a given variable condition (e.g. sort cloud water path data in orde
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/conditionalSampling.html">Conditional Sampling Service</a>.
 </p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/co-location.html">Co-location Service</a>.
+</p>
 </ul>
 
 </ol>
