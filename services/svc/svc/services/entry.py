@@ -14,6 +14,7 @@ from svc.src.threeDimZonalMean import call_threeDimZonalMean
 from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
 from svc.src.scatterPlot2V import call_scatterPlot2V
 from svc.src.conditionalSampling import call_conditionalSampling
+from svc.src.collocation import call_collocation
 
 from flask import current_app
 from functools import update_wrapper
@@ -969,3 +970,87 @@ def displayConditionalSamp():
         'dataUrl': dataUrl
     })
 
+
+
+@app.route('/svc/co-locate', methods=["GET"])
+@crossdomain(origin='*')
+def displayColocation():
+    """Run displayColocation"""
+     
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+    dataUrl = ''
+     
+    # get source, target, start_time, end_time
+     
+    source = request.args.get('source', '')
+    target = request.args.get('target', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
+    try:
+      seed_str = source+target+startT+endT
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/co-location/' #### + tag
+      print 'output_dir: ', output_dir
+
+      ### if not os.path.exists(output_dir):
+        ### os.makedirs(output_dir)
+       
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/collocation')
+      # instantiate the app. class
+     
+      c1 = call_collocation.call_collocation(source, target, startT, endT, output_dir)
+
+      # call the app. function
+      (message, imgFileName) = c1.display()
+      print 'imgFileName: ', imgFileName
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      imgFileName = 'collocation_plot.png'
+      ### url = 'http://' + hostname + ':' + port + '/static/conditionalSampling/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/co-location/' + '/' + imgFileName
+      print 'url: ', url
+      ### dataUrl = 'http://' + hostname + ':' + port + '/static/conditionalSampling/' + tag + '/' + dataFileName
+      ### print 'dataUrl: ', dataUrl
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+        dataUrl = ''
+
+    except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+    except Exception, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+        'dataUrl': dataUrl
+    }) 
+   
