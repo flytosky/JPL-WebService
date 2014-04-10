@@ -118,7 +118,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         $.ajax({
             type: "GET",
@@ -143,7 +143,7 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html1 = "<img src='"+data.url+"' width='680'/>";
+                var html1 = "<img src='"+data.url+"' width='1200'/>";
                 // alert(html1);
                 $("#Image").html(html1);
 
@@ -186,8 +186,8 @@ It co-locates the data of an ATrain satellite onto the grid of another. <br><br>
 
 <tr>
 <td>source data:</td><td><select name="source", id="source" onchange="select_source()">
-<option selected="airs">airs</option>
-<option>mls-h2o</option>
+<option selected="mls-h2o">mls-h2o</option>
+<option>airs</option>
 </select></td>
 
 <td>target data:</td><td><select name="target", id="target" onchange="select_target()">
@@ -197,8 +197,8 @@ It co-locates the data of an ATrain satellite onto the grid of another. <br><br>
 </tr>
 
 <tr>
-<td>start time:</td><td><input id="t0" value="2005-12-01T00:00:00" alt="start"/></td>
-<td>end time:</td><td><input id="t1" value="2005-12-01T01:00:00" alt="end"/></td>
+<td>start time:</td><td><input id="t0" value="2008-05-01T00:00:00" alt="start"/></td>
+<td>end time:</td><td><input id="t1" value="2008-05-01T01:00:00" alt="end"/></td>
 </tr>
 
 <tr>
@@ -217,12 +217,12 @@ It co-locates the data of an ATrain satellite onto the grid of another. <br><br>
 </tr>
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+<textarea readonly id="data_url" cols="120" rows="2">Data URL Here</textarea>
 </td>
 </tr>
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="Response" cols="89" rows="6">Service Response Text Here</textarea>
+<textarea readonly id="Response" cols="120" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 </p>
