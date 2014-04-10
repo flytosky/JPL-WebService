@@ -2,17 +2,27 @@
 '''
 execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation/pythonWrapper')
 
+kk sp
+cd collocation
+rsync -ave 'ssh -p 8022' \
+pythonWrapper \
+wrapper \
+call_collocation.py \
+$cmac4:/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation
+
 
 import sys
 sys.path.append('/home/bytang/projects/cmac/trunk/services/svc/svc/src/collocation')
 import call_collocation 
-call_collocation(
+cl = call_collocation.call_collocation(
 'mls-h2o',
 'cloudsat',
 '2008-05-01T00:00:00',
 '2008-05-01T01:00:00',
-'/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/'):
+'/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
+cl.display()
 
+'airs',
 
 '''
 HOME='/home/svc'
@@ -56,7 +66,7 @@ if cr['import_']       == 1:
   import numpy as np      
   from netCDF4 import Dataset
   import netCDF4 as nC4
-  import NC_btang_v4 as NC1
+  #import NC_btang_v4 as NC1
 
   import matplotlib 
   matplotlib.use('Agg')  
