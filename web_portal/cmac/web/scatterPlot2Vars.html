@@ -786,10 +786,19 @@
                     // alert(data.error);
                     Response = null;
                     var text = JSON.stringify(data, null, 4);
+
+                    if (text.indexOf("No Data") != -1) {
+                      $("#Image").html("No Data");
+                      $("#Response").html("No Data");
+                      $("#data_url").html("No Data");
+                      return;
+                    }
+
                     text = "Error in backend: <br>" + text; 
                     // $("#Response").html("<span style='color:red'>" + text + "</span>");
                     $("#Response").html(text);
                     $("#data_url").html(text);
+
                     return;
                 }
                 var text = JSON.stringify(data, null, 4);
@@ -1052,13 +1061,13 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 
 <tr>
 <td colspan="4" align="center">
-<textarea readonly id="data_url" cols="89" rows="2">Data URL Here</textarea>
+<textarea readonly id="data_url" cols="130" rows="2">Data URL Here</textarea>
 </td>
 </tr>
 
 <tr>
 <td colspan="4" align="center">
-<textarea id="Response" cols="89" rows="6">Service Response Text Here</textarea>
+<textarea id="Response" cols="130" rows="6">Service Response Text Here</textarea>
 </td>
 </tr>
 
