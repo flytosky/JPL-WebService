@@ -252,7 +252,7 @@ class SUBSET_REGION():
     self.dayS = 15
     self.dayE = 15
 
-    self.plotInterval = 500
+    self.nSample = 500
 
     self.outDir = '.'
   
@@ -559,7 +559,7 @@ class SUBSET_REGION():
     aa2 = aa2.ravel()
 
     # only use a subset
-    mm = self.plotInterval
+    mm = self.nSample
     if len(aa1) > :
       ind2 = np.random.permutation(len(aa1))[:mm]
       aaa1 = aa1[ind2]
@@ -1061,7 +1061,7 @@ if cr['command_arg']       == 1:
 
     # arg 11
     ii += 1
-    a.plotInterval = int(argv[ii])
+    a.nSample = int(argv[ii])
 
     # arg 12
     ii += 1
