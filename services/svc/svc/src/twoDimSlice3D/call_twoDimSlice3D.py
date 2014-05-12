@@ -79,7 +79,8 @@ class call_twoDimSlice3D:
 
 
 if __name__ == '__main__':
-    c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'hus', '199001', '201212', '20000', '0', '30', '-29', '29', '4,5,6', './', '7')
+    ### c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'hus', '199001', '201212', '20000', '0', '30', '-29', '29', '4,5,6', './', '7')
+    c1 = call_twoDimSlice3D('ukmo_hadgem2-es', 'wap', '199001', '201212', '20000', '0', '30', '-29', '29', '4,5,6', './', '0')
 
     mesg = c1.displayTwoDimSlice3D()
     print 'mesg: ', mesg
