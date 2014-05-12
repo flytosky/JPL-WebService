@@ -8,7 +8,7 @@ class call_scatterPlot2V:
     def __init__(self, 
 model1, var1, pres1,
 model2, var2, pres2,
-start_time, end_time, lonS, lonE, latS, latE, output_dir, isDiffPlot):
+start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir):
 
         self.model1 = model1
         self.var1 = var1
@@ -22,6 +22,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir, isDiffPlot):
         self.lon2 = lonE
         self.lat1 = latS
         self.lat2 = latE
+        self.nSample = nSample
 
         self.output_dir = output_dir
         self.isDiffPlot = isDiffPlot
@@ -43,6 +44,7 @@ start_time, end_time, lonS, lonE, latS, latE, output_dir, isDiffPlot):
                  self.model2 + ' ' + self.var2 + ' ' + self.pres2 + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
+                 self.nSample + ' ' + \
                  self.output_dir + ' ' + '%d'%self.isDiffPlot
 
         print 'inputs: ', inputs
