@@ -79,7 +79,8 @@ class call_threeDimZonalMean:
 
 if __name__ == '__main__':
     ### ./octaveWrapper gfdl_cm3 cli 197501 199512 '-60 60' '90000, 20000' '5,6,7,8' '/tmp' 7
-    c1 = call_threeDimZonalMean('gfdl_cm3', 'cli', '197501', '199512', '-60', '60', '90000', '20000', '5,6,7,8', './', '7')
+    ### c1 = call_threeDimZonalMean('gfdl_cm3', 'cli', '197501', '199512', '-60', '60', '90000', '20000', '5,6,7,8', './', '7')
+    c1 = call_threeDimZonalMean('ukmo_hadgem2-es', 'wap', '197501', '199512', '-60', '60', '90000', '20000', '5,6,7,8', './', '0')
 
     mesg = c1.displayThreeDimZonalMean()
     print 'mesg: ', mesg
