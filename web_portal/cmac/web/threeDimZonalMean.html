@@ -105,6 +105,8 @@
       x.options[3].disabled=false;
       x.options[4].disabled=false;
       x.options[5].disabled=false;
+      x.options[6].disabled=false;
+      x.options[7].disabled=false;
     }
 
     // form variable string based on "var" dropdown selection
@@ -127,6 +129,10 @@
         variable = "ot";
       else if (var_string == "Ocean Salinity")
         variable = "os";
+      else if (var_string == "Vertical Wind Velocity")
+        variable = "wap";
+      else if (var_string == "Relative Humidty")
+        variable = "hur";
 
       // alert("variable: " + variable)
     }
@@ -153,6 +159,8 @@
         x.options[3].disabled=true;
         x.options[4].disabled=true;
         x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
       }
       else if (data_string == "NASA/MLS") {
         x.options[0].selected=true;
@@ -161,6 +169,8 @@
         x.options[3].disabled=true;
         x.options[4].disabled=true;
         x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
       }
       else if (data_string == "ARGO/ARGO") {
         x.options[0].disabled=true;
@@ -169,6 +179,8 @@
         x.options[3].disabled=true;
         x.options[4].selected=true;
         //x.options[5].selected=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
       }
       else {
         x.options[0].selected=true;
@@ -519,6 +531,8 @@ Select a data source, a variable name, a time range, and a pressure range below.
 <option>Cloud Liquid Water Content</option>
 <option>Ocean Temperature</option>
 <option>Ocean Salinity</option>
+<option>Vertical Wind Velocity</option>
+<option>Relative Humidty</option>
 </select></td>
 
 </tr>
