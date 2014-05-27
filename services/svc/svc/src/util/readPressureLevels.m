@@ -8,7 +8,7 @@ if strcmp(plevVarName, 'plev')
       plev = plev * 1e4; % convert from dbar to Pa
     case 'bar',
       plev = plev * 1e5; % convert from bar to Pa
-    case {'milibar', 'mbar', 'hPa'},
+    case {'milibar', 'mbar', 'hPa', 'millibars'},
       plev = plev * 1e2; % convert from mbar to Pa
     otherwise,
       %% don't do anything

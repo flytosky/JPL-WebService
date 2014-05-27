@@ -14,6 +14,16 @@ else
 end
 unitsSpec = ncreadatt(fileName, 'time', 'units');
 
-date0 = sscanf(unitsSpec, 'days since %d-%d-%d');
+[units_str, str_res] = strtok(unitsSpec);
+date0 = sscanf(str_res, ' since %d-%d-%d');
+
+switch lower(units_str)
+   case 'hours',
+     ts = ts/24;
+   case 'days',
+     % doing nothing
+   otherwise,
+     warning(['!!! Unknown time units string: ' unts_str ' , days assumed.']);
+end
 [years, months, indices] = convertDaysFromADateToMonths(date0, ts, cal);
 
