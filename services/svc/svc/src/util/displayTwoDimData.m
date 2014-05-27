@@ -22,6 +22,8 @@ else
   ylabelOff = cfgParams.ylabelOff;
 end
 imagesc(lon, -lat, twoDimData');
+colorLim = determineDisplayRange(twoDimData(:));
+caxis(colorLim);
 cb=colorbar('southoutside');
 
 if ~isempty(find(isnan(twoDimData(:))))
