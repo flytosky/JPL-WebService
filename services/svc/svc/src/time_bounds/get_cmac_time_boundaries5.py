@@ -83,11 +83,11 @@ def getCmacTimeBoundaries(dataSource, varName, useBreakFiles):
 					#print("Found one: %s" % (fName))
 	else:
 		#print("Path does not exist")
-		return  [ [0, 0] ]
+		return  [0, 0]
 		
 	# If search yields no file name, return [0,0]
 	if foundADate == False:
-		return [ [0, 0] ]
+		return [0, 0]
 	else:
 		#print("last dateList: %s" % (dateList))
 		x = max_min(dateList)
@@ -103,6 +103,7 @@ if __name__ == '__main__':
 			"rsut", "rsutcs", "sfcWind", "ts", "uas", "vas", "clw", "hus", "ta", "tos", "zos", "ohc700", "ohc2000", "zo", "zl", "os", "ot"] 
 			#["clivi", "clwvi", "z1", "z0", "cltStddev", "cltNobs", "sfcWindNobs", "sfcWindStderr", "uasNobs", "uasStderr", "vasNobs", "vasStderr",
 			#"prw"]
+        """
 	print("start test")
 	for source in sources:
 		for var in vars:
@@ -118,3 +119,15 @@ if __name__ == '__main__':
 			print(retDateList, source, var)
 			print("\n")			
 	print("end test")
+        """
+
+        source = 'cccma/canam4'
+        var = 'rlus'
+
+        source = 'argo/argo'
+        var = 'os'
+        retDateList = getCmacTimeBoundaries(source, var, True)
+        print(retDateList, source, var)
+
+
+
