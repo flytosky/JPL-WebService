@@ -15,6 +15,7 @@ from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
 from svc.src.scatterPlot2V import call_scatterPlot2V
 from svc.src.conditionalSampling import call_conditionalSampling
 from svc.src.collocation import call_collocation
+from svc.src.time_bounds import get_cmac_time_boundaries5
 
 from flask import current_app
 from functools import update_wrapper
@@ -1054,3 +1055,40 @@ def displayColocation():
         'dataUrl': dataUrl
     }) 
    
+
+
+@app.route('/svc/time_bounds', methods=["GET"])
+@crossdomain(origin='*')
+def displayTimeBounds():
+    """Run displayTimeBounds"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+   
+    # get data source and variable name
+    source = request.args.get('source', '')
+    var = request.args.get('var', '')
+
+    print 'source: ', source
+    print 'var: ', var
+
+    retDateList = get_cmac_time_boundaries5.getCmacTimeBoundaries(source, var, False)
+    print 'retDateList: ', retDateList
+
+    if retDateList[0] is not 0:
+      lower = int(str(retDateList[0]))
+    else:
+      lower = 0
+
+    if retDateList[1] is not 0:
+      upper = int(str(retDateList[1]))
+    else:
+      upper = 0
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'time_bounds': [lower, upper]
+    }) 
