@@ -560,7 +560,7 @@ class SUBSET_REGION():
 
     # only use a subset
     mm = self.nSample
-    if len(aa1) > :
+    if len(aa1) > mm:
       ind2 = np.random.permutation(len(aa1))[:mm]
       aaa1 = aa1[ind2]
       aaa2 = aa2[ind2]
