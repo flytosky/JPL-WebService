@@ -209,6 +209,12 @@ v_sorted_std = sqrt((v2_sorted_m - v_sorted_m.^2) ./ (n_sorted_valid - 1));
 [x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
 titleStr = [long_name ', sorted by ' largeScaleVarData.name ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/')];
 
+if isfield(largeScaleVarData, 'plev')
+  xlabelStr = [largeScaleVarData.name ' at ' num2str(round(mean(largeScaleVarData.plev)/100)) 'hPa (' largeScaleVarData.units ')' ]
+else
+  xlabelStr = [largeScaleVarData.name '(' largeScaleVarData.units ')' ];
+end
+
 figure;
 if dataIsTwoDim
   if y_opt | z_opt
@@ -226,7 +232,7 @@ if dataIsTwoDim
   end
   set(h1, 'linestyle', '-', 'marker', 's', 'color', 'k', 'linewidth', 2, 'markersize', 6);
   set(h2, 'linestyle', '--', 'color', 'g', 'linewidth', 3);
-  xlabel([largeScaleVarData.name '(' largeScaleVarData.units ')' ]);
+  xlabel(xlabelStr);
   ylabel(ax(1),[varName '(' v_units ')']);
   ylabel(ax(2),'Number of samples');
   set(ax(1), 'fontweight', 'bold');
@@ -274,7 +280,7 @@ else
     currXTick = get(gca, 'xtick')';
     set(gca, 'xticklabel', num2str(10.^(currXTick))); % 
   end
-  xlabel([largeScaleVarData.name '(' largeScaleVarData.units ')' ]);
+  xlabel(xlabelStr);
   if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
         ylabel('Pressure level (hPa)');
   else
