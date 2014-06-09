@@ -141,11 +141,15 @@ var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
 
 if z_opt
   z = log10(var_clim + 1e-4*max(var_clim(:)));
+  cfgParams.logScale = true;
 else
   z = var_clim;
 end
+cfgParams.xlabelOff = false;
+cfgParams.ylabelOff = false;
 
-[h, cb] = displayTwoDimData(lon, lat, z);
+figure;
+[h, cb] = displayTwoDimData(lon, lat, z, gca, cfgParams);
 if z_opt
   set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),3));
 end
@@ -154,7 +158,7 @@ plev_units = 'hPa';
 if strcmp(varName, 'ot') || strcmp(varName, 'os') 
   plev_units = 'dbar';
 end
-title(h, [varName ', at ' num2str(round(thisPlev/100)) plev_units ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+title(h, [long_name ', at ' num2str(round(thisPlev/100)) plev_units ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'longitude', 'latitude'};
