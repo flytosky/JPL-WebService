@@ -25,14 +25,20 @@ imagesc(lon, -lat, twoDimData');
 colorLim = determineDisplayRange(twoDimData(:));
 caxis(colorLim);
 
-if prod(colorLim) < 0
+crossingZero = prod(colorLim) < 0;
+
+if isfield(cfgParams, 'logScale')
+  crossingZero = ~cfgParams.logScale;
+end
+
+if crossingZero
   cmap = myColorMap(colorLim);
 else
   cmap = colormap('jet');
 end
 
 if ~isempty(find(isnan(twoDimData(:))))
-  cmap(1,:) = [1,1,1] * double((prod(colorLim) >= 0));
+  cmap(1,:) = [1,1,1] * double(~crossingZero);
 end
 
 colormap(cmap);
