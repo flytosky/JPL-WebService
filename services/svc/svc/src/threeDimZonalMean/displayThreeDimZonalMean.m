@@ -152,6 +152,14 @@ var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
 
 [var_clim, lat, plev] = subsetValidData(var_clim, lat, plev);
 
+colorLim = determineDisplayRange(var_clim);
+
+if prod(colorLim) < 0
+  cmap = myColorMap(colorLim);
+else
+  cmap = colormap('jet');
+end
+
 [x_opt, y_opt, z_opt] = decodeDisplayOpt(displayOpt);
 
 if z_opt
@@ -171,9 +179,9 @@ figure;
 contourf(lat, y, z, 30, 'linecolor', 'none');
 if ~isempty(find(isnan(var_clim(:))))
   cmap = colormap();
-  cmap(1,:) = [1,1,1];
-  colormap(cmap);
+  cmap(1,:) = [1,1,1] * (double(prod(colorLim) >= 0));
 end
+colormap(cmap);
 grid on;
 set(gca, 'fontweight', 'bold');
 currYTick = get(gca, 'ytick')';
@@ -194,7 +202,7 @@ if z_opt
   set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),2));
 end
 set(get(cb,'xlabel'), 'string', [long_name '(' v_units ')'], 'FontSize', 16);
-title([varName ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
+title([long_name ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/') ' zonal mean map climatology (' v_units '), ' seasonStr(monthIdx)], 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 
 data.dimNames = {'plev', 'latitude'};
