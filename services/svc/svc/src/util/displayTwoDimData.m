@@ -24,13 +24,20 @@ end
 imagesc(lon, -lat, twoDimData');
 colorLim = determineDisplayRange(twoDimData(:));
 caxis(colorLim);
-cb=colorbar('southoutside');
+
+if prod(colorLim) < 0
+  cmap = myColorMap(colorLim);
+else
+  cmap = colormap('jet');
+end
 
 if ~isempty(find(isnan(twoDimData(:))))
-  cmap = colormap();
-  cmap(1,:) = [1,1,1];
-  colormap(cmap);
+  cmap(1,:) = [1,1,1] * double((prod(colorLim) >= 0));
 end
+
+colormap(cmap);
+cb=colorbar('southoutside');
+keyboard;
 
 hold on;
 plot(ha, coastLongAndLat(:,2)-360, -coastLongAndLat(:,1), 'k-');

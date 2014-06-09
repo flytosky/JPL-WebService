@@ -2,6 +2,7 @@ function dispRange = determineDisplayRange(data, cfgParams)
 %
 %
 %
+data = data(isfinite(data));
 m = mean(data(:));
 s = sqrt(mean(data(:).^2) - m^2);
 
