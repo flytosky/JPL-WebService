@@ -127,11 +127,15 @@ monthIdxAdj = mod(monthIdx - startTime.month, 12) + 1;
 var_clim = squeeze(simpleClimatology(monthlyData,3, monthIdxAdj));
 if z_opt
   z = log10(var_clim + 1e-4*max(var_clim(:)));
+  cfgParams.logScale = true;
 else
   z = var_clim;
 end
-[h, cb] = displayTwoDimData(lon, lat, z);
-title(h, [varName ', ' date2Str(real_startTime, '/') '-' date2Str(real_stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
+cfgParams.xlabelOff = false;
+cfgParams.ylabelOff = false;
+figure;
+[h, cb] = displayTwoDimData(lon, lat, z, gca, cfgParams);
+title(h, [long_name ', ' date2Str(real_startTime, '/') '-' date2Str(real_stopTime, '/') ' climatology (' v_units '), ' seasonStr(monthIdx)]);
 if z_opt
   set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),3));
 end
