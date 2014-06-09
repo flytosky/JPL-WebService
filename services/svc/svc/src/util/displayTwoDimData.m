@@ -37,7 +37,6 @@ end
 
 colormap(cmap);
 cb=colorbar('southoutside');
-keyboard;
 
 hold on;
 plot(ha, coastLongAndLat(:,2)-360, -coastLongAndLat(:,1), 'k-');
