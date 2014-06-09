@@ -8,7 +8,7 @@ class call_scatterPlot2V:
     def __init__(self, 
 model1, var1, pres1,
 model2, var2, pres2,
-start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir):
+start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir, isDiffPlot):
 
         self.model1 = model1
         self.var1 = var1
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
 
     c1 = call_scatterPlot2V(\
-         'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
+         'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', 500, \
          '/home/svc/cmac/trunk/services/svc/svc/static/diffPlot2V', 1)
 
     mesg = c1.display()
