@@ -82,6 +82,8 @@
       x.options[28].disabled=true;
       x.options[29].disabled=true;
       x.options[30].disabled=true;
+      x.options[31].disabled=true;
+      x.options[32].disabled=true;
     }
 
 
@@ -443,6 +445,26 @@
         // enable pressure level box for 3D var
         enable_pres1(ID);
       }
+      else if (var_string == "Vertical Wind Velocity") {
+        if (ID == 1) {
+          variable1 = "wap";
+        }
+        else if (ID == 2) {
+          variable2 = "wap";
+        }
+        // enable pressure level box for 3D var
+        enable_pres1(ID);
+      }
+      else if (var_string == "Relative Humidty") {
+        if (ID == 1) {
+          variable1 = "hur";
+        }
+        else if (ID == 2) {
+          variable2 = "hur";
+        }
+        // enable pressure level box for 3D var
+        enable_pres1(ID);
+      }
 
       // alert("variable1: " + variable1)
     }
@@ -657,6 +679,8 @@
         x.options[26].disabled=false;
         x.options[27].disabled=false;
         x.options[28].disabled=false;
+        x.options[31].disabled=false;
+        x.options[32].disabled=false;
 
       }
 
@@ -766,6 +790,10 @@
 
         arglist = arglist.concat("&lat2=");
         arglist = arglist.concat(lat1);
+
+        var nSample = $("#nSample").val();
+        arglist = arglist.concat("&nSample=");
+        arglist = arglist.concat(nSample);
 
         // alert("arglist: " + arglist);
 
@@ -966,6 +994,8 @@ data 2
 <option>Cloud Liquid Water Content</option>
 <option>Ocean Temperature</option>
 <option>Ocean Salinity</option>
+<option>Vertical Wind Velocity</option>  
+<option>Relative Humidty</option>
 </select>
 </td>
 
@@ -1002,6 +1032,8 @@ data 2
 <option>Cloud Liquid Water Content</option>
 <option>Ocean Temperature</option>
 <option>Ocean Salinity</option>
+<option>Vertical Wind Velocity</option>  
+<option>Relative Humidty</option>
 </select>
 </td>
 
@@ -1042,6 +1074,10 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 <tr>
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
+</tr>
+
+<tr>  
+<td>number of samples:</td><td><input id="nSample" value="500"/></td></tr>
 </tr>
 
 <tr>
