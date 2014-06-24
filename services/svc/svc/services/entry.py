@@ -661,7 +661,7 @@ def displayScatterPlot2V():
     url = ''
     dataUrl = ''
 
-    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2
+    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2, nSample
 
     model1 = request.args.get('model1', '')
     var1 = request.args.get('var1', '')
@@ -675,6 +675,7 @@ def displayScatterPlot2V():
     lon2 = request.args.get('lon2', '')
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
+    nSample = request.args.get('nSample', '')
 
     print 'model1: ', model1
     print 'var1: ', var1
@@ -688,13 +689,14 @@ def displayScatterPlot2V():
     print 'lon2: ', lon2
     print 'lat1: ', lat1
     print 'lat2: ', lat2
+    print 'nSample: ', nSample
 
     # get where the input file and output file are
     current_dir = os.getcwd()
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2
+      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2+nSample
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/scatterPlot2V/' + tag
       print 'output_dir: ', output_dir
@@ -704,7 +706,7 @@ def displayScatterPlot2V():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/scatterPlot2V')
       # instantiate the app. class
-      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir, 0)
+      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, nSample, output_dir, 0)
       # call the app. function (0 means the image created is scatter plot)
       ### (message, imgFileName) = c1.displayScatterPlot2V(0)
       (message, imgFileName, dataFileName) = c1.display()
@@ -812,7 +814,7 @@ def displayDiffPlot2V():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/scatterPlot2V')
       # instantiate the app. class
-      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, output_dir, 1)
+      c1 = call_scatterPlot2V.call_scatterPlot2V(model1, var1, pres1, model2, var2, pres2, startT, endT, lon1, lon2, lat1, lat2, 0, output_dir, 1)
       # call the app. function (1 means the image created is difference plot)
       (message, imgFileName, dataFileName) = c1.display()
       print 'imgFileName: ', imgFileName
