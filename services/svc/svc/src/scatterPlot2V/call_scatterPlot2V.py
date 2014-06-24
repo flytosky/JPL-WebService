@@ -44,8 +44,9 @@ start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir, isDiffPlot):
                  self.model2 + ' ' + self.var2 + ' ' + self.pres2 + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 self.nSample + ' ' + \
-                 self.output_dir + ' ' + '%d'%self.isDiffPlot
+                 str(self.nSample) + ' ' + \
+                 self.output_dir + ' ' + str(self.isDiffPlot)
+                 ### self.output_dir + ' ' + '%d'%self.isDiffPlot
 
         print 'inputs: ', inputs
         #command = '/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V/wrapper ' +  inputs
@@ -97,20 +98,20 @@ start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir, isDiffPlot):
 
 if __name__ == '__main__':
 
-    """
     c1 = call_scatterPlot2V(\
-         'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', \
+         'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', 500, \
          '/home/svc/cmac/trunk/services/svc/svc/static/scatterPlot2V', 0)
 
     mesg = c1.display()
     print 'mesg: ', mesg
+
+
     """
-
-
     c1 = call_scatterPlot2V(\
          'ukmo_hadgem2-a', 'ts', '200', 'ukmo_hadgem2-a', 'clt', '200', '199001', '199512', '0', '100', '-29', '29', 500, \
          '/home/svc/cmac/trunk/services/svc/svc/static/diffPlot2V', 1)
 
     mesg = c1.display()
     print 'mesg: ', mesg
+    """
 
