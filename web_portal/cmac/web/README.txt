@@ -29,3 +29,19 @@ For the physical variables, please add
 "hus" for specific humidity
 "cli" for cloud ice water content
 "ta" for air temperature
+
+
+6/24/14:
+(1) add new variables:
+     "Vertical Wind Velocity" and "Relative Humidty" 
+     to all 3D services;
+     conditional sampling, and difference 
+     sample: twoDimSlice3D.html
+
+(2) add Reanalysis and 3 vars for all services;
+    sample: twoDimZonalMean.html
+
+(3) check data availability for all services.
+    sample: twoDimMap.html 
+
+
