@@ -13,3 +13,12 @@ color lat   lon
 
 . conditional Sampling
   designed (from Seungwon)
+
+
+. todo:
+(1) add new variables:
+     "Vertical Wind Velocity" and "Relative Humidty" 
+     to all 3D services; (done)
+(2) add Reanalysis and 3 vars for all services;
+(3) check data availability for all services.
+
