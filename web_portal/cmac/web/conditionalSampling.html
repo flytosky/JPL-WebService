@@ -748,6 +748,14 @@
         x.options[28].disabled=false;
 
       }
+      else if (data_string == "ECMWF/interim") {
+        unset_vars1(ID);
+ 
+        x.options[3].selected=true;
+        disable_pres1(ID); // the selected one is 2D
+
+        x.options[3].disabled=false;
+      }
 
       // form variable string
       select_var1(ID);
@@ -1212,6 +1220,9 @@ Environmental Variable (sampling variable)
 <option>NASA/MLS</option>
 <option>ARGO/ARGO</option>
 </optgroup>
+<optgroup label="Reanalysis">
+<option>ECMWF/interim</option>
+</optgroup>
 </select></td>
 
 <td>source:</td><td><select name="data2", id="data2" onchange="select_data1(2)">
@@ -1246,6 +1257,9 @@ Environmental Variable (sampling variable)
 <option>NASA/AIRS</option>
 <option>NASA/MLS</option>
 <option>ARGO/ARGO</option>
+</optgroup>
+<optgroup label="Reanalysis">
+<option>ECMWF/interim</option>
 </optgroup>
 </select></td>
 
