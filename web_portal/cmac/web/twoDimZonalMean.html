@@ -444,6 +444,35 @@
 
         x.options[13].selected=true;
       }
+      else if (data_string == "ECMWF/interim") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[3].selected=true;
+      }
       // for all other models
       else {
         x.options[9].disabled=true;
@@ -654,6 +683,80 @@
         // url = url + arglist;
         // alert("url: " + url);
 
+        var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
+        var arglistTB = "";
+        arglistTB = arglistTB.concat("source=");
+        arglistTB = arglistTB.concat(d1);
+        arglistTB = arglistTB.concat("&var=");
+        arglistTB = arglistTB.concat(variable);
+        urlTimeBounds = urlTimeBounds + encodeURI(arglistTB);
+        // alert("urlTimeBounds: " + urlTimeBounds);
+
+
+        $.ajax({
+            type: "GET",
+            url: urlTimeBounds,
+            dataType: "json",
+            data: null,
+            success: function(data, textStatus, xhr) {
+                Response = data;
+                // alert("data: " + data);
+                if (data.success == false) {
+                    // alert(data.error);
+                    Response = null;
+                    var text = JSON.stringify(data, null, 4);
+                    text = "Error in backend: <br>" + text; 
+                    $("#Response").html(text);
+                    $("#data_url").html(text);
+                    return;
+                }
+                var text = JSON.stringify(data, null, 4);
+                // alert("text: " + text);
+                // $("#Response").html("<pre>"+text+"</pre>");
+                // $("#Response").html(text);
+
+                var tb = data.time_bounds;
+                var bds = String(tb).split(",");
+                // alert("tb: " + tb);
+                // alert("bds: " + bds);
+                var lowerT = parseInt(bds[0]);
+                var upperT = parseInt(bds[1]);
+                // alert("lowerT: " + lowerT);
+                // alert("upperT: " + upperT);
+                var t0I = parseInt(t0);
+                var t1I = parseInt(t1);
+                // alert("t0: " + t0I);
+                // alert("t1: " + t1I);
+
+                if (t0I < lowerT && t1I < lowerT ||
+                    t0I > upperT && t1I > upperT) {
+                  alert("We do not have data that span your time range. Try the range inside ["+lowerT+", "+upperT+"].");
+                  return;
+                }
+
+                if (t0I < lowerT) {
+                  alert("Your start year-month is out of bound. It has to be in or later than " + lowerT +
+                        ". We will use the range ["+lowerT+", "+t1I+"] for you.");
+                }
+
+                if (t1I > upperT) {
+                  alert("Your end year-month is out of bound. It has to be in or earlier than " + upperT +
+                        ". We will use the range ["+t0I+", "+upperT+"] for you.");
+                }
+
+            },
+            error: function(xhr, textStatus, errorThrown) {
+		$("#Response").html("error!");
+		$("#data_url").html("error!");
+                // alert("xhr.status: "+xhr.status);
+                // alert("error status: "+textStatus);
+            },
+            complete: function(xhr, textStatus) {
+                //alert("complete status: "+textStatus);
+            }
+        });
+
+
         $.ajax({
             type: "GET",
             url: url,
@@ -750,6 +853,9 @@ Select a data source (model or observation), a variable name, and a time range b
 <option>IPSL/CM5A-LR</option>
 <option>MIROC/MIROC5</option>
 <option>UKMO/HadGEM2-A</option>
+</optgroup>
+<optgroup label="Reanalysis">
+<option>ECMWF/interim</option>
 </optgroup>
 </select></td>
 
