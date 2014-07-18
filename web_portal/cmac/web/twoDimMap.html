@@ -443,6 +443,35 @@
 
         x.options[13].selected=true;
       }
+      else if (data_string == "ECMWF/interim") {
+
+        x.options[0].disabled=true;
+        x.options[1].disabled=true;
+        x.options[2].disabled=true;
+        x.options[4].disabled=true;
+        x.options[5].disabled=true;
+        x.options[6].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+        x.options[13].disabled=true;
+        x.options[14].disabled=true;
+        x.options[15].disabled=true;
+        x.options[16].disabled=true;
+        x.options[17].disabled=true;
+        x.options[18].disabled=true;
+        x.options[19].disabled=true;
+        x.options[20].disabled=true;
+        x.options[21].disabled=true;
+        x.options[22].disabled=true;
+        x.options[23].disabled=true;
+        x.options[24].disabled=true;
+
+        x.options[3].selected=true;
+      }
       // for all other models
       else {
         x.options[9].disabled=true;
@@ -831,6 +860,9 @@ Select a data source (model or observation), a variable name, a time range, and 
 <option>IPSL/CM5A-LR</option>
 <option>MIROC/MIROC5</option>
 <option>UKMO/HadGEM2-A</option>
+</optgroup>
+<optgroup label="Reanalysis">
+<option>ECMWF/interim</option>
 </optgroup>
 </select></td>
 
