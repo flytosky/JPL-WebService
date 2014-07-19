@@ -743,16 +743,20 @@
                   return;
                 }
 
-                if (t0I < lowerT) {
+                if (t0I < lowerT && t1I <= upperT) {
                   alert("Your start year-month is out of bound. It has to be in or later than " + lowerT +
                         ". We will use the range ["+lowerT+", "+t1I+"] for you.");
                 }
 
-                if (t1I > upperT) {
+                if (t1I > upperT && t0I >= lowerT) {
                   alert("Your end year-month is out of bound. It has to be in or earlier than " + upperT +
                         ". We will use the range ["+t0I+", "+upperT+"] for you.");
                 }
 
+                if (t0I < lowerT && t1I > upperT ) {
+                  alert("Both of your start and end year-months are out of bounds. They have to be in or earlier than " + upperT +
+                        ", and in or later than " + lowerT + ". We will use the range ["+lowerT+", "+upperT+"] for you.");
+                }
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#Response").html("error!");
