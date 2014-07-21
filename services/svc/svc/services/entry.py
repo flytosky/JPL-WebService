@@ -1059,6 +1059,61 @@ def displayColocation():
    
 
 
+@app.route('/svc/two_time_bounds', methods=["GET"])
+@crossdomain(origin='*')
+def displayTwoTimeBounds():
+    """Run displayTwoTimeBounds"""
+
+    # status and message
+    success = True
+    message = "ok"
+   
+    # get data source and variable name
+    source1 = request.args.get('source1', '')
+    var1 = request.args.get('var1', '')
+    source2 = request.args.get('source2', '')
+    var2 = request.args.get('var2', '')
+
+    print 'source1: ', source1
+    print 'var:1 ', var1
+    print 'source2: ', source2
+    print 'var2: ', var2
+
+    retDateList1 = get_cmac_time_boundaries5.getCmacTimeBoundaries(source1, var1, False)
+    print 'retDateList1: ', retDateList1
+
+    if retDateList1[0] is not 0:
+      lower1 = int(str(retDateList1[0]))
+    else:
+      lower1 = 0
+
+    if retDateList1[1] is not 0:
+      upper1 = int(str(retDateList1[1]))
+    else:
+      upper1 = 0
+
+    retDateList2 = get_cmac_time_boundaries5.getCmacTimeBoundaries(source2, var2, False)
+    print 'retDateList2: ', retDateList2
+
+    if retDateList2[0] is not 0:
+      lower2 = int(str(retDateList2[0]))
+    else:
+      lower2 = 0
+
+    if retDateList2[1] is not 0:
+      upper2 = int(str(retDateList2[1]))
+    else:
+      upper2 = 0
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'time_bounds1': [lower1, upper1],
+        'time_bounds2': [lower2, upper2]
+    }) 
+
+
+
 @app.route('/svc/time_bounds', methods=["GET"])
 @crossdomain(origin='*')
 def displayTimeBounds():
@@ -1067,7 +1122,6 @@ def displayTimeBounds():
     # status and message
     success = True
     message = "ok"
-    url = ''
    
     # get data source and variable name
     source = request.args.get('source', '')
@@ -1094,3 +1148,4 @@ def displayTimeBounds():
         'message': message,
         'time_bounds': [lower, upper]
     }) 
+
