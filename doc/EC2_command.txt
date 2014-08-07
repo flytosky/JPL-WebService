@@ -1,0 +1,49 @@
+. go to
+  http://climate.earthkit.jpl.net/
+  Username: lei, password: mirrorpond
+  click Launch
+
+. copy the url from the above landing page
+
+. ssh to the instance
+  ssh -i climate-default.pem ubuntu@ec2-54-183-158-89.us-west-1.compute.amazonaws.com
+
+. change user to
+  sudo su - sflops
+  the cmac code is there
+  /home/sflops/cmac/trunk
+
+. the data mount
+  /mnt/xvdf/data/
+
+. remember to stop after use
+  click Shutdown
+
+
+
+How to start the machine
+1. Log into earthkit at climate.earthkit.jpl.net. Username lei, password mirrorpond.
+2. Click on Launch
+
+How to stop the machine
+1. Log into earthkit at climate.earthkit.jpl.net. Username lei, password mirrorpond.
+2. Click on Shutdown
+
+How to obtain the IP address of the machine
+1. Start your machine
+2. Click on the Start button. This will open a new page in your browser. The URL of the page will have your machine's ip address/hostname.
+
+How to log into your machine
+1. Obtain the machine's ip address
+2. Log in using the following command
+
+ssh -i PATH_TO_YOUR_PRIVATE_KEY ubuntu@ipaddress
+
+3. Switch to sflops user by running the following command
+
+sudo su - sflops
+
+Notes:
+* Data volume is mounted to /mnt/xvdf/data/
+
+
