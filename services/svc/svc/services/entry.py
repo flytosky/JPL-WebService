@@ -135,6 +135,11 @@ def displayTwoDimMap():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -229,6 +234,11 @@ def display_timeSeries2D():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -327,6 +337,11 @@ def displayTwoDimSlice3D():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -420,6 +435,11 @@ def displayTwoDimZonalMean():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -517,6 +537,11 @@ def displayThreeDimZonalMean():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -612,6 +637,11 @@ def displayThreeDimVerticalProfile():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -721,6 +751,11 @@ def displayScatterPlot2V():
         print message1a[1]
      
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
       print 'imgFileName: ', imgFileName
@@ -822,6 +857,11 @@ def displayDiffPlot2V():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -937,6 +977,11 @@ def displayConditionalSamp():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
@@ -1019,6 +1064,11 @@ def displayColocation():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
       print 'hostname: ', hostname
       print 'port: ', port
 
