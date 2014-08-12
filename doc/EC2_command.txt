@@ -47,3 +47,19 @@ Notes:
 * Data volume is mounted to /mnt/xvdf/data/
 
 
+======================================
+Things to modify for the Amazon EC2 deployment
+. In trunk/services/svc/svc/src/time_bounds/get_cmac_time_boundaries5.py
+  # for Amazon EC2
+  dataPath1 = '/mnt/xvdf/data/cmip5/' + dataPath
+  (This hardcode value needs to be replaced by value read from data.cfg.)
+. In data.cfg
+  /mnt/xvdf/data/
+. In host.cfg
+  HOSTNAME = EC2
+  PORT = 8890
+. In settings.cfg
+  PORT = 8890
+. In *.html under trunk/web_portal/cmac/web
+  change port numbers from 8090 to 8890
+
