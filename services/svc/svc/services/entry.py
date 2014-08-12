@@ -1,6 +1,7 @@
 import os, hashlib, shutil
 from datetime import datetime, timedelta
 import md5
+import urllib2
 
 from flask import jsonify, request, url_for, make_response
 from werkzeug import secure_filename
