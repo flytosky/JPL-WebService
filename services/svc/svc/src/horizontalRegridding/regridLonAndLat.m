@@ -135,7 +135,6 @@ switch opt
     lonlon = mod(lonlon - minLon, 360) + minLon;
     for ii = 1:nMaps
       data_regridded(:, :, ii) = griddata(lon_data, lat_data, data(:,:,ii), lonlon, latlat, 'linear');
-      keyboard;
     end
   case 'subidx',
     disp('subindexing a regular 2-d grid');
