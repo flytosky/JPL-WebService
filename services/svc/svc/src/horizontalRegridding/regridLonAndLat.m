@@ -129,8 +129,13 @@ switch opt
     end
   case '2d_interp_irreg',
     disp('regridding an irregular 2-d grid');
+    % make sure the longitude is in the correct range
+    maxLon = max(lon_data(:));
+    minLon = min(lon_data(:));
+    lonlon = mod(lonlon - minLon, 360) + minLon;
     for ii = 1:nMaps
       data_regridded(:, :, ii) = griddata(lon_data, lat_data, data(:,:,ii), lonlon, latlat, 'linear');
+      keyboard;
     end
   case 'subidx',
     disp('subindexing a regular 2-d grid');
