@@ -1,47 +1,18 @@
 import os
 import glob
+import re
+p1 = re.compile( r'_(\d*)-(\d*).nc')
 
 def calcTimeBounds(fn):
   # find the start of the time bounds
-  temp1 = fn.find('_19') 
-  temp19 = fn.find('_18') 
-  if temp1==-1 and temp19==-1:
+  m1 = p1.search(fn)
+  g1 =  m1.groups()
+  if len(g1)!=2:
     return [0, 0]
 
-  # pick 18?? if no 19??
-  if temp1==-1:
-    temp1 = temp19
-  temp1 += 1
-
-  # find the start of the second time bound
-  temp1a = fn[temp1:]
-  temp2 = temp1a.find('-') 
-  if temp2==-1:
-    return [0, 0]
-
-  # some file has other parts after the time bounds.
-  # for now, ignore those files
-  temp2a = temp1a[temp2:]
-  temp3 = temp2a.find('_') 
-  if temp3>-1:
-    return [0, 0]
-
-  temp1b = temp1
-  temp2b = temp1 + temp2
-
-#  if temp3>-1:
-#    print fn
-#    temp3b = temp2b + temp3
-#  else:
-#    temp3b = -3
-
-  temp3b = -3
-
-  y1 = fn[temp1b:temp2b]
-  y2 = fn[(temp2b+1):temp3b]
-  #print fn, y1, y2
-  year1 = int(y1)
-  year2 = int(y2)
+  #print fn, g1
+  year1 = int(g1[0])
+  year2 = int(g1[1])
 
   return [year1, year2]
 
@@ -66,7 +37,9 @@ def getTimeBounds(serviceType, dataSource, varName):
   for subdir in subdirs:
 
     # list of files
-    files = glob.glob( dir00 + '/' + dataSource + '/' + varName + '_*.nc' )
+    temp1 =  dir00 + '/' + dataSource + '/' + varName + '_*.nc'
+    #print temp1
+    files = glob.glob( temp1 )
     files1 = [os.path.split(file1)[1] for file1 in files]
 
     # if no files in that subdir
@@ -93,13 +66,19 @@ def getTimeBounds(serviceType, dataSource, varName):
   return [0,0]
 
 if __name__ == '__main__':
-        sources = ["argo/argo", "cccma/canam4", "cccma/canesm2", "csiro/mk3.6", "gfdl/cm3", "gfdl/cm3_hist", "gfdl/esm2g",
+        if 0:
+          sources = ["nasa/modis", ]
+          vars = ['lai', ]
+
+        if 1:
+          sources = ["argo/argo", "cccma/canam4", "cccma/canesm2", "csiro/mk3.6", "gfdl/cm3", "gfdl/cm3_hist", "gfdl/esm2g",
                            "giss/e2-h", "giss/e2-r", "ipsl/cm5a-lr", "miroc/miroc5", "nasa/airs", "nasa/amsre", "nasa/aviso",
                            "nasa/ceres", "nasa/gpcp", "nasa/grace", "nasa/mls", "nasa/modis", "nasa/quikscat", "nasa/trmm",
                            "ncar/cam5", "ncar/cam5-1-fv2", "ncc/noresm", "noaa/nodc", "ukmo/hadgem2-a", "ukmo/hadgem2-es"]
-                           
-        vars = ["pr", "cli", "clt", "lai", "rlds", "rldscs","rlus", "rlut", "rlutcs", "rsds", "rsdscs", "rsdt", "rsus", "rsuscs",
+
+          vars = ["pr", "cli", "clt", "lai", "rlds", "rldscs","rlus", "rlut", "rlutcs", "rsds", "rsdscs", "rsdt", "rsus", "rsuscs",
                         "rsut", "rsutcs", "sfcWind", "ts", "uas", "vas", "clw", "hus", "ta", "tos", "zos", "ohc700", "ohc2000", "zo", "zl", "os", "ot"] 
+
                         #["clivi", "clwvi", "z1", "z0", "cltStddev", "cltNobs", "sfcWindNobs", "sfcWindStderr", "uasNobs", "uasStderr", "vasNobs", "vasStderr",
                         #"prw"]
         print("start test")
@@ -107,20 +86,22 @@ if __name__ == '__main__':
         serviceType = '1'
         #serviceType = '2'
 
+        """
         for source in sources:
                 for var in vars:
                         bounds = getTimeBounds(serviceType, source, var)
                         print '%20s  %10s:  %7d : %7d'%(source, var, bounds[0], bounds[1])
         print("end test")
+        """
+
 
         ### source = 'cccma/canam4'
         ### var = 'rlus'
         ### source = 'argo/argo'
         ### var = 'os'
-        ### source = 'NASA/MODIS'
-        source = 'nasa/modis'
+        source = 'NASA/MODIS'
+        ### source = 'nasa/modis'
         var = 'clt'
-
+ 
         retDateList = getTimeBounds(serviceType, source, var)
         print(retDateList, serviceType, source, var)
-
