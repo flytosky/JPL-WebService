@@ -46,15 +46,15 @@ def calcTimeBounds(fn):
   return [year1, year2]
 
 def getTimeBounds(serviceType, dataSource, varName):
-  # serviceType = 1: Chengxing Zhai's services
-  # serviceType = 2: Benyang Tang's services
+  # serviceType = '1': Chengxing Zhai's services
+  # serviceType = '2': Benyang Tang's services
 
   dir00 = '/mnt/hgfs/cmacws/data1/data/cmip5'
 
   subdirs1 = ['regridded', 'break', '.']
   subdirs2 = ['regridded', 'original', '.']
 
-  if serviceType==1:
+  if serviceType=='1':
     subdirs = subdirs1
   else:
     subdirs = subdirs2
@@ -104,16 +104,14 @@ if __name__ == '__main__':
                         #"prw"]
         print("start test")
 
-        serviceType = 1
-        #serviceType = 2
+        serviceType = '1'
+        #serviceType = '2'
 
-        """
         for source in sources:
                 for var in vars:
                         bounds = getTimeBounds(serviceType, source, var)
                         print '%20s  %10s:  %7d : %7d'%(source, var, bounds[0], bounds[1])
         print("end test")
-        """
 
         ### source = 'cccma/canam4'
         ### var = 'rlus'
@@ -124,5 +122,5 @@ if __name__ == '__main__':
         var = 'clt'
 
         retDateList = getTimeBounds(serviceType, source, var)
-        print(retDateList, source, var)
+        print(retDateList, serviceType, source, var)
 
