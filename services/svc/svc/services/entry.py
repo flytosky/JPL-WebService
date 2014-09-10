@@ -16,7 +16,7 @@ from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
 from svc.src.scatterPlot2V import call_scatterPlot2V
 from svc.src.conditionalSampling import call_conditionalSampling
 from svc.src.collocation import call_collocation
-from svc.src.time_bounds import get_cmac_time_boundaries5
+from svc.src.time_bounds import getTimeBounds
 
 from flask import current_app
 from functools import update_wrapper
@@ -1120,6 +1120,7 @@ def displayTwoTimeBounds():
     message = "ok"
    
     # get data source and variable name
+    serviceType = request.args.get('serviceType', '')
     source1 = request.args.get('source1', '')
     var1 = request.args.get('var1', '')
     source2 = request.args.get('source2', '')
@@ -1130,7 +1131,7 @@ def displayTwoTimeBounds():
     print 'source2: ', source2
     print 'var2: ', var2
 
-    retDateList1 = get_cmac_time_boundaries5.getCmacTimeBoundaries(source1, var1, False)
+    retDateList1 = getTimeBounds.getTimeBounds(serviceType, source1, var1)
     print 'retDateList1: ', retDateList1
 
     if retDateList1[0] is not 0:
@@ -1143,7 +1144,7 @@ def displayTwoTimeBounds():
     else:
       upper1 = 0
 
-    retDateList2 = get_cmac_time_boundaries5.getCmacTimeBoundaries(source2, var2, False)
+    retDateList2 = getTimeBounds.getTimeBounds(serviceType, source2, var2)
     print 'retDateList2: ', retDateList2
 
     if retDateList2[0] is not 0:
@@ -1175,13 +1176,14 @@ def displayTimeBounds():
     message = "ok"
    
     # get data source and variable name
+    serviceType = request.args.get('serviceType', '')
     source = request.args.get('source', '')
     var = request.args.get('var', '')
 
     print 'source: ', source
     print 'var: ', var
 
-    retDateList = get_cmac_time_boundaries5.getCmacTimeBoundaries(source, var, False)
+    retDateList = getTimeBounds.getTimeBounds(serviceType, source, var)
     print 'retDateList: ', retDateList
 
     if retDateList[0] is not 0:
