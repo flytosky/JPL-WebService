@@ -37,7 +37,7 @@ def getTimeBounds(serviceType, dataSource, varName):
   for subdir in subdirs:
 
     # list of files
-    temp1 =  dir00 + '/' + dataSource + '/' + varName + '_*.nc'
+    temp1 =  dir00 + '/' + dataSource.lower() + '/' + varName + '_*.nc'
     #print temp1
     files = glob.glob( temp1 )
     files1 = [os.path.split(file1)[1] for file1 in files]
