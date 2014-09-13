@@ -1112,7 +1112,9 @@
 
         var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/two_time_bounds?";
         var arglistTB = "";
-        arglistTB = arglistTB.concat("source1=");
+        arglistTB = arglistTB.concat("serviceType=");
+        arglistTB = arglistTB.concat("1");
+        arglistTB = arglistTB.concat("&source1=");
         arglistTB = arglistTB.concat(d1);
         arglistTB = arglistTB.concat("&var1=");
         arglistTB = arglistTB.concat(variable1);
