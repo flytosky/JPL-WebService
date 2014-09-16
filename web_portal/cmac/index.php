@@ -1,7 +1,7 @@
 <?php require_once("./header.php") ?>
 
 <h1>
-Parallel Web Services for Data Preparation and Data Analysis
+Web Services for Climate Data Analysis
 </h1>
 <h3>
 Summer School 2014, JPL Center for Climate Sciences
@@ -16,7 +16,7 @@ Summer School 2014, JPL Center for Climate Sciences
 <li>
 Introduction 
 <p>
-Parallel Web-Service Climate Model Diagnostic Analyzer provides web services for multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs. It is based on parallel Python and distributed web service technologies.
+This tool called Climate Model Diagnostic Analyzer provides web services for multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs. 
 </p>
 </li>
 
@@ -72,8 +72,8 @@ Difference of two variables
 Display the differences between the two variables, which can be either a two dimensional variable or a slice of a three-dimensional variable at a specified altitude as colored longitude and latitude maps
 </li>
 <li>
-Scatter plots of two variables
-This services display the scatter plot (X-Y plot) between two specified variables. The number of samples can be specified and the correlation is computed. The two variables can be either a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude.
+Scatter and histogram plots of two variables
+This services display the scatter plot (X-Y plot) between two specified variables and the histograms of the two variables. The number of samples can be specified and the correlation is computed. The two variables can be either a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude.
 </li>
 <li>
 Conditional sampling
@@ -113,7 +113,10 @@ Use time series to look for temporal variations and trends.
 Use scatter plot to study the relationship between physical quantities.  The number of sample option allows one to smooth the data.
 </li>
 <li>
-Difference plots is useful for comparisons between models, observations, and reanalysis.
+Use histogram plot to study the probability density distributions of physical quantities. 
+</li>
+<li>
+Use difference plot to compare between models, observations, and reanalysis.
 </li>
 <li>
 Use the sophisticated conditional sampling tools to examine data relation in physical variable space. It is crucial to use an appropriate set of bin boundaries to achieve meaningful results. 
@@ -158,7 +161,7 @@ Download data for future usage.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/scatterPlot2Vars.html">Scatter Plot of Two Variables Service</a>.
+<a href="/cmac/web/scatterPlot2Vars.html">Scatter and Histogram Plots of Two Variables Service</a>.
 </p>
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
