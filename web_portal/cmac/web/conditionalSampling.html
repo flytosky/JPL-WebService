@@ -532,6 +532,26 @@
         // enable pressure level box for 3D var
         enable_pres1(ID);
       }
+      else if (var_string == "Vertical Wind Velocity") {
+        if (ID == 1) {
+          variable1 = "wap";
+        }
+        else if (ID == 2) {
+          variable2 = "wap";
+        }
+        // enable pressure level box for 3D var
+        enable_pres1(ID);
+      }
+      else if (var_string == "Relative Humidty") {
+        if (ID == 1) {
+          variable1 = "hur";
+        }
+        else if (ID == 2) {
+          variable2 = "hur";
+        }
+        // enable pressure level box for 3D var
+        enable_pres1(ID);
+      }
 
       // alert("variable1: " + variable1)
     }
@@ -755,6 +775,8 @@
         disable_pres1(ID); // the selected one is 2D
 
         x.options[3].disabled=false;
+        x.options[31].disabled=false;
+        x.options[32].disabled=false;
       }
 
       // form variable string
@@ -1420,6 +1442,8 @@ Environmental Variable (sampling variable)
 <option>Cloud Liquid Water Content</option>
 <option>Ocean Temperature</option>
 <option>Ocean Salinity</option>
+<option>Vertical Wind Velocity</option>
+<option>Relative Humidty</option>
 </select>
 </td>
 
@@ -1456,6 +1480,8 @@ Environmental Variable (sampling variable)
 <option>Cloud Liquid Water Content</option>
 <option>Ocean Temperature</option>
 <option>Ocean Salinity</option>
+<option>Vertical Wind Velocity</option>
+<option>Relative Humidty</option>
 </select>
 </td>
 
