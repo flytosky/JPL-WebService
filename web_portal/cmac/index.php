@@ -52,15 +52,15 @@ This service displays the average of a two-dimensional variable over the specifi
 Three dimensional variable services
 <ol type="i">
 <li>
-Map of a two dimensional slice 
+Map of a two dimensional slice: 
 This service displays a two-dimensional slice of a three-dimensional variable at a specific altitude as a colored longitude and latitude map with values represented by a color scheme.
 </li>
 <li>
-Zonal mean
+Zonal mean:
 Zonal mean of the specified three-dimensional variable is computed and displayed as a colored altitude-latitude map.
 </li>
 <li>
-Vertical profile
+Vertical profile:
 Compute the area weighted average of a three-dimensional variable over the specified region and display the average as function of pressure level (altitude) as an X-Y plot.
 </li>
 </ol>
@@ -68,15 +68,15 @@ Compute the area weighted average of a three-dimensional variable over the speci
 General services
 <ol type="i">
 <li>
-Difference of two variables
-Display the differences between the two variables, which can be either a two dimensional variable or a slice of a three-dimensional variable at a specified altitude as colored longitude and latitude maps
+Difference of two variables:
+This service displays the differences between the two variables, which can be either a two dimensional variable or a slice of a three-dimensional variable at a specified altitude as colored longitude and latitude maps
 </li>
 <li>
-Scatter and histogram plots of two variables
-This services display the scatter plot (X-Y plot) between two specified variables and the histograms of the two variables. The number of samples can be specified and the correlation is computed. The two variables can be either a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude.
+Scatter and histogram plots of two variables:
+This service displays the scatter plot (X-Y plot) between two specified variables and the histograms of the two variables. The number of samples can be specified and the correlation is computed. The two variables can be either a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude.
 </li>
 <li>
-Conditional sampling
+Conditional sampling:
 This service lets user to sort a physical quantity of two or dimensions according to the values of another variable (environmental condition, e.g. SST) which may be a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude. For a two dimensional quantity, the plot is displayed an X-Y plot, and for a two-dimensional quantity, plot is displayed as a colored-map.
 </li>
 </ol>
