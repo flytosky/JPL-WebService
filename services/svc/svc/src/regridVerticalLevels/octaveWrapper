@@ -1,6 +1,8 @@
-#!/usr/local/bin/octave -q
+#!/usr/bin/octave -q
 
 addpath([pwd()  '/../util/']);
+
+pkg load netcdf;
 
 arg_list = argv();
 printf ("program name: %s\n", program_name());
@@ -38,7 +40,7 @@ end
 [center,model] = strtok(modelName, '_');
 model = model(2:end); % get rid of '_'
 
-dataDir = [getDataRootDirectory()  center '/' model '/']; 
+dataDir = [getDataRootDirectory() 'cmip5/' center '/' model '/']; 
 
 sourceDataDir = [dataDir '/original/'];
 
