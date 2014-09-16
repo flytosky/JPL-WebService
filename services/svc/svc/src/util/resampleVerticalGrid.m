@@ -8,68 +8,77 @@ status = -1;
 
 % get some info
 inFileInfo = ncinfo(file_in);
-outFileInfo = inFileInfo;
 varInfo = inFileInfo.Variables;
-nVar = length(varInfo);
-levelVarName = [];
-data = single(ncread(file_in, varName));
 
-[nT, nP_orig,nLat,nLon] = size(data);
+outFileInfo.Name = inFileInfo.Name;
+outFileInfo.Format = inFileInfo.Format;
+outFileInfo.Groups = inFileInfo.Groups;
+outFileInfo.Attributes = inFileInfo.Attributes;
 
-nP = length(plev);
+dimNames = {'time', 'lon', 'lat', 'bnds'};
+nDims = length(dimNames);
 
-data_regrided = zeros(nT,nP,nLat,nLon, 'single');
-
-dimInfo = ncdim(fd_in);
-nDim = length(dimInfo);
-for dimI = 1:nDim
-  thisDimName = ncname(dimInfo{dimI});
-  if isempty(strfind(thisDimName, 'lev'))
-    fd_out(thisDimName) = dimInfo{dimI}(:);
+for ii = 1:nDims
+  idx = lookupDim(dimNames{ii}, inFileInfo);
+  if length(idx) == 1
+    outFileInfo.Dimensions(ii) = inFileInfo.Dimensions(idx(1));
   else
-    fd_out('plev') = nP;
+    warning(['!!! missing dimension info: ' dimNames{ii} ]);
+    keyboard;
   end
 end
 
-varList = {'lon', 'lat', 'time', 'lon_bnds', 'lat_bnds', 'time_bnds'};
+nP = length(plev);
+outFileInfo.Dimensions(nDims+1) = struct('Name', 'plev', 'Length', nP, 'Unlimited', false);
 
-% Copy all the dimension grid variables
-for ii = 1:length(varList)
-  copyVar(fd_out, fd_in, varList{ii});
+varList = {'lon', 'lat', 'time', 'lon_bnds', 'lat_bnds', 'time_bnds', varName};
+
+nVar = length(varList);
+
+for ii = 1:nVar
+  idx = lookupVar(varList{ii}, inFileInfo);
+  if length(idx) == 1
+    outFileInfo.Variables(ii) = rmfield(inFileInfo.Variables(idx(1)), 'Checksum'); % "checksum is not implemented for netcdf-3
+  else
+    warning(['!!! missing variable: ' varList{ii} ]);
+    keyboard;
+  end
+  if strcmp(varList{ii}, varName)
+    outFileInfo.Variables(ii).Dimensions(1:4) = outFileInfo.Dimensions([2,3,nDims+1,1]);
+  end
 end
 
-% create vertical dimension grid
-fd_out{'plev'} = ncdouble('plev');
-fd_out{'plev'}(:) = plev;
-fd_out{'plev'}.units = 'Pa';
-fd_out{'plev'}.long_name = 'pressure';
-fd_out{'plev'}.standard_name = 'air_pressure';
-fd_out{'plev'}.axis = 'Z';
-fd_out{'plev'}.positive = 'down';
+ncwriteschema(file_out, outFileInfo);
 
-% copy the global attributes
-copyAtt(fd_out, fd_in);
+for ii = 1:(nVar -1)
+  ncwrite(file_out, varList{ii}, ncread(file_in, varList{ii}));
+end
 
-fd_out{varName} = ncfloat('time', 'plev', 'lat', 'lon');
+status = obs4MIPs_write_plev(file_out, plev);
+
+data = single(ncread(file_in, varName));
+
+[nLon, nLat, nP_orig, nT] = size(data);
+
+data_regrided = zeros(nLon, nLat, nP, nT, 'single');
 
 % We now go through the vertical coordinate
-for varI = 1:nVar
-  thisVarName = ncname(varInfo{varI});
+for varI = 1:length(varInfo)
+  thisVarName = varInfo(varI).Name;
   if ~isempty(strfind(thisVarName, 'plev'))
-    plev_orig = fd_in{'plev'};
+    plev_orig = ncread(file_in, 'plev');
     % Compute a kernel matrix for computing linear interpolation
     % to save time. Interpolation is done using log scale
     K = computeInterpKernel(log(plev_orig(:)), log(plev(:)), 'linear');
     for tI = 1:nT
-      data_regrided(tI,:) = reshape(K*squeeze(data(tI,:,:)), 1, []);
+      data_regrided(:,:,:,tI) = reshape(reshape(data(:,:,:,tI), nLon*nLat, nP_orig)*K', nLon, nLat, nP);
     end
-    fd_out{varName}(:) = data_regrided;
-    status = copyAtt(fd_out{varName}, fd_in{varName});
-    close(fd_out);
-    close(fd_in);
+    ncwrite(file_out, varName, data_regrided);
+    status = 0;
     return;
   elseif ~isempty(strfind(thisVarName, 'lev'))
     levelVarName = thisVarName;
+    levelVarIdx = varI;
     break;
   end
 end
@@ -79,9 +88,9 @@ if isempty(levelVarName)
 end
 
 % We  now get the information regarding the vertical coordinate,i.e. sigma or hybrid sigma coordinate
-formula_str = fd_in{levelVarName}.formula;
-standard_name = fd_in{levelVarName}.standard_name;
-terms = fd_in{levelVarName}.formula_terms;
+formula_str = lookupValue(varInfo(levelVarIdx).Attributes, 'formula');
+standard_name = lookupValue(varInfo(levelVarIdx).Attributes, 'standard_name');
+terms = lookupValue(varInfo(levelVarIdx).Attributes, 'formula_terms');
 if isempty(formula_str)
   warning('No formula is found!');
 end
@@ -97,60 +106,58 @@ switch lower(standard_name)
     formula = formulaParser(formula_str_simple);
     
     p_ref_var = lookupTermName(formula.inputVars{1}, termPairs, 'p0');
-    p0 = fd_in{p_ref_var}(:);
+    p0 = ncread(file_in, p_ref_var);
     lev_var = lookupTermName(formula.inputVars{2}, termPairs, 'lev');
-    lev = fd_in{lev_var}(:);
+    lev = ncread(file_in, lev_var);
     plev_orig = p0 * exp(-lev);
     K = computeInterpKernel(log(plev_orig(:)), log(plev(:)), 'linear');
     for tI = 1:nT
-      data_regrided(tI,:) = reshape(K*squeeze(data(tI,:,:)), 1, []);
+      data_regrided(:,:,:,tI) = reshape(reshape(data(:,:,:,tI), nLon*nLat, nP_orig)*K', nLon, nLat, nP);
     end
-    fd_out{varName}(:) = data_regrided;
-    status = copyAtt(fd_out{varName}, fd_in{varName});
-    close(fd_out);
-    close(fd_in);
+    ncwrite(file_out, varName, data_regrided);
+    status = 0;
     return;
   case {'atmosphere_sigma_coordinate'},
     ptop_var = lookupTermName(formula.inputVars{1}, termPairs, 'ptop');
-    ptop = fd_in{ptop_var}(:);
+    ptop = ncread(file_in, ptop_var);
     b_var = lookupTermName(formula.inputVars{2}, termPairs, 'b');
-    b = fd_in{b_var}(:);
+    b = ncread(file_in, b_var);
     ps_var = lookupTermName(formula.inputVars{3}, termPairs, 'ps');
-    ps = fd_in{ps_var}(:) - ptop;
-    pverFunc = @(tI, latI, lonI) ptop*a + ps(tI, latI, lonI)*b;
+    ps = ncread(file_in, ps_var) - ptop;
+    pverFunc = @(lonI, latI, tI) ptop*a + ps(lonI, latI, tI)*b;
   case {'atmosphere_hybrid_sigma_pressure_coordinate'},
     varIdx = 1;
     if length(formula.op) == 2
       if strcmp(formula.op{varIdx}, '+')
         ap_var = lookupTermName(formula.inputVars{1}, termPairs, 'ap');
-        ap = fd_in{ap_var}(:);
+        ap = ncread(file_in, ap_var);
         varIdx = varIdx+1;
       else
         error('Unconventional formula for hybrid sigma pressure coordinate!');
       end
     else
       a_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'a');
-      a = fd_in{a_var}(:);
+      a = ncread(file_in, a_var);
       varIdx = varIdx+1;
       p_ref_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'p0');
-      p0 = fd_in{p_ref_var}(:);
+      p0 = ncread(file_in, p_ref_var);
       varIdx = varIdx+1;
       ap = a*p0;
     end
     b_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'b');
-    b = fd_in{b_var}(:);
+    b = ncread(file_in, b_var);
     varIdx = varIdx+1;
     ps_var = lookupTermName(formula.inputVars{varIdx}, termPairs, 'ps');
-    ps = fd_in{ps_var}(:);
-    pverFunc = @(tI, latI, lonI) ap + b*ps(tI, latI, lonI);
+    ps = ncread(file_in, ps_var);
+    pverFunc = @(lonI, latI, tI) ap + b*ps(lonI, latI, tI);
   case {'atmosphere_hybrid_height_coordinate'}
     a_var = lookupTermName(formula.inputVars{1}, termPairs, 'a');
-    a = fd_in{a_var}(:);
+    a = ncread(file_in, a_var);
     b_var = lookupTermName(formula.inputVars{2}, termPairs, 'b');
-    b = fd_in{b_var}(:);
+    b = ncread(file_in, b_var);
     orog_var = lookupTermName(formula.inputVars{3}, termPairs, 'orog');
-    orog = fd_in{orog_var}(:);
-    pverFunc = @(tI, latI, lonI) altitude2Pressure(a + orog(tI, latI, lonI)*b);
+    orog = ncread(file_in, orog_var);
+    pverFunc = @(lonI, latI, tI) altitude2Pressure(a + orog(lonI, latI, tI)*b);
   otherwise,
     error('unknown vertical coordinate!');
 end
@@ -158,16 +165,12 @@ end
 for lonI = 1:nLon
   for latI = 1:nLat
     for tI = 1:nT
-      this_p = pverFunc(tI, latI, lonI);
+      this_p = pverFunc(lonI, latI, tI);
       % Use linear interpolation on log(p)
-      data_regrided(tI, :, latI, lonI) = interp1(log(this_p), data(tI,:,latI, lonI), log(plev), 'linear');
+      data_regrided(lonI, latI, :, tI) = interp1(log(this_p), squeeze(data(lonI, latI, :, tI)), log(plev), 'linear');
     end
   end
 end
 
-fd_out{varName}(:) = data_regrided;
-status = copyAtt(fd_out{varName}, fd_in{varName});
-close(fd_out);
-close(fd_in);
-
+ncwrite(file_out, varName, data_regrided);
 status = 0;
