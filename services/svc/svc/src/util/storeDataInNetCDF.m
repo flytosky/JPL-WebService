@@ -56,11 +56,15 @@ switch lower(opt)
     end
     thisSchema.Variables(nDim+1).Attributes(1) = struct('Name', 'units', 'Value', data.varUnits);
     thisSchema.Variables(nDim+1).Attributes(2) = struct('Name', 'long_name', 'Value', data.varLongName);
+    %thisSchema.Variables(nDim+1).Attributes(3) = struct('Name', '_FillValue', 'Value', 1.0e20);
+    %thisSchema.Variables(nDim+1).Attributes(4) = struct('Name', 'missing_value', 'Value', 1.0e20);
     disp(thisSchema)
     if exist(fileName, 'file')
       delete(fileName);
     end
     ncwriteschema(fileName, thisSchema);
+    ncwriteatt(fileName, data.varName, '_FillValue', 1e20);
+    ncwriteatt(fileName, data.varName, 'missing_value', 1e20);
     for ii = 1:nDim
       ncwrite(fileName, thisSchema.Variables(ii).Name, data.dimVars{ii});
     end
