@@ -3,6 +3,7 @@ function status = obs4MIPs_write_plev(file, plev)
 % This function write pressure levels into file and add the relevant attributes
 % according to CMIP5 convention
 %
+plev = plev(:); % make sure it is a row vector
 status = 0;
 
 if ~isempty(find(plev < 0))
