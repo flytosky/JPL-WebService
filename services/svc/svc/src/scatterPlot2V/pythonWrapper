@@ -1009,7 +1009,12 @@ class SUBSET_REGION():
     print 'corr1:  ',
     print corr1.shape
     print corr1
-    Mat.title('corr coef = %.4f'%(corr1[0,1]))
+    #Mat.title('corr coef = %.4f'%(corr1[0,1]))
+    Mat.title('corr coef = %.4f. %d random points from %d/%02d - %d/%02d'%(corr1[0,1], 
+        self.nSample, 
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
 
     # concatenate data for histogram
     hist1 = np.concatenate( histAll1, axis=0 ).astype('f')
@@ -1048,7 +1053,12 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     n1, bins1a, patches1 = Mat.hist(center1, bins=bins12, weights=hist1/hist1.sum(),
                 color='red', histtype='bar', rwidth=0.8)
     Mat.ylabel('probability density distribution')
-    Mat.title('%s_%s:%s'%(self.center1, self.model1, self.varName1))
+    #Mat.title('%s_%s:%s'%(self.center1, self.model1, self.varName1))
+    Mat.title('%s_%s:%s. histogram(%d/%02d - %d/%02d)'%(self.center1, self.model1, 
+        self.varName1, 
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
     if self.varName1==self.varName2:
       pass
       #Mat.ylim(0, histMax*1.1)
@@ -1058,7 +1068,12 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     n2, bins2a, patches2 = Mat.hist(center2, bins=bins12, weights=hist2/hist2.sum(),
                 color='blue', histtype='bar', rwidth=0.8)
     Mat.ylabel('probability density distribution')
-    Mat.title('%s_%s:%s'%(self.center2, self.model2, self.varName2))
+    #Mat.title('%s_%s:%s'%(self.center2, self.model2, self.varName2))
+    Mat.title('%s_%s:%s. histogram(%d/%02d - %d/%02d)'%(self.center2, self.model2, 
+        self.varName2, 
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
     if self.varName1==self.varName2:
       histMax = max(n1.max(), n2.max())
       Mat.ylim(0, histMax*1.1)
@@ -1131,7 +1146,11 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     temp1 = m1.drawcoastlines()
     #change_labels(Mat.gca())
     Mat.colorbar()
-    Mat.title('%s_%s:%s (%s)'%(self.center1, self.model1, self.varName1, self.units1))
+    Mat.title('%s_%s:%s (%s). mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
+        self.varName1, self.units1,
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
 
     # plot 2
     Mat.subplot(3,1,2)
@@ -1140,7 +1159,12 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     temp1 = m2.drawcoastlines()
     #change_labels(Mat.gca())
     Mat.colorbar()
-    Mat.title('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
+    #Mat.title('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
+    Mat.title('%s_%s:%s (%s). mean(%d/%02d - %d/%02d )'%(self.center2, self.model2, 
+        self.varName2, self.units2,
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
 
     # plot diff
     if self.varName1==self.varName2:
@@ -1267,7 +1291,11 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     temp1 = m1.drawcoastlines()
     #change_labels(Mat.gca())
     Mat.colorbar()
-    Mat.title('%s_%s:%s (%s)'%(self.center1, self.model1, self.varName1, self.units1))
+    Mat.title('%s_%s:%s (%s). mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
+        self.varName1, self.units1,
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
 
     # plot 2
     Mat.subplot(3,1,2)
