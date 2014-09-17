@@ -4,12 +4,14 @@ import subprocess
 import os
 from os.path import basename
 
+import sys
+sys.path.append('../time_bounds')
+from getTimeBounds import correctTimeBounds1
+
 class call_twoDimMap:
     def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, months, output_dir, displayOpt):
         self.model = model
         self.var = var
-        self.start_time = start_time
-        self.end_time = end_time
         self.lon1 = lon1
         self.lon2 = lon2
         self.lat1 = lat1
@@ -17,6 +19,9 @@ class call_twoDimMap:
         self.months = months
         self.output_dir = output_dir
         self.displayOpt = displayOpt
+        availableTimeBnds = correctTimeBounds1('1', model.replace("_", "/"), var, start_time, end_time)
+        self.start_time = availableTimeBnds[0]
+        self.end_time = availableTimeBnds[1]
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -37,6 +42,9 @@ class call_twoDimMap:
         cmd = command.split(' ')
         cmdstring = string.join(cmd, ' ')
         print 'cmdstring: ', cmdstring
+
+        if self.start_time == '0' or self.end_time == '0':
+          return ('No Data', '', '')
 
         try:
           proc=subprocess.Popen(cmd, cwd='.', stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
@@ -80,7 +88,7 @@ class call_twoDimMap:
 if __name__ == '__main__':
     ### c1 = call_twoDimMap('ukmo_hadgem2-a', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
     ### c1 = call_twoDimMap('cccma_canam4', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
-    c1 = call_twoDimMap('ncc_noresm', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6', './', '7')
+    c1 = call_twoDimMap('ncc_noresm', 'ts', '109001', '309912', '0', '100', '-29', '29', '4,5,6', './', '7')
     ### c1 = call_twoDimMap('ukmo_hadgem2-es', 'ts', '199001', '199512', '0', '100', '-29', '29', '4,5,6,10,12', '/home/svc/cmac/trunk/services/twoDimMap/twoDimMap/static/')
 
     mesg = c1.displayTwoDimMap()
