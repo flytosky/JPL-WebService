@@ -4,12 +4,17 @@ import subprocess
 import os
 from os.path import basename
 
+if __name__ == '__main__':
+  import sys
+  sys.path.append('../time_bounds')
+  from getTimeBounds import correctTimeBounds2
+else:
+  from svc.src.time_bounds.getTimeBounds import correctTimeBounds2
+
 class call_conditionalSampling:
     def __init__(self, data_source, var, start_time, end_time, lon1, lon2, lat1, lat2, pres1, pres2, months, env_var_source, env_var, bin_min, bin_max, bin_n, env_var_plev, output_dir, displayOpt):
         self.data_source = data_source		# for e.g. "NCAR_cam5" or "nasa_airs", etc
         self.var = var				# CMIP5 variable names, e.g. 'ta', 'hus', 'clt'
-        self.start_time = start_time		# start time in format 'yyyymm'
-        self.end_time = end_time		# end time in format 'yyyymm'
         self.lon1 = lon1			# longitude range, min, units = deg
         self.lon2 = lon2			# longitude range, max, units = deg
         self.lat1 = lat1			# latitude range, min, units = deg
@@ -25,6 +30,9 @@ class call_conditionalSampling:
         self.env_var_plev = env_var_plev	# pressure level for env var if it is 3-d
         self.output_dir = output_dir		# output directory for figure and data file
         self.displayOpt = displayOpt		# display option, if in binary, the last 3 bits = [z y x]
+        availableTimeBnds = correctTimeBounds2('2', data_source.replace("_", "/"), var, env_var_source.replace("_", "/"), env_var, start_time, end_time)
+        self.start_time = availableTimeBnds[0]
+        self.end_time = availableTimeBnds[1]
 						# z = map scale, y = vertical axis, x = horizontal axis
 						# 1 = log, 0 = lin
 
@@ -41,6 +49,9 @@ class call_conditionalSampling:
         cmd = command.split(' ')
         cmdstring = string.join(cmd, ' ')
         print 'cmdstring: ', cmdstring
+
+        if self.start_time == '0' or self.end_time == '0':
+          return ('No Data', '', '')
 
         try:
           proc=subprocess.Popen(cmd, cwd='.', stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
