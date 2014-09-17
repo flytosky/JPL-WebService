@@ -24,7 +24,7 @@ def getDates(s, varName):
 	#print(len(dot_split))
 	if(len(dot_split) > 1):
 		if(dot_split[len(dot_split)-1] != 'nc'):
-			#print("not a .nc file")
+			print("not a .nc file")
 			return [0, 0]
 		else:
 			# If the extension matches,now extract the word before the first underscore
@@ -33,16 +33,16 @@ def getDates(s, varName):
 			if(len(underscore_split) > 1):
 				#print(underscore_split[0], varName)
 				if(underscore_split[0] != varName):
-					#print("no variable name match")
+					print("no variable name match")
 					return [0, 0]
 			else:
 				# Bad file name.
-				#print("no underscore present")
+				print("no underscore present")
 				return [0, 0]
 				
 			return [s[-16:-10], s[-9:-3]]
 	else:
-		#print("not a .nc file")
+		print("not a .nc file")
 		return [0, 0]
 
 
@@ -62,7 +62,8 @@ def getCmacTimeBoundaries(dataSource, varName, useBreakFiles):
 	
 	#print("dataSource = %s varName = %s useBreakFiles = %s" % (dataSource, varName,useBreakFiles))
 	dataPath = dataSource.lower()      
-	dataPath1 = '/export/data1/data/cmip5/' + dataPath
+	### dataPath1 = '/export/data1/data/cmip5/' + dataPath
+        dataPath1 = '/mnt/hgfs/cmacws/data1/data/cmip5/' + dataPath
 	if(os.path.exists(dataPath1 + subDir[0])):  
 		#print('path exists')
 		for dir in subDir:
