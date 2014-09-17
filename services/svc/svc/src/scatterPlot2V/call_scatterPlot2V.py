@@ -4,6 +4,13 @@ import subprocess
 import os
 from os.path import basename
 
+if __name__ == '__main__':
+  import sys
+  sys.path.append('../time_bounds')
+  from getTimeBounds import correctTimeBounds2
+else:
+  from svc.src.time_bounds.getTimeBounds import correctTimeBounds2
+
 class call_scatterPlot2V:
     def __init__(self, 
 model1, var1, pres1,
@@ -26,6 +33,10 @@ start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir, isDiffPlot):
 
         self.output_dir = output_dir
         self.isDiffPlot = isDiffPlot
+
+        availableTimeBnds = correctTimeBounds2('2', model1.replace("_", "/"), var1, model2.replace("_", "/"), var2, start_time, end_time)
+        self.start_time = availableTimeBnds[0]
+        self.end_time = availableTimeBnds[1]
 
         # temporary fix
         # This application level knowledge may not belong here
@@ -54,6 +65,9 @@ start_time, end_time, lonS, lonE, latS, latE, nSample, output_dir, isDiffPlot):
         cmd = command.split(' ')
         cmdstring = string.join(cmd, ' ')
         print 'cmdstring: ', cmdstring
+
+        if self.start_time == '0' or self.end_time == '0':
+          return ('No Data', '', '')
 
         try:
           proc=subprocess.Popen(cmd, cwd='.', stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
