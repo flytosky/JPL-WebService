@@ -13,8 +13,23 @@ p1 = re.compile( r'_(\d*)-(\d*).nc')
 # def_getRootDir():
 def getRootDir():
   # use data.cfg to set the data root dir.
+
+  # assuming the cwd is in src/*
+  configFile = '../../../data.cfg'
+
+  # if not, use 'trunk' to figure it out  
+  if not os.path.isfile(configFile):
+    cwd = os.getcwd()
+    ind1 = cwd.find('trunk')
+    if ind1>-1:
+      configFile = cwd[:ind1] + '/trunk/services/svc/data.cfg'
+
+    if not os.path.isfile(configFile):
+      print 'failed to find data.cfg.'
+      return None 
+    
   try:
-    temp1 = open('../../../data.cfg').read() 
+    temp1 = open(configFile).read() 
     if temp1[-1]=='\n':
       temp1 = temp1[:-1]
     if temp1[-1]=='/':
@@ -26,8 +41,9 @@ def getRootDir():
         
   except:
     print 'failed to read data.cfg.'
-    pass
     return None
+
+  return None
 
 dir00 = getRootDir()
 
