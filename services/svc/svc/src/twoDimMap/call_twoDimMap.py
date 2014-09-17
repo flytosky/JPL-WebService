@@ -4,9 +4,12 @@ import subprocess
 import os
 from os.path import basename
 
-import sys
-sys.path.append('../time_bounds')
-from getTimeBounds import correctTimeBounds1
+if __name__ == '__main__':
+  import sys
+  sys.path.append('../time_bounds')
+  from getTimeBounds import correctTimeBounds1
+else:
+  from svc.src.time_bounds.getTimeBounds import correctTimeBounds1
 
 class call_twoDimMap:
     def __init__(self, model, var, start_time, end_time, lon1, lon2, lat1, lat2, months, output_dir, displayOpt):
