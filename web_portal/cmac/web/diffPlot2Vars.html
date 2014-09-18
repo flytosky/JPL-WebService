@@ -869,7 +869,15 @@
 
                 var lowerT, upperT;
                 // compute the intersection of the two data bounds
-                if (lowerT2 > upperT1 || lowerT1 > upperT2) { // no intersection
+                if (lowerT1 == 0  || upperT1 == 0){ // no data-1
+                  alert("We do not have data for the data-1 source and variable configuration.");
+                  return;
+                }
+                else if (lowerT2 == 0  || upperT2 == 0){ // no data-2
+                  alert("We do not have data for the data-2 source and variable configuration.");
+                  return;
+                }
+                else if (lowerT2 > upperT1 || lowerT1 > upperT2) { // no intersection
                   alert("The two data sets/vars do not have a common time range.");
                   return;
                 }
@@ -890,11 +898,6 @@
                 }
                 // alert("lowerT: " + lowerT);
                 // alert("upperT: " + upperT);
-
-                if ( lowerT == 0 && upperT ==0 ) {
-                  alert("We do not have data for this source and variable configuration.");
-                  return;
-                }
 
                 if (t0I < lowerT && t1I < lowerT ||
                     t0I > upperT && t1I > upperT) {
