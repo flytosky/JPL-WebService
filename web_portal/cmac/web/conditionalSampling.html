@@ -1218,6 +1218,11 @@
                 // alert("lowerT: " + lowerT);
                 // alert("upperT: " + upperT);
 
+                if ( lowerT == 0 && upperT ==0 ) {
+                  alert("We do not have data for this source and variable configuration.");
+                  return;
+                }
+
                 if (t0I < lowerT && t1I < lowerT ||
                     t0I > upperT && t1I > upperT) {
                   alert("We do not have data that span your time range. Try the range inside ["+lowerT+", "+upperT+"].");
