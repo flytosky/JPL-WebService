@@ -203,16 +203,21 @@ def extractNC(desFn):
 class SUBSET_REGION():
   #== def___init__
   def __init__(self):
-    ### self.ferretCmd = '/home/bytang/install/bin/ferret' 
-    self.ferretCmd = '/home/svc/install/bin/ferret' 
-    self.ferretMem = 100
-    self.isDiffPlot = 0
-
-    #self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
     self.dataDir = getRootDir()
     if self.dataDir is None:
       sys.exit(1)
 
+    ### self.ferretCmd = '/home/bytang/install/bin/ferret' 
+    # /mnt/xvdf/data/
+    if self.dataDir.find('xvdf')>-1:
+      self.ferretCmd = '/home/sflops/install/bin/ferret'
+    else:
+      self.ferretCmd = '/home/svc/install/bin/ferret' 
+
+    self.ferretMem = 100
+    self.isDiffPlot = 0
+
+    #self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
     #self.desDir = '/home/svc/cmac/des/original'
 
