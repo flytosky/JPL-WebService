@@ -12,9 +12,11 @@ cr = {
 'import_':              1,   # 0  1   1  0
 # parameters_
 # def_change_labels:     # not working
-# def_plotBinnedData
+# def_getRootDir():
+# def_extractNC(desFn):
 # class_SUBSET_REGION():
   # def_noDataExit()
+  # def_getFileName2
   # def_getFileName
   # def_getUnits(self):
   # def_checkTime
@@ -47,6 +49,7 @@ if cr['import_']       == 1:
   import tempfile
   #import math
   import glob
+  import re
   #import pickle
 
   import numpy as np      
@@ -151,16 +154,50 @@ def change_labels(ax):
   Mat.setp(ax, xticklabels=x1New, yticklabels=y1New)
   return x1New, y1New
 
+# def_getRootDir():
+def getRootDir():
+  # use data.cfg to set the data root dir.
 
-# def_plotBinnedData
-def plotBinnedData(binedges, data,
-               *args, **kwargs):
-    #The dataset values are the bin centres
-    x = (binedges[1:] + binedges[:-1]) / 2.0
-    #The weights are the y-values of the input binned data
-    weights = data
-    return Mat.hist(x, bins=binedges, weights=weights,
-               *args, **kwargs)
+  # assuming the cwd is in src/*
+  configFile = '../../../data.cfg'
+
+  # if not, use 'trunk' to figure it out  
+  if not os.path.isfile(configFile):
+    cwd = os.getcwd()
+    ind1 = cwd.find('trunk')
+    if ind1>-1:
+      configFile = cwd[:ind1] + '/trunk/services/svc/data.cfg'
+
+    if not os.path.isfile(configFile):
+      print 'failed to find data.cfg.'
+      return None 
+    
+  try:
+    temp1 = open(configFile).read() 
+    if temp1[-1]=='\n':
+      temp1 = temp1[:-1]
+    if temp1[-1]=='/':
+      temp1 = temp1[:-1]
+    if os.path.isdir(temp1):
+      dataDir = temp1 + '/cmip5' 
+      #a.dataDir = temp1  # should change to this when data.cfg is without 'cmip5'
+      return dataDir
+        
+  except:
+    print 'failed to read data.cfg.'
+    return None
+
+  print 'failed to get data.cfg.'
+  return None
+
+# def_extractNC(desFn):
+p1 = re.compile("S_FILENAME += *\'(.+\.nc)\'")
+def extractNC(desFn):
+  lines = open(desFn).read()
+  # S_FILENAME    = '/mnt/r1i1p1_plevRegridded_198412-200511.nc'
+
+  m1 = p1.search(lines)
+  return m1.groups()[0]
 
 # class_SUBSET_REGION():
 class SUBSET_REGION():
@@ -171,15 +208,17 @@ class SUBSET_REGION():
     self.ferretMem = 100
     self.isDiffPlot = 0
 
-    #self.dataDir = '/home/zhai/cmip5' 
-    #self.dataDir = '/home/bytang/cmip5' # my des dir
-    ### self.dataDir = '/export/data1/data/cmip5' 
-    self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
+    #self.dataDir = '/mnt/hgfs/cmacws/data1/data/cmip5'
+    self.dataDir = getRootDir()
+    if self.dataDir is None:
+      sys.exit(1)
 
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
+    #self.desDir = '/home/svc/cmac/des/original'
+
     # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
-    self.desDir = '/home/svc/cmac/des/original'
+    self.desDir = os.path.split(self.dataDir)[0] + '/des'  # for deployment
 
     self.inFile = '' 
     self.inFile2 = '' 
@@ -309,7 +348,6 @@ class SUBSET_REGION():
     # yyyy
     if len(filesNc)==0:
       self.noDataExit('no *.nc file.')
-      
 
     if len(filesDes)>1:
       print 'more than 1 des files:'
@@ -336,6 +374,24 @@ class SUBSET_REGION():
       return filesNc[0], filesNc[0]
  
     return None
+
+  # def_getFileName2(self, center, model, varName):
+  def getFileName2(self, center, model, varName):
+    dir0 = '%s/%s_%s'%(self.desDir, center, model)
+    fileNc = glob.glob('%s/%s.nc'%(dir0, varName))
+    print '%s/%s.nc'%(dir0, varName)
+    if len(fileNc)>0:
+      return fileNc[0], fileNc[0] 
+
+    else:
+      print '%s/%s.des'%(dir0, varName)
+      fileDes = glob.glob('%s/%s.des'%(dir0, varName))
+
+      if len(fileDes)==0:
+        return None
+
+      # def_extractNC(desFn):
+      return fileDes[0], extractNC(fileDes[0])
 
   # def_getUnits(self):
   def getUnits(self):
@@ -1010,10 +1066,10 @@ class SUBSET_REGION():
     print corr1.shape
     print corr1
     #Mat.title('corr coef = %.4f'%(corr1[0,1]))
-    Mat.title('corr coef = %.4f. %d random points from %d/%02d - %d/%02d'%(corr1[0,1], 
-        self.nSample, 
+    Mat.title('corr coef = %.4f.  Period: %d/%02d-%d/%02d.  Number of random points: %d'%(corr1[0,1], 
         self.yearS, self.monthS,
         self.yearE, self.monthE,
+        self.nSample, 
         ))
 
     # concatenate data for histogram
@@ -1054,7 +1110,7 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
                 color='red', histtype='bar', rwidth=0.8)
     Mat.ylabel('probability density distribution')
     #Mat.title('%s_%s:%s'%(self.center1, self.model1, self.varName1))
-    Mat.title('%s_%s:%s. histogram(%d/%02d - %d/%02d)'%(self.center1, self.model1, 
+    Mat.title('%s_%s:%s. Histogram(%d/%02d - %d/%02d)'%(self.center1, self.model1, 
         self.varName1, 
         self.yearS, self.monthS,
         self.yearE, self.monthE,
@@ -1069,7 +1125,7 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
                 color='blue', histtype='bar', rwidth=0.8)
     Mat.ylabel('probability density distribution')
     #Mat.title('%s_%s:%s'%(self.center2, self.model2, self.varName2))
-    Mat.title('%s_%s:%s. histogram(%d/%02d - %d/%02d)'%(self.center2, self.model2, 
+    Mat.title('%s_%s:%s. Histogram(%d/%02d - %d/%02d)'%(self.center2, self.model2, 
         self.varName2, 
         self.yearS, self.monthS,
         self.yearE, self.monthE,
@@ -1146,7 +1202,7 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     temp1 = m1.drawcoastlines()
     #change_labels(Mat.gca())
     Mat.colorbar()
-    Mat.title('%s_%s:%s (%s). mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
+    Mat.title('%s_%s:%s (%s).  mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
         self.varName1, self.units1,
         self.yearS, self.monthS,
         self.yearE, self.monthE,
@@ -1160,7 +1216,7 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     #change_labels(Mat.gca())
     Mat.colorbar()
     #Mat.title('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
-    Mat.title('%s_%s:%s (%s). mean(%d/%02d - %d/%02d )'%(self.center2, self.model2, 
+    Mat.title('%s_%s:%s (%s).  mean(%d/%02d - %d/%02d )'%(self.center2, self.model2, 
         self.varName2, self.units2,
         self.yearS, self.monthS,
         self.yearE, self.monthE,
@@ -1291,7 +1347,7 @@ Mat.gca().yaxis.set_major_formatter(FuncFormatter(to_percentage))
     temp1 = m1.drawcoastlines()
     #change_labels(Mat.gca())
     Mat.colorbar()
-    Mat.title('%s_%s:%s (%s). mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
+    Mat.title('%s_%s:%s (%s). Mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
         self.varName1, self.units1,
         self.yearS, self.monthS,
         self.yearE, self.monthE,
@@ -1731,41 +1787,24 @@ if cr['command_arg']       == 1:
       print 'a.isDiffPlot : ',
       print a.isDiffPlot 
 
-  # use data.cfg to set the data root dir.
-  try:
-    temp1 = open('../../../data.cfg').read() 
-    if temp1[-1]=='\n':
-      temp1 = temp1[:-1]
-    if temp1[-1]=='/':
-      temp1 = temp1[:-1]
-    if os.path.isdir(temp1):
-      a.dataDir = temp1 + '/cmip5' # should change to this when data.cfg is without 'cmip5'
-      #a.dataDir = temp1
-        
-  except:
-    print 'failed to read data.cfg.'
-    pass
-  '''
-/home/bytang/projects/cmac/trunk/services/svc/data.cfg
-/home/bytang/projects/cmac/trunk/services/svc/svc/src/scatterPlot2V
-'''
-
 if cr['plot__']       == 1:
   # get file names
   #try: 
   if 1: 
-    a.inFile1, a.inFile1Nc = a.getFileName(a.center1, a.model1, a.varName1) 
+    a.inFile1, a.inFile1Nc = a.getFileName2(a.center1, a.model1, a.varName1) 
   if 0:
   #except:
     print 'error: file 1 not there'
     sys.exit()
  
   try: 
-    a.inFile2, a.inFile2Nc = a.getFileName(a.center2, a.model2, a.varName2) 
+    a.inFile2, a.inFile2Nc = a.getFileName2(a.center2, a.model2, a.varName2) 
   except:
     print 'error: file 2 not there'
     sys.exit()
 
+  #print a.inFile1
+  #print a.inFile2
   a.getUnits()
 
   # which one has the finer resolution?
