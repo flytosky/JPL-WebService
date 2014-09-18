@@ -68,7 +68,8 @@ def getTimeBounds(serviceType, dataSource, varName):
 
 
   subdirs1 = ['regridded', 'break', '.']
-  subdirs2 = ['regridded', 'original', '.']
+  #subdirs2 = ['regridded', 'original', '.']
+  subdirs2 = ['regridded',  '.']
 
   if serviceType=='1':
     subdirs = subdirs1
