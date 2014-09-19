@@ -4,4 +4,4 @@ function flag = hasAttribute(fn, varName, attName)
 %
 varInfo = ncinfo(fn, varName);
 
-flag = prod(strcmp({varInfo.Attributes.Name}, attName)) > 0;
+flag = sum(strcmp({varInfo.Attributes.Name}, attName)) > 0;
