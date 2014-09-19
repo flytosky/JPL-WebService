@@ -16,7 +16,7 @@ function [years, months, dayIndices] = convertDaysFromADateToMonths(date0, dayVe
 
 % Determine the time frame in terms of years
 minYear = floor(min(dayVec)/366);
-maxYear = ceil(max(dayVec)/360);
+maxYear = ceil(max(dayVec)/359);
 
 N = length(dayVec);
 years = zeros(N,1);
@@ -53,7 +53,7 @@ function daysIn = dayInThisMonth(date0, dayVec, year, month, calendar)
 % This function determines whether a day is in a specified month
 % according to specified calendar.
 %
-switch lower(calendar),
+switch lower(deblank(calendar)),
   case '360_day',
     firstDayOfThisMonth = year*360 + (month - date0(2))*30 + 1 - date0(3);
     firstDayOfNextMonth = firstDayOfThisMonth + 30;
