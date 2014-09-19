@@ -1,4 +1,4 @@
 #!/bin/sh
 
-/home/svc/install/bin/epd ./pythonWrapper $*
+/home/sflops/install/bin/epd ./pythonWrapper $*
 
