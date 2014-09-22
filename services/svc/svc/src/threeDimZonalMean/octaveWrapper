@@ -34,12 +34,12 @@ lonRange = [0, 360];
 ### printf("%s", arg_list{3})
 ### printf("%s", arg_list{4})
 
+latRange = 90*[-1,1];
+
 if narg > 4
-  lonRange = str2num(arg_list{5});
+  latRange = str2num(arg_list{5});
   ### printf("%s", arg_list{5})
 end
-
-latRange = 90*[-1,1];
 
 if narg > 5
   plevRange = str2num(arg_list{6});
