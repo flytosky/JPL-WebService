@@ -461,7 +461,8 @@ class SUBSET_REGION():
     nc1.close()
 
   # def_subsetting():
-  def subsetting(self, ncFile1, varName1, ncFile2=None, varName2='DATA1', varNameOut='DATA1', interp='', dim=4, lev=-1, isAve=0):
+  def subsetting(self, ncFile1, varName1, ncFile2=None, varName2='DATA1', 
+         varNameOut='DATA1', interp='', dim=4, lev=-1, isAve=0):
 
     try:
       temp1 = os.path.isfile(ncFile1)
@@ -558,7 +559,7 @@ class SUBSET_REGION():
   !define var/bad=-9999.0/title="aa" data1 =SST[d=1, g=newG@ave, l=1]
   ! Default is linear interpolation. As fast as nrst: 
   ! 4
-  define var/bad=-9999.0/title="aa" %s =%s[d=1, g=DATA1[d=2, l=1]%s %s]
+  define var/bad=-9999.0/title="aa" %s =%s[d=1, g=%s[d=2, l=1]%s %s]
   ! 5
   save/clobber/file="%s" %s
   '''%(
@@ -569,6 +570,7 @@ class SUBSET_REGION():
   # 4
   varNameOut,
   varName1,
+  varName2,
   interp,
   dimStr,
   # 5
@@ -949,7 +951,7 @@ class SUBSET_REGION():
 
     print 'figFile: %s'%figFile
 
-  # def_scatterPlot3
+  # def_scatterPlot3 # this is one used
   def scatterPlot3(self, ncFile1, ncFile2, varName1='DATA1', varName2='DATA2'):
     nBin = 30 
     nBin1 = 40 
@@ -1820,9 +1822,16 @@ if cr['plot__']       == 1:
 
   # plot scatter
   if a.isDiffPlot:
-    # subset
-    tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4, lev=a.pres1, isAve=1)
-    tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2, isAve=1)
+    if a.model1=='trmm':
+      tempFile2 = a.subsetting(a.inFile2, a.varName2, varNameOut='DATA2', 
+                    dim=4, lev=a.pres2, isAve=1)
+      tempFile1 = a.subsetting(a.inFile1, a.varName1, varNameOut='DATA1', 
+                    ncFile2=tempFile2, varName2='DATA2', 
+                    dim=4, lev=a.pres1, isAve=1)
+    else:
+      # subset
+      tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4, lev=a.pres1, isAve=1)
+      tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2, isAve=1)
   
     a.diffPlot4(tempFile1, tempFile2)
     #a.diffPlot5(tempFile1, tempFile2)
