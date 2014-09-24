@@ -550,7 +550,7 @@
         unset_vars1(ID);
 
         x.options[7].selected=true;
-        disable_pres1(); // the selected one is 2D
+        disable_pres1(ID); // the selected one is 2D
 
         x.options[7].disabled=false;
 
@@ -596,12 +596,14 @@
         x.options[22].disabled=false;
         x.options[23].disabled=false;
         x.options[24].disabled=false;
-        x.options[25].disabled=false;
-        x.options[26].disabled=false;
-        x.options[27].disabled=false;
-        x.options[28].disabled=false;
-        x.options[29].disabled=false;
-        x.options[30].disabled=false;
+        // The following 6 commented out
+        // per request by Benyang
+        // x.options[25].disabled=false;
+        // x.options[26].disabled=false;
+        // x.options[27].disabled=false;
+        // x.options[28].disabled=false;
+        // x.options[29].disabled=false;
+        // x.options[30].disabled=false;
 
       }
       else if (data_string == "NASA/AIRS") {
