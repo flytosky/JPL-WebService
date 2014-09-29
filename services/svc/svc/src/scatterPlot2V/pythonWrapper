@@ -29,8 +29,8 @@ cr = {
   # def_diffPlot    
   # def_diffPlot2   
   # def_diffPlot3   
-  # def_diffPlot4   
-  # def_diffPlot5   # this is one used
+  # def_diffPlot4   # this is one used
+  # def_diffPlot5 
   # def_saveData(self):
 'init_class':           1,   # 1  1
 'command_arg':          1,   # 1  1
@@ -163,11 +163,13 @@ def getRootDir():
   configFile = '../../../data.cfg'
 
   # if not, use 'trunk' to figure it out  
-  if not os.path.isfile(configFile):
+  #if not os.path.isfile(configFile):
+  if 1:
     cwd = os.getcwd()
     ind1 = cwd.find('trunk')
     if ind1>-1:
-      configFile = cwd[:ind1] + '/trunk/services/svc/data.cfg'
+      cmacDir = cwd[:ind1]
+      configFile = cmacDir + '/trunk/services/svc/data.cfg'
 
     if not os.path.isfile(configFile):
       print 'failed to find data.cfg.'
@@ -182,7 +184,7 @@ def getRootDir():
     if os.path.isdir(temp1):
       dataDir = temp1 + '/cmip5' 
       #a.dataDir = temp1  # should change to this when data.cfg is without 'cmip5'
-      return dataDir
+      return dataDir, cmacDir
         
   except:
     print 'failed to read data.cfg.'
@@ -217,9 +219,11 @@ def clipEnd(x, w, percL, percR):
 class SUBSET_REGION():
   #== def___init__
   def __init__(self):
-    self.dataDir = getRootDir()
+    self.dataDir, self.cmacDir = getRootDir()
     if self.dataDir is None:
       sys.exit(1)
+
+    self.scatterDir = '%s/trunk/services/svc/svc/src/scatterPlot2V'%self.cmacDir
 
     ### self.ferretCmd = '/home/bytang/install/bin/ferret' 
     # /mnt/xvdf/data/
@@ -241,6 +245,7 @@ class SUBSET_REGION():
     # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = os.path.split(self.dataDir)[0] + '/des'  # for deployment
+    self.desDir = '%s/des'%self.scatterDir  # ad hoc fix for summer school
 
     self.inFile = '' 
     self.inFile2 = '' 
@@ -1233,7 +1238,8 @@ class SUBSET_REGION():
         ))
 
     # plot diff
-    if self.varName1==self.varName2:
+    #if self.varName1==self.varName2:
+    if 1:
       ax1 = Mat.subplot(3,1,3)
       m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
 
@@ -1267,7 +1273,7 @@ class SUBSET_REGION():
 
     print 'figFile: %s'%figFile
 
-  # def_diffPlot5   # this is one used
+  # def_diffPlot5 
   def diffPlot5(self, ncFile1, ncFile2, varName1='DATA1', varName2='DATA2'):
     # open file
     nc1 = Dataset(ncFile1, 'r')
@@ -1373,7 +1379,8 @@ class SUBSET_REGION():
     Mat.title('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
 
     # plot diff
-    if self.varName1==self.varName2:
+    #if self.varName1==self.varName2:
+    if 1:
       ax1 = Mat.subplot(3,1,3)
       m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
 
@@ -1836,6 +1843,7 @@ if cr['plot__']       == 1:
     a.diffPlot4(tempFile1, tempFile2)
     #a.diffPlot5(tempFile1, tempFile2)
 
+  # for scatter plot
   else:
     # subset
     tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4, lev=a.pres1)
