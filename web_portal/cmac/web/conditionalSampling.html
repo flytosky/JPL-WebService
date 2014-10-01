@@ -366,20 +366,20 @@
       }
       else if (var_string == "Surface Downwelling Shortwave Radiation") {
         if (ID == 1) {
-          variable1 = "rlus";
+          variable1 = "rsds";
         }
         else if (ID == 2) {
-          variable2 = "rlus";
+          variable2 = "rsds";
         }
         // disable pressure level box for 2D var
         disable_pres1(ID);
       }
       else if (var_string == "Surface Upwelling Longwave Radiation") {
         if (ID == 1) {
-          variable1 = "rsds";
+          variable1 = "rlus";
         }
         else if (ID == 2) {
-          variable2 = "rsds";
+          variable2 = "rlus";
         }
         // disable pressure level box for 2D var
         disable_pres1(ID);
@@ -730,11 +730,77 @@
         // alert("in ARGO ...");
         // alert(data_string);
       }
+      else if (data_string == "CCCMA/CANAM4") {
+
+        unset_vars1(ID);
+
+        x.options[0].selected=true;
+        disable_pres1(ID); // the selected one is 2D
+
+        x.options[0].disabled=false;
+        x.options[1].disabled=false;
+        x.options[2].disabled=false;
+        x.options[4].disabled=false;
+        x.options[5].disabled=false;
+        x.options[6].disabled=false;
+
+        x.options[13].disabled=false;
+        x.options[14].disabled=false;
+        x.options[15].disabled=false;
+        x.options[16].disabled=false;
+        x.options[17].disabled=false;
+        x.options[18].disabled=false;
+        x.options[19].disabled=false;
+        x.options[20].disabled=false;
+        x.options[21].disabled=false;
+        x.options[22].disabled=false;
+        x.options[23].disabled=false;
+        x.options[24].disabled=false;
+        x.options[25].disabled=false;
+        x.options[26].disabled=false;
+        x.options[27].disabled=false;
+        x.options[28].disabled=false;
+
+      }
+      else if (data_string == "CSIRO/MK3.6") {
+
+        unset_vars1(ID);
+
+        x.options[0].selected=true;
+        disable_pres1(ID); // the selected one is 2D
+
+        x.options[0].disabled=false;
+        x.options[1].disabled=false;
+        x.options[2].disabled=false;
+        x.options[4].disabled=false;
+        x.options[5].disabled=false;
+        x.options[6].disabled=false;
+
+        x.options[13].disabled=false;
+        x.options[14].disabled=false;
+        x.options[15].disabled=false;
+        x.options[16].disabled=false;
+        x.options[17].disabled=false;
+        x.options[18].disabled=false;
+        x.options[19].disabled=false;
+        x.options[20].disabled=false;
+        x.options[21].disabled=false;
+        x.options[22].disabled=false;
+        x.options[23].disabled=false;
+        x.options[24].disabled=false;
+        x.options[25].disabled=false;
+        x.options[26].disabled=false;
+        x.options[27].disabled=false;
+        x.options[28].disabled=false;
+        x.options[31].disabled=false;
+        x.options[32].disabled=false;
+
+      }
+
       else if (data_string == "CCCMA/CANESM2" || data_string == "GFDL/ESM2G" ||
                data_string == "GISS/E2-H" || data_string == "GISS/E2-R" ||
                data_string == "NCAR/CAM5" || data_string == "NCC/NORESM" ||
                data_string == "UKMO/HadGEM2-ES" ||
-               data_string == "CCCMA/CANAM4" || data_string == "CSIRO/MK3.6" ||
                data_string == "GFDL/CM3" || data_string == "IPSL/CM5A-LR" ||
                data_string == "MIROC/MIROC5" || data_string == "UKMO/HadGEM2-A"
               ) {
