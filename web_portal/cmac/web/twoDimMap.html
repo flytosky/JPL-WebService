@@ -472,6 +472,18 @@
 
         x.options[3].selected=true;
       }
+      else if (data_string == "CCCMA/CANAM4" || data_string == "CSIRO/MK3.6") {
+
+        x.options[3].disabled=true;
+        x.options[7].disabled=true;
+        x.options[8].disabled=true;
+        x.options[9].disabled=true;
+        x.options[10].disabled=true;
+        x.options[11].disabled=true;
+        x.options[12].disabled=true;
+
+        x.options[0].selected=true;
+      }
       // for all other models
       else {
         x.options[9].disabled=true;
