@@ -13,26 +13,22 @@ Summer School 2014, JPL Center for Climate Sciences
 
 <ol>
 
-<li>
-Introduction 
+<h3><li>Introduction</h3>
 <p>
-This tool called Climate Model Diagnostic Analyzer provides web services for multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs. 
+These web-based tools provide web services for multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs. 
 </p>
 </li>
 
-<li>
-Summary of analysis tools in service 
+<h3><li>Service summary</h3> 
 
 <p>
-Web-based analysis tools let users display, analyze, and download earth science data interactively. The source data files are required to conform to the Coupled Model Inter-comparison Project Phase 5 (CMIP5) data format (<a href="http://cmip-pcmdi.llnl.gov/cmip5/output_req.html">http://cmip-pcmdi.llnl.gov/cmip5/output_req.html</a>) so that output data from CMIP5 models and NASA observational data published via Obs4MIPS project can be directly used by our services. Our tools help scientists quickly examine data to identify specific features, e.g. trends, geographical distributions, etc., and determine whether a further study is needed. All of the tools are designed and implemented to be general so that data from models, observation, and reanalysis are processed and displayed in a unified way to facilitate fair comparisons. The services prepare and display data as a colored map or an X-Y plot and allow users to download these data. Basic visual capabilities include 1) displaying two-dimensional variable as a map, zonal mean, and time series 2) displaying three-dimensional variable’s zonal mean, a two-dimensional slice at a specific altitude, and a vertical profile. General analysis can be done using the difference, scatter plot, and conditional sampling services. All the tools support display options for using linear or logarithmic scales and allow users to specify a temporal range and months in a year.
+These web-based tools let users display, analyze, and download earth science data interactively. These tools help scientists quickly examine data to identify specific features, e.g. trends, geographical distributions, etc., and determine whether a further study is needed. All of the tools are designed and implemented to be general so that data from models, observation, and reanalysis are processed and displayed in a unified way to facilitate fair comparisons. The services prepare and display data as a colored map or an X-Y plot and allow users to download the analyzed data. Basic visual capabilities include 1) displaying two-dimensional variable as a map, zonal mean, and time series 2) displaying three-dimensional variable’s zonal mean, a two-dimensional slice at a specific altitude, and a vertical profile. General analysis can be done using the difference, scatter plot, and conditional sampling services. All the tools support display options for using linear or logarithmic scales and allow users to specify a temporal range and months in a year. The source/input datasets for these tools are CMIP5 model outputs, Obs4MIP observational datasets, and ECMWF reanalysis datasets, are stored in the tool server, and are selectable by a user through the web services.  
 </p>
 </li>
 
-<li>
-Service descriptions 
+<h3><li>Service descriptions</h3> 
 <ol type="a">
-<li>
-Two dimensional variable services
+<h4><li> Two dimensional variable services</h4>
 <ol type="i">
 <li>
 Map of two-dimensional variable
@@ -42,14 +38,13 @@ This services displays a two dimensional variable as a colored longitude and lat
 Two dimensional variable zonal mean
 This service plots the zonal mean value of a two-dimensional variable as a function of the latitude in terms of an X-Y plot.
 </li>
-<li>
+<li> 
 Two dimensional variable time series
 This service displays the average of a two-dimensional variable over the specific region as function of time as an X-Y plot. 
 </li>
 </ol>
 </li>
-<li>
-Three dimensional variable services
+<h4><li> Three dimensional variable services</h4>
 <ol type="i">
 <li>
 Map of a two dimensional slice: 
@@ -64,8 +59,7 @@ Vertical profile:
 Compute the area weighted average of a three-dimensional variable over the specified region and display the average as function of pressure level (altitude) as an X-Y plot.
 </li>
 </ol>
-<li>
-General services
+<h4><li> General services</h4>
 <ol type="i">
 <li>
 Difference of two variables:
@@ -85,12 +79,8 @@ This service lets user to sort a physical quantity of two or dimensions accordin
 
 </li>
 
-<li>
-Tips for using these tools
+<h3><li>Tips for using these tools</h3>
 <ul>
-<li>
-The tools are designed so that seasonal variations can be studies by selecting specific months. 
-</li>
 <li>
 To study climatology, a longer temporal range should be used to average out some short-term variations. 
 </li>
@@ -98,7 +88,10 @@ To study climatology, a longer temporal range should be used to average out some
 Service automatically checks data availability. It can be used to find available temporal range. 
 </li>
 <li>
-When data range exceeds what is available, only the available data range will be used. Pay attention to the actually data range used.
+When a requiested data time range exceeds what is available, only the available data time range will be used. Pay attention to the actual data time range used.
+</li>
+<li>
+The tools are designed so that seasonal variations can be studies by selecting specific months. 
 </li>
 <li>
 Use maps to find spatial variations. Choose a longitude/latitude range to specify a region
@@ -122,13 +115,13 @@ Use difference plot to compare between models, observations, and reanalysis.
 Use the sophisticated conditional sampling tools to examine data relation in physical variable space. It is crucial to use an appropriate set of bin boundaries to achieve meaningful results. 
 </li>
 <li>
-Logarithmic scale can be very useful for examine data that has large range. 
+Logarithmic scale can be very useful for examine data that has a large range. 
 </li>
 <li>
 NaN is displayed as “white” color for positive semi-definite quantities and “black” for data with both positive and negative values.
 </li>
 <li>
-Download data for future usage.
+Download analyzed data for future usage.
 </li>
 </ul>
 
