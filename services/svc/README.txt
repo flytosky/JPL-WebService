@@ -24,10 +24,11 @@ To run in production mode
 --------------------------
 gunicorn -w2 -b 0.0.0.0:8888 -k tornado --daemon -p svc.pid svc:app
 
-To deploy, first edit two files:
+To deploy, first edit these three files:
 host.cfg
 settings.cfg
-and set the hostname and port right.
+data.cfg
+to set the hostname, port #, and data dir right.
 
 Then go to 
 ../../web_portal/cmac/web
