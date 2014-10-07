@@ -12,6 +12,11 @@ pip install tornado
 pip install httplib2
 pip install lxml
 
+Need to have installed:
+epd python
+ferret
+GNU plot Version 4.6 patchlevel 4
+
 To install/develop
 --------------------------
 python setup.py develop|install
