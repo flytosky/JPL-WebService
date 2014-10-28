@@ -127,6 +127,21 @@ Download analyzed data for future usage.
 
 </li>
 
+<h3><li>Datasets supported by these tools</h3>
+
+<p>
+Most of our observational data are provided by the NASA/Obs4MIPs project, where the observational data sets are published on the Earth System Grid Federation (http://esg-datanode.jpl.nasa.gov) using the same format as the CMIP5 model data sets to facilitate a direct comparison between the observation and model. 
+Currently, the web services are implemented assuming that model data sets conform to the requirements of the Coupled Model Intercomparison Project Phase 5 (CMIP5) and the observational data sets conform to the Observations for Model Intercomparison Project (Obs4MIPs) standard. The reanalysis data are prepared by applying an editing script to the original reanalysis data downloaded from reanalysis centers to meet a few basic CMIP5 requirements. The analysis tools treat the data sets uniformly between model outputs, observational data and reanalysis data to facilitate a fair comparison.
+</p>
+
+<p>
+<a href="DataSetDescription.htm">
+For a detailed description of the datasets, please click here.
+</a>
+</p>
+
+</li>
+
 
 <p>
 <img src="images/service.jpeg" alt="service" height="60" width="60">
