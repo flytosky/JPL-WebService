@@ -1,0 +1,25 @@
+
+Apache Incubation Process Outline:
+
+1. become a candidate
+  . find a champion
+  . write a proposal
+  . find a sponsor
+  . find mentors
+  . call a vote
+
+2. Podling
+  . create Podling website
+  . review
+  . continuation
+
+3. graduation
+  . migration of code to
+    target project
+ 
+4. TLP (Top-Level-Project)
+  . ASF Board
+  . draft a board motion
+    with scope, mission, and
+    charter
+
