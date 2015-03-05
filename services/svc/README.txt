@@ -13,6 +13,7 @@ pip install httplib2
 pip install lxml
 
 Need to have installed:
+octave
 epd python
 ferret
 GNU plot Version 4.6 patchlevel 4
