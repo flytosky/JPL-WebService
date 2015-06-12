@@ -26,6 +26,8 @@
     {
       var x=document.getElementById("download_data");
       x.disabled=true;
+      var y=document.getElementById("webify_data");
+      y.disabled=true;
     }
 
     // enable download data button
@@ -33,6 +35,8 @@
     {
       var x=document.getElementById("download_data");
       x.disabled=false;
+      var y=document.getElementById("webify_data");
+      y.disabled=false;
     }
 
     // select all months in the checkboxes
@@ -563,6 +567,24 @@
         window.location.assign(durl);
       });
 
+      $("#webify_data").click(function(event) {
+        var durl = $("#data_url").val();
+        var wurl = "http://cmacws3.jpl.nasa.gov:18080/data/output/twoDimMap/"; // where webify dir is
+        // find where the last "/" is to truncate the nc file name
+        var ll = durl.lastIndexOf("/");
+        // alert(ll);
+        durl = durl.substring(0, ll);
+        // find where the last "/" is in the new string
+        ll = durl.lastIndexOf("/");
+        // alert(ll);
+        // get rid of the prepend url for data download
+        // so only the random_string in the subdir is left
+        var random_string = durl.substring(ll+1);
+        // alert(random_string);
+        // prepend the webification url to the randow_string
+        window.location = wurl.concat(random_string);
+      });
+
       $("#twodvarmap").click(function(event) {
 	Response = null;
 
@@ -985,11 +1007,14 @@ color scale:
 
 <tr>
 <td colspan="2" align="center"><input id="twodvarmap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="1" align="center">
 <form>
-<td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
-</td>
+<input id="download_data" type="button" value="Download Data" style="height:28px"/>
 </form>
-
+</td>
+<td colspan="1" align="center">
+<input id="webify_data" type="button" value="Webify Data" style="height:28px"/>
+</td>
 </tr>
 
 <tr>
