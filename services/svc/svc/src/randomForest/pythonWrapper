@@ -868,15 +868,11 @@ if cr['command_arg']       == 1:
 
   '''
 - interface:
- model1
- var1
- lavel1
- model2
- var2
- lavel2
- model3
- var3
- lavel3
+ nVar
+ repeat nVar times:
+  model1
+  var1
+  lavel1
  months
  lon1,lon2
  lat1,lat2
@@ -900,63 +896,32 @@ if cr['command_arg']       == 1:
 
     # arg 1
     ii = 1
-    temp1 = argv[ii].split('_')
-    a.center1 = temp1[0]
-    a.model1 = temp1[1]
+    nVar = int(argv[ii])
 
-    # arg 2
-    ii += 1
-    a.varName1 = argv[ii]
-
-    # arg 3
-    if 1:
+    a.center = []
+    a.model = []
+    a.varName = []
+    for iVar in range(nVar):
+      # arg 2
       ii += 1
-      try:
-        a.pres1 = float(argv[ii])
-      except ValueError:
-        a.pres1 = -1
-      if a.pres1>0 and (a.varName1 not in oceanVar):
-        a.pres1 *= 100.0
+      temp1 = argv[ii].split('_')
+      a.center.append(temp1[0])
+      a.model.append(temp1[1])
 
-    # arg 4
-    ii += 1
-    temp1 = argv[ii].split('_')
-    a.center2 = temp1[0]
-    a.model2 = temp1[1]
-
-    # arg 5
-    ii += 1
-    a.varName2 = argv[ii]
-
-    # arg 6
-    if 1:
+      # arg 3
       ii += 1
-      try:
-        a.pres2 = float(argv[ii])
-      except ValueError:
-        a.pres2 = -1
-      if a.pres2>0 and (a.varName2 not in oceanVar):
-        a.pres2 *= 100.0
+      a.varName.append(argv[ii])
 
-    # arg 7
-    ii += 1
-    temp1 = argv[ii].split('_')
-    a.center3 = temp1[0]
-    a.model3 = temp1[1]
-
-    # arg 8
-    ii += 1
-    a.varName3 = argv[ii]
-
-    # arg 9
-    if 1:
-      ii += 1
-      try:
-        a.pres3 = float(argv[ii])
-      except ValueError:
-        a.pres3 = -1
-      if a.pres3>0 and (a.varName3 not in oceanVar):
-        a.pres3 *= 100.0
+      # arg 4
+      if 1:
+        ii += 1
+        try:
+          pres1 = float(argv[ii])
+        except ValueError:
+          pres1 = -1
+        if pres1>0 and (a.varName[iVar] not in oceanVar):
+          pres1 *= 100.0
+        a.pres.append(pres1)
 
     # arg 10
     ii += 1
@@ -986,21 +951,19 @@ if cr['command_arg']       == 1:
 if cr['plot__']       == 1:
   # get file names
   #try: 
-  if 1: 
-    a.inFile1, a.inFile1Nc = a.getFileName2(a.center1, a.model1, a.varName1) 
-  if 0:
-  #except:
-    print 'error: file 1 not there'
-    sys.exit()
- 
-  try: 
-    a.inFile2, a.inFile2Nc = a.getFileName2(a.center2, a.model2, a.varName2) 
-  except:
-    print 'error: file 2 not there'
-    sys.exit()
+  a.inFile = []
+  a.inFileNc = []
+  for iVar in range(nVar):
+    if 1: 
+      inFile1, inFile1Nc = a.getFileName2(a.center[iVar], a.model[iVar], a.varName[iVar]) 
+      a.inFile.append(inFile1)
+      a.inFileNc.append(inFile1Nc)
 
-  #print a.inFile1
-  #print a.inFile2
+    if 0:
+    #except:
+      print 'error: file 1 not there'
+      sys.exit()
+ 
   a.getUnits()
 
   # subset
