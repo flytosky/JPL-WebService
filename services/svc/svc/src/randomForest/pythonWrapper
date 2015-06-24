@@ -901,6 +901,7 @@ if cr['command_arg']       == 1:
     a.center = []
     a.model = []
     a.varName = []
+    a.pres = []
     for iVar in range(nVar):
       # arg 2
       ii += 1
@@ -958,12 +959,12 @@ if cr['plot__']       == 1:
       inFile1, inFile1Nc = a.getFileName2(a.center[iVar], a.model[iVar], a.varName[iVar]) 
       a.inFile.append(inFile1)
       a.inFileNc.append(inFile1Nc)
+      print 'variable ', iVar
+      print a.center[iVar], a.model[iVar], a.varName[iVar]
+      print a.inFile[-1]
+      print a.inFileNc[-1]
 
-    if 0:
-    #except:
-      print 'error: file 1 not there'
-      sys.exit()
- 
+'''
   a.getUnits()
 
   # subset
@@ -979,4 +980,4 @@ if cr['plot__']       == 1:
   print 'tempFiles:'
   print tempFile1
   print tempFile2
-
+'''

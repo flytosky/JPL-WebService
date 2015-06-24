@@ -18,7 +18,7 @@ class call_randomForest:
         self.models = []
         self.vars1 = []
         self.pres1 = []
-        for iVar in range(nVar):
+        for iVar in range(self.nVar):
           ii += 1
           self.models.append(args[ii])
           ii += 1
@@ -50,11 +50,11 @@ class call_randomForest:
         # inputs: model name, variable name, start-year-mon, end-year-mon, 'start lon, end lon', 'start lat, end lat', 'mon list'
         # example: ./octaveWrapper ukmo_hadgem2-a ts 199001 199512 '0,100' '-29,29' '4,5,6,10,12'
                  #'%g'%self.lon1 + ',' + '%g'%self.lon2 + ' ' + '%g'%self.lat1 + ',' + '%g'%self.lat2 + ' ' + \
-        inputs = str(nVar)
-        for iVar in range(nVar):
+        inputs = str(self.nVar)
+        for iVar in range(self.nVar):
           inputs = inputs + ' ' + self.models[iVar] + ' ' + self.vars1[iVar] + ' ' + self.pres1[iVar]
 
-        inputs = inputs + \
+        inputs = inputs + ' ' + self.months + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
                  self.output_dir 
 
