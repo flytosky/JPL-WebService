@@ -17,6 +17,7 @@ from svc.src.scatterPlot2V import call_scatterPlot2V
 from svc.src.conditionalSampling import call_conditionalSampling
 from svc.src.collocation import call_collocation
 from svc.src.time_bounds import getTimeBounds
+from svc.src.regridAndDownload import call_regridAndDownload
 
 from flask import current_app
 from functools import update_wrapper
@@ -1201,4 +1202,107 @@ def displayTimeBounds():
         'message': message,
         'time_bounds': [lower, upper]
     }) 
+
+@app.route('/svc/regridAndDownload', methods=["GET"])
+@crossdomain(origin='*')
+def displayTwoDimMap():
+    """Run regridAndDownload"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+    dataUrl = ''
+
+    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months, scale
+
+    model = request.args.get('model', '')
+    var = request.args.get('var', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    dlon = request.args.get('dlon', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    dlat = request.args.get('dlat', '')
+    plev = request.args.get('plev', '')
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'dlon: ', dlon
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'dlat: ', dlat
+    print 'plev: ', plev
+
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
+    try:
+      seed_str = model+var+startT+endT+lon1+lon2+dlon+lat1+lat2+dlat+months+scale
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/regridAndDownload/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/regridAndDownload')
+      # instantiate the app. class
+      c1 = call_twoDimMap.call_regridAndDownload(model, var, startT, endT, lon1, lon2, dlon, lat1, lat2, dlat, plev, output_dir)
+      # call the app. function
+      (message, imgFileName, dataFileName) = c1.regridAndDownload()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      ### url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/regridAndDownload/' + tag + '/' + imgFileName
+      print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/regridAndDownload/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+        dataUrl = ''
+
+    except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+    except Exception, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        ### message = str("Error caught in displayTwoDimMap()")
+        message = str(e)
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+        'dataUrl': dataUrl
+    })
+
 
