@@ -92,7 +92,7 @@ dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime
 dataFilePath = [outputDir '/' dataFile];
 
 % For now we only grab the first file as the output file
-cmd = ['/bin/ln -s ' outFiles{round([1,end])} ' ' dataFilePath];
+cmd = ['/bin/ln -s ' outFiles{round(mean([1,end]))} ' ' dataFilePath];
 system(cmd);
 
 printf("dataFile: %s\n", dataFile)
