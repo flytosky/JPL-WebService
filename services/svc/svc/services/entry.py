@@ -1205,7 +1205,7 @@ def displayTimeBounds():
 
 @app.route('/svc/regridAndDownload', methods=["GET"])
 @crossdomain(origin='*')
-def displayTwoDimMap():
+def regridAndDownload():
     """Run regridAndDownload"""
 
     # status and message
@@ -1295,7 +1295,7 @@ def displayTwoDimMap():
         print 'change dir back to: ', current_dir
 
         success = False
-        ### message = str("Error caught in displayTwoDimMap()")
+        ### message = str("Error caught in regridAndDownload()")
         message = str(e)
 
     return jsonify({
