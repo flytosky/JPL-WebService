@@ -54,6 +54,7 @@ if narg > 7
   outputDir = arg_list{8};
 end 
 
+overwrite = true;
 if narg > 8
   overwrite = str2num(arg_list{9});
 end 
@@ -70,13 +71,20 @@ disp(nFile)
 
 outFiles = cell(nFile,1);
 
-regridStr = strrep(strrep([arg_list{5} '_'  arg_list{6} '_' arg_list{7}], ' ' , ''), ',', ':');
+regridStr = strrep(strrep([arg_list{5} '_'  arg_list{6} '_' arg_list{7}], ' ' , ''), ',', 'f');
 
 for fileI = 1:nFile
   thisInputFile = dataFileFullPath{fileI};
   [thisPath, thisName] = fileparts(thisInputFile);
   outFiles{fileI} = [outputDir '/' thisName '_' regridStr '.nc'];
   disp(outFiles{fileI})
+  if exist(outFiles{fileI}, 'file')
+    if overwrite
+      delete(outFiles{fileI});
+    else
+      continue;
+    end
+  end
   status = regridAndDownload(thisInputFile, outFiles{fileI}, varName, lon, lat, plev);
 end
 
