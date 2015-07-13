@@ -70,7 +70,7 @@ disp(nFile)
 
 outFiles = cell(nFile,1);
 
-regridStr = strrep([arg_list{5} '_'  arg_list{6} '_' arg_list{7}], ' ' , '');
+regridStr = strrep(strrep([arg_list{5} '_'  arg_list{6} '_' arg_list{7}], ' ' , ''), ',', ':');
 
 for fileI = 1:nFile
   thisInputFile = dataFileFullPath{fileI};
