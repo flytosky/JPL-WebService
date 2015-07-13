@@ -1214,7 +1214,7 @@ def displayTwoDimMap():
     url = ''
     dataUrl = ''
 
-    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months, scale
+    # get model, var, start time, end time, lon1, lon2, dlon, lat1, lat2, dlat, plev
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -1245,7 +1245,7 @@ def displayTwoDimMap():
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model+var+startT+endT+lon1+lon2+dlon+lat1+lat2+dlat+months+scale
+      seed_str = model+var+startT+endT+lon1+lon2+dlon+lat1+lat2+dlat+plev
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/regridAndDownload/' + tag
       print 'output_dir: ', output_dir
@@ -1255,7 +1255,7 @@ def displayTwoDimMap():
       # chdir to where the app is
       os.chdir(current_dir+'/svc/src/regridAndDownload')
       # instantiate the app. class
-      c1 = call_twoDimMap.call_regridAndDownload(model, var, startT, endT, lon1, lon2, dlon, lat1, lat2, dlat, plev, output_dir)
+      c1 = call_regridAndDownload.call_regridAndDownload(model, var, startT, endT, lon1, lon2, dlon, lat1, lat2, dlat, plev, output_dir)
       # call the app. function
       (message, imgFileName, dataFileName) = c1.regridAndDownload()
       # chdir back
