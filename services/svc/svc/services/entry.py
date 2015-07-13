@@ -1203,7 +1203,8 @@ def displayTimeBounds():
         'time_bounds': [lower, upper]
     }) 
 
-@app.route('/svc/regridAndDownload', methods=["GET"])
+### @app.route('/svc/regridAndDownload', methods=["GET"])
+@app.route('/svc/regridAndDownload', methods=["POST"])
 @crossdomain(origin='*')
 def regridAndDownload():
     """Run regridAndDownload"""
@@ -1216,6 +1217,7 @@ def regridAndDownload():
 
     # get model, var, start time, end time, lon1, lon2, dlon, lat1, lat2, dlat, plev
 
+    '''
     model = request.args.get('model', '')
     var = request.args.get('var', '')
     startT = request.args.get('start_time', '')
@@ -1227,6 +1229,21 @@ def regridAndDownload():
     lat2 = request.args.get('lat2', '')
     dlat = request.args.get('dlat', '')
     plev = request.args.get('plev', '')
+    '''
+
+    jsonData = request.json
+
+    model = jsonData['model']
+    var = jsonData['var']
+    startT = jsonData['start_time']
+    endT = jsonData['end_time']
+    lon1 = jsonData['lon1']
+    lon2 = jsonData['lon2']
+    dlon = jsonData['dlon']
+    lat1 = jsonData['lat1']
+    lat2 = jsonData['lat2']
+    dlat = jsonData['dlat']
+    plev = jsonData['plev']
 
     print 'model: ', model
     print 'var: ', var
