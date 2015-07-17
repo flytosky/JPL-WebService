@@ -91,9 +91,16 @@ end
 dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' regridStr '.nc'];
 dataFilePath = [outputDir '/' dataFile];
 
-% For now we only grab the first file as the output file
-cmd = ['/bin/ln -s ' outFiles{round(mean([1,end]))} ' ' dataFilePath];
+% Let us concatenate all the outpout files
+cmd = ['/usr/bin/ncrcat ']
+for ii = 1:nFile
+  cmd = [cmd outFiles{ii} ' '];
+end
+cmd = [cmd dataFilePath];
 system(cmd);
+for ii = 1:nFile
+  delete(outFiles{ii});
+end
 
 printf("dataFile: %s\n", dataFile)
 printf("dataFilePath: %s\n", dataFilePath)
