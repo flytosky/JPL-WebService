@@ -66,7 +66,7 @@ switch lower(opt)
     ncwriteatt(fileName, data.varName, '_FillValue', 1e20);
     ncwriteatt(fileName, data.varName, 'missing_value', 1e20);
     for ii = 1:nDim
-      ncwrite(fileName, thisSchema.Variables(ii).Name, data.dimVars{ii});
+      ncwrite(fileName, thisSchema.Variables(ii).Name, data.dimVars{ii}(:));
     end
     ncwrite(fileName, data.varName, data.var);
 end
