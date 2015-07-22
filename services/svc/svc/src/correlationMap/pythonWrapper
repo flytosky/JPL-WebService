@@ -910,6 +910,7 @@ if cr['plot__']       == 1:
       print a.inFile[-1]
       print a.inFileNc[-1]
 
+'''
   a.getUnits()
 
   # subset
