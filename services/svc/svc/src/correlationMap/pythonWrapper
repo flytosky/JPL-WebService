@@ -702,7 +702,11 @@ class SUBSET_REGION():
     print 'yyb: '
     print yyb.min(), yyb.max(), yyb.mean(), yyb.std()
 
+    temp1 = np.sqrt( (xxb-xb*xb)*(yyb-yb*yb) )
+    temp2 = temp1<1e-6
+    temp1[temp2] = 1.0
     corrxy = (xyb - xb*yb)/np.sqrt( (xxb-xb*xb)*(yyb-yb*yb) )
+    corrxy[temp1] = np.ma.masked
 
     # figure
     fig1 = Mat.figure(figsize=(10,16))
