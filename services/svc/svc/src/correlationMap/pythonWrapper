@@ -416,15 +416,12 @@ class SUBSET_REGION():
 
   # def_getUnits(self):
   def getUnits(self):
-    nc1 = Dataset(self.inFile1Nc, 'r')
-    data = nc1.variables[self.varName1]
-    self.units1 = data.units
-    nc1.close()
-
-    nc1 = Dataset(self.inFile2Nc, 'r')
-    data = nc1.variables[self.varName2]
-    self.units2 = data.units
-    nc1.close()
+    self.units = []
+    for iVar in range(self.nVar):
+      nc1 = Dataset(self.inFile1Nc[iVar], 'r')
+      data = nc1.variables[self.varName[iVar]]
+      self.units.append(data.units)
+      nc1.close()
 
   # def_checkTime
   # not used yet
@@ -879,7 +876,6 @@ if cr['command_arg']       == 1:
     a.yearE = int(argv[ii][:4])
     a.monthE = int(argv[ii][4:])
 
-
     # arg 10
     if 0:
       ii += 1
@@ -921,20 +917,17 @@ if cr['plot__']       == 1:
       print a.inFile[-1]
       print a.inFileNc[-1]
 
-'''
   a.getUnits()
 
   # subset
-  tempFile1 = a.subsetting(a.inFile1, a.varName1, dim=4, lev=a.pres1)
-  tempFile2 = a.subsetting(a.inFile2, a.varName2, ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2)
-  tempFile3 = a.subsetting(a.inFile3, a.varName3, ncFile2=tempFile1, varNameOut='DATA3', dim=4, lev=a.pres3)
+  tempFile1 = a.subsetting(a.inFile[0], a.varName[0], dim=4, lev=a.pres1)
+  tempFile2 = a.subsetting(a.inFile[1], a.varName[1], ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2)
 
   if 1:
-    a.scatterPlot3(tempFile1,tempFile2)
+    a.corr(tempFile1,tempFile2)
 
   #a.saveData(tempFile1, tempFile2)
 
   print 'tempFiles:'
   print tempFile1
   print tempFile2
-'''
