@@ -238,7 +238,7 @@ class SUBSET_REGION():
     # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = os.path.split(self.dataDir)[0] + '/des'  # for deployment
-    self.desDir = '%s/des'%self.scatterDir  # ad hoc fix for summer school
+    #self.desDir = '%s/des'%self.scatterDir  # ad hoc fix for summer school
 
     self.inFile = '' 
     self.inFile2 = '' 
@@ -837,14 +837,16 @@ if cr['command_arg']       == 1:
 
     # arg 1
     nVar = 2
+    a.nVar = 2
 
     a.center = []
     a.model = []
     a.varName = []
     a.pres = []
+    ii = 0
     for iVar in range(nVar):
       # arg 2
-      ii = 1
+      ii += 1
       temp1 = argv[ii].split('_')
       a.center.append(temp1[0])
       a.model.append(temp1[1])
@@ -908,7 +910,6 @@ if cr['plot__']       == 1:
       print a.inFile[-1]
       print a.inFileNc[-1]
 
-'''
   a.getUnits()
 
   # subset
