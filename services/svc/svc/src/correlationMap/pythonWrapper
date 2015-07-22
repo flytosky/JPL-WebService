@@ -400,12 +400,12 @@ class SUBSET_REGION():
   def getFileName2(self, center, model, varName):
     dir0 = '%s/%s_%s'%(self.desDir, center, model)
     fileNc = glob.glob('%s/%s.nc'%(dir0, varName))
-    print '%s/%s.nc'%(dir0, varName)
+    #print '%s/%s.nc'%(dir0, varName)
     if len(fileNc)>0:
       return fileNc[0], fileNc[0] 
 
     else:
-      print '%s/%s.des'%(dir0, varName)
+      #print '%s/%s.des'%(dir0, varName)
       fileDes = glob.glob('%s/%s.des'%(dir0, varName))
 
       if len(fileDes)==0:
@@ -686,6 +686,22 @@ class SUBSET_REGION():
     xyb /= float(monthCount)
     xxb /= float(monthCount)
     yyb /= float(monthCount)
+
+    print 'xb: '
+    print xb.min(), xb.max(), xb.mean(), xb.std()
+
+    print 'yb: '
+    print yb.min(), yb.max(), yb.mean(), yb.std()
+
+    print 'xyb: '
+    print xyb.min(), xyb.max(), xyb.mean(), xyb.std()
+
+    print 'xxb: '
+    print xxb.min(), xxb.max(), xxb.mean(), xxb.std()
+
+    print 'yyb: '
+    print yyb.min(), yyb.max(), yyb.mean(), yyb.std()
+
     corrxy = (xyb - xb*yb)/np.sqrt( (xxb-xb*xb)*(yyb-yb*yb) )
 
     # figure
