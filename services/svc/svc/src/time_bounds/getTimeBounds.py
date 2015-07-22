@@ -47,6 +47,7 @@ def getRootDir():
 
 dir00 = getRootDir()
 
+# calc time bounds from filename
 # def_calcTimeBounds(fn):
 def calcTimeBounds(fn):
   # find the start of the time bounds
@@ -65,7 +66,6 @@ def calcTimeBounds(fn):
 def getTimeBounds(serviceType, dataSource, varName):
   # serviceType = '1': Chengxing Zhai's services
   # serviceType = '2': Benyang Tang's services
-
 
   subdirs1 = ['regridded', 'break', '.']
   #subdirs2 = ['regridded', 'original', '.']
