@@ -870,12 +870,23 @@ if cr['command_arg']       == 1:
     temp1 = argv[ii]
     a.laggedTime = int(temp1)
 
-    # arg 10
     ii += 1
-    temp1 = argv[ii].split(',')
-    a.months = [int(i) for i in temp1]
-    if a.months[0]==-1:
-      a.months = range(1,13)
+    a.yearS = int(argv[ii][:4])
+    a.monthS = int(argv[ii][4:])
+
+    # arg 8
+    ii += 1
+    a.yearE = int(argv[ii][:4])
+    a.monthE = int(argv[ii][4:])
+
+
+    # arg 10
+    if 0:
+      ii += 1
+      temp1 = argv[ii].split(',')
+      a.months = [int(i) for i in temp1]
+      if a.months[0]==-1:
+        a.months = range(1,13)
 
     # arg 11
     ii += 1
