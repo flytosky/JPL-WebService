@@ -418,7 +418,7 @@ class SUBSET_REGION():
   def getUnits(self):
     self.units = []
     for iVar in range(self.nVar):
-      nc1 = Dataset(self.inFile1Nc[iVar], 'r')
+      nc1 = Dataset(self.inFileNc[iVar], 'r')
       data = nc1.variables[self.varName[iVar]]
       self.units.append(data.units)
       nc1.close()
