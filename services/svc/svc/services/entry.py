@@ -2,6 +2,8 @@ import os, hashlib, shutil
 from datetime import datetime, timedelta
 import md5
 import urllib2
+#Added by Chris
+import requests, time, json
 
 from flask import jsonify, request, url_for, make_response
 from werkzeug import secure_filename
@@ -15,13 +17,22 @@ from svc.src.threeDimZonalMean import call_threeDimZonalMean
 from svc.src.threeDimVerticalProfile import call_threeDimVerticalProfile
 from svc.src.scatterPlot2V import call_scatterPlot2V
 from svc.src.conditionalSampling import call_conditionalSampling
-from svc.src.collocation import call_collocation
+#from svc.src.collocation import call_collocation
 from svc.src.time_bounds import getTimeBounds
 from svc.src.regridAndDownload import call_regridAndDownload
 
 from flask import current_app
 from functools import update_wrapper
 
+#Added by Chris
+#BASE_URL = 'http://einstein.sv.cmu.edu:9000/addServiceExecutionLog?userId={0}&serviceId={1}&purpose={2}&serviceConfiguration={3}&datasetLog={4}&executionStartTime={5}&executionEndTime={6}&parameters={7}'
+#BASE_URL = 'http://einstein.sv.cmu.edu:9008/addServiceExecutionLog/{0}/{1}/{2}/{3}/{4}/{5}/{6}'
+#BASE_POST_URL = 'http://einstein.sv.cmu.edu:9008/addServiceExecutionLogUsingPost'
+BASE_POST_URL_WEI = 'http://einstein.sv.cmu.edu:9020/serviceExecutionLog/addServiceExecutionLog'
+#PARAMETER_POST_URL = 'http://einstein.sv.cmu.edu:9008/addServiceParameter'
+HEADERS = {'Content-Type': 'application/json'}
+### USE_CMU = True
+USE_CMU = False
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -84,6 +95,7 @@ def get_host_port(cfg_file):
 @crossdomain(origin='*')
 def displayTwoDimMap():
     """Run displayTwoDimMap"""
+    executionStartTime = int(time.time())
 
     # status and message
     success = True
@@ -92,6 +104,7 @@ def displayTwoDimMap():
     dataUrl = ''
 
     # get model, var, start time, end time, lon1, lon2, lat1, lat2, months, scale
+
 
     model = request.args.get('model', '')
     var = request.args.get('var', '')
@@ -103,6 +116,13 @@ def displayTwoDimMap():
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
     scale = request.args.get('scale', '')
+    #added by CMU
+    parameters_json = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'months':months,
+                       'scale':scale}
+    #/added by CMU
+
 
     print 'model: ', model
     print 'var: ', var
@@ -172,6 +192,170 @@ def displayTwoDimMap():
         success = False
         ### message = str("Error caught in displayTwoDimMap()")
         message = str(e)
+    #TODO call Wei's url
+    #added by CMU
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "1"
+    purpose = request.args.get('purpose')
+    executionEndTime = int(time.time())
+
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+        try:
+            print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+    #/added by CMU  
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+        'dataUrl': dataUrl
+    })
+
+@app.route('/svc/twoDimMapPOST', methods=["POST"])
+@crossdomain(origin='*')
+def displayTwoDimMapPOST():
+    """Run displayTwoDimMap"""
+    executionStartTime = int(time.time())
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+    dataUrl = ''
+
+    # get model, var, start time, end time, lon1, lon2, lat1, lat2, months, scale
+    jsonData = request.json
+
+    model = jsonData['model']
+    var = jsonData['var']    
+    startT = jsonData['start_time']
+    endT = jsonData['end_time']
+    lon1 = jsonData['lon1']
+    lon2 = jsonData['lon2']
+    lat1 = jsonData['lat1']
+    lat2 = jsonData['lat2']
+    months = jsonData['months']
+    scale = jsonData['scale']
+
+    #added by Chris
+    parameters_json = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'months':months,
+                       'scale':scale}
+    #/added by Chris
+
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'months: ', months
+    print 'scale: ', scale
+
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
+    try:
+      seed_str = model+var+startT+endT+lon1+lon2+lat1+lat2+months+scale
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/twoDimMap/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/twoDimMap')
+      # instantiate the app. class
+      c1 = call_twoDimMap.call_twoDimMap(model, var, startT, endT, lon1, lon2, lat1, lat2, months, output_dir, scale)
+      # call the app. function
+      (message, imgFileName, dataFileName) = c1.displayTwoDimMap()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      ### url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/twoDimMap/' + tag + '/' + imgFileName
+      print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/twoDimMap/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+        dataUrl = ''
+
+    except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+    except Exception, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        ### message = str("Error caught in displayTwoDimMap()")
+        message = str(e)
+    #TODO call Wei's url
+    #added by Chris
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "1"#"13"#"00"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#   serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'12', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            print "Something went wrong"
+        try:
+            print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+    #/added by Chris
 
     return jsonify({
         'success': success,
@@ -185,6 +369,7 @@ def displayTwoDimMap():
 @crossdomain(origin='*')
 def display_timeSeries2D():
     """Run display_timeSeries2D"""
+    executionStartTime = int(time.time())
 
     # status and message
     success = True
@@ -203,6 +388,10 @@ def display_timeSeries2D():
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
     scale = request.args.get('scale', '')
+
+    parameters_json = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'scale':scale}
 
     print 'model: ', model
     print 'var: ', var
@@ -272,6 +461,44 @@ def display_timeSeries2D():
         ### message = str("Error caught in display_timeSeries2D()")
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "3"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'1595', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+
+
     return jsonify({
         'success': success,
         'message': message,
@@ -279,20 +506,20 @@ def display_timeSeries2D():
         'dataUrl': dataUrl
     })
 
-
 @app.route('/svc/twoDimSlice3D', methods=["GET"])
+# @app.route('/svc/twoDimSlice3D', methods=["POST"])
 @crossdomain(origin='*')
 def displayTwoDimSlice3D():
-    """Run displayTwoDimSlice3D"""
 
+    """Run displayTwoDimSlice3D"""
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
     url = ''
     dataUrl = ''
-
+    
     # get model, var, start time, end time, pressure_level, lon1, lon2, lat1, lat2, months, scale
-
     model = request.args.get('model', '')
     var = request.args.get('var', '')
     startT = request.args.get('start_time', '')
@@ -304,6 +531,25 @@ def displayTwoDimSlice3D():
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
     scale = request.args.get('scale', '')
+    '''
+    jsonData = request.json
+
+    model = jsonData['model']
+    var = jsonData['var']    
+    startT = jsonData['start_time']
+    endT = jsonData['end_time']
+    pr = jsonData['pr']
+    lon1 = jsonData['lon1']
+    lon2 = jsonData['lon2']
+    lat1 = jsonData['lat1']
+    lat2 = jsonData['lat2']
+    months = jsonData['months']
+    scale = jsonData['scale']
+    '''
+    parameters_json = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT, 'pr':pr, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'months':months,
+                       'scale':scale}
 
     print 'model: ', model
     print 'var: ', var
@@ -374,6 +620,44 @@ def displayTwoDimSlice3D():
         ### message = str("Error caught in displayTwoDimSlice3D()")
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "4"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'16', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+
     return jsonify({
         'success': success,
         'message': message,
@@ -386,7 +670,7 @@ def displayTwoDimSlice3D():
 @crossdomain(origin='*')
 def displayTwoDimZonalMean():
     """Run displayTwoDimZonalMean"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -403,6 +687,16 @@ def displayTwoDimZonalMean():
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
     scale = request.args.get('scale', '')
+
+    parameters_json_wei = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT,
+                       'lat1':lat1, 'lat2':lat2, 'months':months,
+                       'scale':scale}
+
+    parameters_json = {'data source':model, 'variable name':var, 'start year-month':startT,
+                       'end year-month':endT,
+                       'start lat (deg)':lat1, 'end lat (deg)':lat2, 'select months':months,
+                       'variable scale':scale}
 
     print 'model: ', model
     print 'var: ', var
@@ -472,6 +766,45 @@ def displayTwoDimZonalMean():
         ### message = str("Error caught in displayTwoDimZonalMean()")
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "2"#"01"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+
+
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'13', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'url': url, 'dataUrl': dataUrl}
+
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json_wei, 'url': url}
+
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            'Something went wrong with Xing\'s stuff'
+        try:
+            print post_json_wei
+            print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
 
     return jsonify({
         'success': success,
@@ -485,7 +818,7 @@ def displayTwoDimZonalMean():
 @crossdomain(origin='*')
 def displayThreeDimZonalMean():
     """Run displayThreeDimZonalMean"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -504,6 +837,11 @@ def displayThreeDimZonalMean():
     pres2 = request.args.get('pres2', '')
     months = request.args.get('months', '')
     scale = request.args.get('scale', '')
+
+    parameters_json = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT, 
+                       'lat1':lat1, 'lat2':lat2, 'pres1':pres1, 'pres2':pres2,
+                       'months':months, 'scale':scale}
 
     print 'model: ', model
     print 'var: ', var
@@ -573,6 +911,43 @@ def displayThreeDimZonalMean():
         success = False
         ### message = str("Error caught in displayThreeDimZonalMean()")
         message = str(e)
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "5"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'1597', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+
 
     return jsonify({
         'success': success,
@@ -586,7 +961,7 @@ def displayThreeDimZonalMean():
 @crossdomain(origin='*')
 def displayThreeDimVerticalProfile():
     """Run displayThreeDimVerticalProfile"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -605,6 +980,10 @@ def displayThreeDimVerticalProfile():
     lat2 = request.args.get('lat2', '')
     months = request.args.get('months', '')
     scale = request.args.get('scale', '')
+    parameters_json = {'model':model, 'var':var, 'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'months':months,
+                       'scale':scale}
 
     print 'model: ', model
     print 'var: ', var
@@ -674,6 +1053,45 @@ def displayThreeDimVerticalProfile():
         ### message = str("Error caught in displayThreeDimVerticalProfile()")
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "6"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'18', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+    
+
     return jsonify({
         'success': success,
         'message': message,
@@ -686,7 +1104,7 @@ def displayThreeDimVerticalProfile():
 @crossdomain(origin='*')
 def displayScatterPlot2V():
     """Run displayScatterPlot2V"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -708,6 +1126,12 @@ def displayScatterPlot2V():
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
     nSample = request.args.get('nSample', '')
+
+    parameters_json = {'model1':model1, 'var1':var1, 'pres1':pres1,
+                       'model2':model2, 'var2':var2, 'pres2':pres2,
+                       'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'nSample':nSample}
 
     print 'model1: ', model1
     print 'var1: ', var1
@@ -789,6 +1213,43 @@ def displayScatterPlot2V():
         ### message = str("Error caught in displayScatterPlot2V()")
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "7"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'19', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+
     return jsonify({
         'success': success,
         'message': message,
@@ -801,7 +1262,7 @@ def displayScatterPlot2V():
 @crossdomain(origin='*')
 def displayDiffPlot2V():
     """Run displayDiffPlot2V"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -822,6 +1283,12 @@ def displayDiffPlot2V():
     lon2 = request.args.get('lon2', '')
     lat1 = request.args.get('lat1', '')
     lat2 = request.args.get('lat2', '')
+
+    parameters_json = {'model1':model1, 'var1':var1, 'pres1':pres1,
+                       'model2':model2, 'var2':var2, 'pres2':pres2,
+                       'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2}
 
     print 'model1: ', model1
     print 'var1: ', var1
@@ -893,6 +1360,42 @@ def displayDiffPlot2V():
         success = False
         ### message = str("Error caught in displayDiffPlot2V()")
         message = str(e)
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "8"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'20', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
 
     return jsonify({
         'success': success,
@@ -903,10 +1406,11 @@ def displayDiffPlot2V():
 
 
 @app.route('/svc/conditionalSampling', methods=["GET"])
+#@app.route('/svc/conditionalSampling', methods=["POST"])
 @crossdomain(origin='*')
 def displayConditionalSamp():
     """Run displayConditionalSamp"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -914,7 +1418,6 @@ def displayConditionalSamp():
     dataUrl = ''
 
     # get model1, var1, start time, end time, lon1, lon2, lat1, lat2, pres1, pres2, months, model2, var2, bin_min, bin_max, bin_n, env_var_plev, displayOpt
-
     model1 = request.args.get('model1', '')
     var1 = request.args.get('var1', '')
     startT = request.args.get('start_time', '')
@@ -933,6 +1436,38 @@ def displayConditionalSamp():
     bin_n = request.args.get('bin_n', '')
     env_var_plev = request.args.get('env_var_plev', '')
     displayOpt = request.args.get('displayOpt', '')
+    '''
+
+    jsonData = request.json   
+
+    model1 = jsonData['model1']
+    var1 = jsonData['var1']
+    startT = jsonData['start_time']
+    endT = jsonData['end_time']
+    lon1 = jsonData['lon1']
+    lon2 = jsonData['lon2']
+    lat1 = jsonData['lat1']
+    lat2 = jsonData['lat2']
+    pres1 = jsonData['pres1']
+    pres2 = jsonData['pres2']
+    months = jsonData['months']
+    model2 = jsonData['model2']
+    var2 = jsonData['var2']
+    bin_min = jsonData['bin_min']
+    bin_max = jsonData['bin_max']
+    bin_n = jsonData['bin_n']
+    env_var_plev = jsonData['env_var_plev']
+    displayOpt = jsonData['displayOpt']
+
+    '''
+    parameters_json = {'model1':model1, 'var1':var1, 'pres1':pres1,
+                       'model2':model2, 'var2':var2, 'pres2':pres2,
+                       'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 'months':months,
+                       'bin_min':bin_min, 'bin_max':bin_max,
+                       'bin_n':bin_n, 'env_var_plev':env_var_plev,
+                       'displayOpt':displayOpt}
 
     print 'model1: ', model1
     print 'var1: ', var1
@@ -1013,6 +1548,43 @@ def displayConditionalSamp():
         success = False
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "9"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'21', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+
     return jsonify({
         'success': success,
         'message': message,
@@ -1026,7 +1598,7 @@ def displayConditionalSamp():
 @crossdomain(origin='*')
 def displayColocation():
     """Run displayColocation"""
-     
+    executionStartTime = int(time.time())     
     # status and message
     success = True
     message = "ok"
@@ -1039,6 +1611,9 @@ def displayColocation():
     target = request.args.get('target', '')
     startT = request.args.get('start_time', '')
     endT = request.args.get('end_time', '')
+
+    parameters_json = {'source':source, 'target':target,
+                       'startT':startT, 'endT':endT}
 
     # get where the input file and output file are
     current_dir = os.getcwd()
@@ -1102,6 +1677,28 @@ def displayColocation():
         success = False
         message = str(e)
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "Test .\'\"\\userId"
+    serviceId = "displayColocation"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+    serviceConfigurationId = "Test .\'\"\\confId"
+    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+    post_json = {'userId':userId, 'serviceId':serviceId, 'purpose':purpose,
+                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+                 'executionStartTime':executionStartTime, 'executionEndTime':executionEndTime,
+                 'parameters': parameters_json}
+    #requests.post(BASE_URL, data=post_json)
+#    print BASE_URL.format(userId, serviceId, purpose,
+#                          serviceConfigurationId, datasetLogId,
+#                          executionStartTime, executionEndTime,
+#                          json.dumps(post_json))
+    req_url = BASE_URL.format(userId, serviceId, purpose,
+                          serviceConfigurationId, datasetLogId,
+                          executionStartTime, executionEndTime)
+    print req_url
+
     return jsonify({
         'success': success,
         'message': message,
@@ -1115,7 +1712,7 @@ def displayColocation():
 @crossdomain(origin='*')
 def displayTwoTimeBounds():
     """Run displayTwoTimeBounds"""
-
+    executionStartTime = int(time.time())     
     # status and message
     success = True
     message = "ok"
@@ -1126,6 +1723,8 @@ def displayTwoTimeBounds():
     var1 = request.args.get('var1', '')
     source2 = request.args.get('source2', '')
     var2 = request.args.get('var2', '')
+    parameters_json = {'serviceType':serviceType, 'source1':source1,
+                       'var1':var1, 'source2':source2, 'var2':var2}
 
     print 'source1: ', source1
     print 'var:1 ', var1
@@ -1158,6 +1757,39 @@ def displayTwoTimeBounds():
     else:
       upper2 = 0
 
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "Test .\'\"\\userId"
+    serviceId = "displayTwoTimeBounds"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+    serviceConfigurationId = "Test .\'\"\\confId"
+    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+#    parameters_json['purpose'] = purpose
+#    parameters_json['dataUrl'] = ''#dataUrl
+#    parameters_json['plotUrl'] = ''#url
+#    post_json = {'userId':userId, 'serviceId':serviceId, 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':executionStartTime, 'executionEndTime':executionEndTime,
+#                 'parameters': parameters_json}
+#    post_json_wei = {'dataUrl': '', 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+#                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+#                     'parameters': parameters_json, 'url': ''}
+#    post_json = json.dumps(post_json)
+#    post_json_wei = json.dumps(post_json_wei)
+#
+#    try:
+#        print requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#    except:
+#        print 'Something went wrong with Xing\'s stuff'
+#        pass
+#    try:
+#        print requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+#        print post_json_wei
+#    except:
+#        print 'Something went wrong with Wei\'s stuff'
+#        pass
+
     return jsonify({
         'success': success,
         'message': message,
@@ -1171,7 +1803,7 @@ def displayTwoTimeBounds():
 @crossdomain(origin='*')
 def displayTimeBounds():
     """Run displayTimeBounds"""
-
+    executionStartTime = int(time.time())
     # status and message
     success = True
     message = "ok"
@@ -1180,6 +1812,8 @@ def displayTimeBounds():
     serviceType = request.args.get('serviceType', '')
     source = request.args.get('source', '')
     var = request.args.get('var', '')
+
+    parameters_json = {'serviceType':serviceType, 'source':source, 'var':var}
 
     print 'source: ', source
     print 'var: ', var
@@ -1196,6 +1830,18 @@ def displayTimeBounds():
       upper = int(str(retDateList[1]))
     else:
       upper = 0
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "Test .\'\"\\userId"
+    serviceId = "displayTimeBounds"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+    serviceConfigurationId = "Test .\'\"\\confId"
+    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+    post_json = {'userId':userId, 'serviceId':serviceId, 'purpose':purpose,
+                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+                 'executionStartTime':executionStartTime, 'executionEndTime':executionEndTime,
+                 'parameters': parameters_json}
 
     return jsonify({
         'success': success,
@@ -1203,11 +1849,114 @@ def displayTimeBounds():
         'time_bounds': [lower, upper]
     }) 
 
-### @app.route('/svc/regridAndDownload', methods=["GET"])
-@app.route('/svc/regridAndDownload', methods=["POST"])
+
+@app.route('/svc/regridAndDownload', methods=["GET"])
 @crossdomain(origin='*')
 def regridAndDownload():
     """Run regridAndDownload"""
+
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+    dataUrl = ''
+
+    # get model, var, start time, end time, lon1, lon2, dlon, lat1, lat2, dlat, plev
+
+    model = request.args.get('model', '')
+    var = request.args.get('var', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    dlon = request.args.get('dlon', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    dlat = request.args.get('dlat', '')
+    plev = request.args.get('plev', '')
+
+    print 'model: ', model
+    print 'var: ', var
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'dlon: ', dlon
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    print 'dlat: ', dlat
+    print 'plev: ', plev
+
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
+    try:
+      seed_str = model+var+startT+endT+lon1+lon2+dlon+lat1+lat2+dlat+plev
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/regridAndDownload/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/regridAndDownload')
+      # instantiate the app. class
+      c1 = call_regridAndDownload.call_regridAndDownload(model, var, startT, endT, lon1, lon2, dlon, lat1, lat2, dlat, plev, output_dir)
+      # call the app. function
+      (message, imgFileName, dataFileName) = c1.regridAndDownload()
+      # chdir back
+      os.chdir(current_dir)
+
+      hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
+      print 'hostname: ', hostname
+      print 'port: ', port
+
+      ### url = 'http://cmacws.jpl.nasa.gov:8090/static/twoDimMap/' + tag + '/' + imgFileName
+      url = 'http://' + hostname + ':' + port + '/static/regridAndDownload/' + tag + '/' + imgFileName
+      print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/regridAndDownload/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 :
+        success = False
+        url = ''
+        dataUrl = ''
+
+    except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+    except Exception, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        ### message = str("Error caught in regridAndDownload()")
+        message = str(e)
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+        'dataUrl': dataUrl
+    })
+
+
+@app.route('/svc/regridAndDownloadPOST', methods=["POST"])
+@crossdomain(origin='*')
+def regridAndDownloadPOST():
+    """Run regridAndDownloadPOST"""
 
     # status and message
     success = True
@@ -1321,5 +2070,4 @@ def regridAndDownload():
         'url': url,
         'dataUrl': dataUrl
     })
-
 
