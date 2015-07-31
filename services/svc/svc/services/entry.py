@@ -31,8 +31,8 @@ from functools import update_wrapper
 BASE_POST_URL_WEI = 'http://einstein.sv.cmu.edu:9020/serviceExecutionLog/addServiceExecutionLog'
 #PARAMETER_POST_URL = 'http://einstein.sv.cmu.edu:9008/addServiceParameter'
 HEADERS = {'Content-Type': 'application/json'}
-### USE_CMU = True
-USE_CMU = False
+USE_CMU = True
+### USE_CMU = False
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
