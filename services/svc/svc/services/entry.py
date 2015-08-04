@@ -2,6 +2,7 @@ import os, hashlib, shutil
 from datetime import datetime, timedelta
 import md5
 import urllib2
+import json
 #Added by Chris
 import requests, time, json
 
@@ -157,11 +158,17 @@ def displayTwoDimMap():
       os.chdir(current_dir)
 
       hostname, port = get_host_port("host.cfg")
+      userid = 'anonymous'
       if hostname == 'EC2':
         req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
         response = urllib2.urlopen(req)
         hostname = response.read()
 
+        req2 = urllib2.Request(' http://169.254.169.254/latest/user-data')
+        response2 = urllib2.urlopen(req2)
+        userid = json.loads(response2.read())['username']
+
+      print 'userid: ', userid
       print 'hostname: ', hostname
       print 'port: ', port
 
