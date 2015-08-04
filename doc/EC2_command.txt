@@ -64,3 +64,15 @@ Things to modify for the Amazon EC2 deployment
 . In *.html under trunk/web_portal/cmac/web
   change port numbers from 8090 to 8890
 
+
+How to modify security group to open up a port
+. https://797794755098.signin.aws.amazon.com/console
+. username: lpan
+. password: 6@G.........
+. on the console, click on (compute) EC2
+  then Security Groups on the left pane
+  then choose the group "climate-workshop-users"
+  then click on inbound below
+  now we can add new rules
+
+
