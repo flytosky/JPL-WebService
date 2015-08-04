@@ -1,0 +1,34 @@
+Software architecture and design of the web services 
+facilitating climate model diagnostic analysis
+Lei Pan, Seungwon Lee, Chengxing Zhai, Benyang Tang, Darren Dao, Jonathan Jiang, Jia Zhang, Wei Wang, and Qihao Bao 
+
+Jet Propulsion Laboratory, California Institute of Technology
+
+Climate model diagnostic analysis is a computationally- and data-intensive task
+because it involves multiple numerical model outputs and satellite observation
+data that can both be high resolution. We have built an online tool that
+facilitates this process. The tool is called Climate Model Diagnostic Analyzer
+(CMDA). It employs the web service technology and provides a web-based user
+interface. The benefits of these choices include: (1) No installation of
+any software other than a browser, hence it is platform compatable; (2) Co-location 
+of computation and big data on the server side, and small results and plots
+to be downloaded on the client side, hence high data efficiency; 
+(3) multi-threaded implementation to achieve parallel performance on multi-core
+servers; and (4) cloud deployment so each user has a dedicated virtual machine.
+
+In this presentation, we will focus on the computer science aspects of this tool, 
+namely the architectural design, the infrastructure of the web services, the
+implementation of the web-based user interface, the mechanism of provenance 
+collection, the approach to virtualization, and the Amazon Cloud deployment. 
+As an example, We will describe our methodology to transform an existing 
+science application code into a web service using a Python wrapper interface 
+and Python web service frameworks (i.e., Flask, Gunicorn, and Tornado).
+Another example is the use of Docker, a light-weight virtualization container,
+to distribute and deploy CMDA onto an Amazon EC2 instance.
+
+Our tool of CMDA has been successfully used in the 2014 Summer School hosted
+by the JPL Center for Climate Science. Students had positive feedbacks in
+general and we will report their comments. An enhanced version of CMDA with
+several new features, some requested by the 2014 students, will be used in 
+the 2015 Summer School soon.
+
