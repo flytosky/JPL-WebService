@@ -417,6 +417,10 @@
         else
           arglist = arglist.concat('4');
 
+        var purpose = $("#purpose").val();
+        arglist = arglist.concat("&purpose=");
+        arglist = arglist.concat(purpose);
+
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
@@ -676,6 +680,17 @@ color scale:
 <td colspan="3">
 <form> <input type="radio" name="scale1" value="linear" id="radioLin" checked>linear
 <input type="radio" name="scale1" value="logarithmic" id="radioLog">logarithmic
+</form>
+</td>
+</tr>
+
+<tr>
+<td colspan="1">
+Execution purpose
+</td>
+<td colspan="3">
+<form>
+<textarea name="purpose" id="purpose" rows="4" cols="50"> </textarea>
 </form>
 </td>
 </tr>
