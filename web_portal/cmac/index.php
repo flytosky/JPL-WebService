@@ -179,6 +179,10 @@ For a detailed description of the datasets, please click here.
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/conditionalSampling.html">Conditional Sampling Service</a>.
 </p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/regridAndDownload.html">Regrid And Download Service</a>.
+</p>
 <ol>
 
 <?php require_once("./footer.php") ?>
