@@ -151,6 +151,9 @@
         // alert("arglist: " + arglist);
 
         var pres1 = $("#pres1").val();
+        if (isNaN(Number(pres1))) {
+            pres1 = "";
+        }
         arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
 
