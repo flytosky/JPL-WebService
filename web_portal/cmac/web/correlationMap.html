@@ -216,6 +216,10 @@
 
         // alert("arglist: " + arglist);
 
+        var purpose = $("#purpose").val();
+        arglist = arglist.concat("&purpose=");
+        arglist = arglist.concat(purpose);
+
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
@@ -501,6 +505,18 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 <td></td>
 <td colspan="2"><center>lag (month):<input id="laggedTime" value="0"/></center></td><td></td></tr>
 </tr>
+
+<tr>
+<td colspan="1">
+Execution purpose
+</td>
+<td colspan="3">
+<form>
+<textarea name="purpose" id="purpose" rows="4" cols="50"> </textarea>
+</form>
+</td>
+</tr>
+<tr>
 
 <tr>
 <td colspan="2" align="center"><input id="correlationMap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
