@@ -2090,7 +2090,7 @@ def displayCorrelationMap():
     url = ''
     dataUrl = ''
 
-    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2, nSample
+    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2
 
     model1 = request.args.get('model1', '')
     var1 = request.args.get('var1', '')
@@ -2136,7 +2136,7 @@ def displayCorrelationMap():
     print 'current_dir: ', current_dir
 
     try:
-      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2+nSample
+      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2
       tag = md5.new(seed_str).hexdigest()
       output_dir = current_dir + '/svc/static/correlationMap/' + tag
       print 'output_dir: ', output_dir
