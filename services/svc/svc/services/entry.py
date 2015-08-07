@@ -21,6 +21,7 @@ from svc.src.conditionalSampling import call_conditionalSampling
 #from svc.src.collocation import call_collocation
 from svc.src.time_bounds import getTimeBounds
 from svc.src.regridAndDownload import call_regridAndDownload
+from svc.src.correlationMap import call_correlationMap
 
 from flask import current_app
 from functools import update_wrapper
@@ -2077,4 +2078,171 @@ def regridAndDownloadPOST():
         'url': url,
         'dataUrl': dataUrl
     })
+
+@app.route('/svc/correlationMap', methods=["GET"])
+@crossdomain(origin='*')
+def displayCorrelationMap():
+    """Run displayCorrelationMap"""
+    executionStartTime = int(time.time())
+    # status and message
+    success = True
+    message = "ok"
+    url = ''
+    dataUrl = ''
+
+    # get model1, var1, pres1, model2, var2, pres2, start time, end time, lon1, lon2, lat1, lat2, nSample
+
+    model1 = request.args.get('model1', '')
+    var1 = request.args.get('var1', '')
+    pres1 = request.args.get('pres1', '')
+    model2 = request.args.get('model2', '')
+    var2 = request.args.get('var2', '')
+    pres2 = request.args.get('pres2', '')
+    laggedTime = request.args.get('laggedTime', '')
+    startT = request.args.get('start_time', '')
+    endT = request.args.get('end_time', '')
+    lon1 = request.args.get('lon1', '')
+    lon2 = request.args.get('lon2', '')
+    lat1 = request.args.get('lat1', '')
+    lat2 = request.args.get('lat2', '')
+    #months = request.args.get('months', '')
+
+    parameters_json = {'model1':model1, 'var1':var1, 'pres1':pres1,
+                       'model2':model2, 'var2':var2, 'pres2':pres2,
+                       'laggedTime':laggedTime,
+                       'startT':startT,
+                       'endT':endT, 'lon1':lon1, 'lon2':lon2,
+                       'lat1':lat1, 'lat2':lat2, 
+                       #'months':months
+                        }
+
+    print 'model1: ', model1
+    print 'var1: ', var1
+    print 'pres1: ', pres1
+    print 'model2: ', model2
+    print 'var2: ', var2
+    print 'pres2: ', pres2
+    print 'laggedTime: ', laggedTime
+    print 'startT: ', startT
+    print 'endT: ', endT
+    print 'lon1: ', lon1
+    print 'lon2: ', lon2
+    print 'lat1: ', lat1
+    print 'lat2: ', lat2
+    #print 'months: ', months
+
+    # get where the input file and output file are
+    current_dir = os.getcwd()
+    print 'current_dir: ', current_dir
+
+    try:
+      seed_str = model1+var1+pres1+model2+var2+pres2+startT+endT+lat1+lat2+lon1+lon2+nSample
+      tag = md5.new(seed_str).hexdigest()
+      output_dir = current_dir + '/svc/static/correlationMap/' + tag
+      print 'output_dir: ', output_dir
+      if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+      # chdir to where the app is
+      os.chdir(current_dir+'/svc/src/correlationMap')
+      # instantiate the app. class
+      c1 = call_correlationMap.call_correlationMap(model1, var1, pres1, model2, var2, pres2, 
+           laggedTime, startT, endT, lon1, lon2, lat1, lat2, 
+           #months, 
+           output_dir)
+      # call the app. function (0 means the image created is scatter plot)
+      ### (message, imgFileName) = c1.displayScatterPlot2V(0)
+      (message, imgFileName, dataFileName) = c1.display()
+      # chdir back
+      os.chdir(current_dir)
+
+      ind1 = message.find('No Data')
+      if ind1>0:
+        message1 = message[ind1:(ind1+200)]
+        message1a = message1.split('\n')
+        print message1a[0]
+        print message1a[1]
+     
+      hostname, port = get_host_port("host.cfg")
+      if hostname == 'EC2':
+        req = urllib2.Request('http://169.254.169.254/latest/meta-data/public-ipv4')
+        response = urllib2.urlopen(req)
+        hostname = response.read()
+
+      print 'hostname: ', hostname
+      print 'port: ', port
+      print 'imgFileName: ', imgFileName
+
+# zzzz
+      url = 'http://' + hostname + ':' + port + '/static/correlationMap/' + tag + '/' + imgFileName
+      print 'url: ', url
+      dataUrl = 'http://' + hostname + ':' + port + '/static/correlationMap/' + tag + '/' + dataFileName
+      print 'dataUrl: ', dataUrl
+
+      print 'message: ', message
+      if len(message) == 0 or message.find('Error') >= 0 or message.find('error:') >= 0 or message.find('No Data') >= 0:
+        success = False
+        url = ''
+        dataUrl = ''
+
+    except ValueError, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        message = str(e)
+    except Exception, e:
+        # chdir to current_dir in case the dir is changed to where the app is in the try block
+        os.chdir(current_dir)
+        print 'change dir back to: ', current_dir
+
+        success = False
+        ### message = str("Error caught in displayScatterPlot2V()")
+        message = str(e)
+
+    #TODO call Wei's url
+    print 'Wei\'s URL called here'
+    userId = "1"
+    serviceId = "7"
+    #serviceExecutionLogId = "89"
+    purpose = request.args.get('purpose')#"Test .\'\"\\purpose"
+#    serviceConfigurationId = "Test .\'\"\\confId"
+#    datasetLogId = "Test .\'\"\\logId"
+    executionEndTime = int(time.time())
+
+    #New parameters added here.
+    #parameters_json['purpose'] = purpose
+    #parameters_json['dataUrl'] = dataUrl
+    #parameters_json['plotUrl'] = url
+    #Xing's
+#    post_json = {'userId':userId, 'serviceId':'19', 'purpose':purpose,
+#                 'serviceConfigurationId':serviceConfigurationId, 'datasetLogId':datasetLogId,
+#                 'executionStartTime':str(executionStartTime), 'executionEndTime':str(executionEndTime),
+#                 'parameters': parameters_json,
+#                 'plotUrl': url, 'dataUrl': dataUrl}
+    post_json_wei = {'dataUrl': dataUrl, 'userId': long(userId), 'serviceId':long(serviceId), 'purpose':purpose,
+                     'executionStartTime':long(executionStartTime)*1000, 'executionEndTime':long(executionEndTime)*1000,
+                     'parameters': parameters_json, 'url': url}
+
+#    post_json = json.dumps(post_json)
+    post_json_wei = json.dumps(post_json_wei)
+    if USE_CMU:
+#        try:
+#            requests.post(BASE_POST_URL, data=post_json, headers=HEADERS).text
+#        except:
+#            pass
+        try:
+            print post_json_wei
+            requests.post(BASE_POST_URL_WEI, data=post_json_wei, headers=HEADERS).text
+        except:
+            print 'Something went wrong with Wei\'s stuff'
+
+    return jsonify({
+        'success': success,
+        'message': message,
+        'url': url,
+        'dataUrl': dataUrl
+    })
+
 
