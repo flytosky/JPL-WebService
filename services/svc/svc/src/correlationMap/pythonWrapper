@@ -897,14 +897,6 @@ if cr['command_arg']       == 1:
     a.yearE = int(argv[ii][:4])
     a.monthE = int(argv[ii][4:])
 
-    # arg 10
-    if 0:
-      ii += 1
-      temp1 = argv[ii].split(',')
-      a.months = [int(i) for i in temp1]
-      if a.months[0]==-1:
-        a.months = range(1,13)
-
     # arg 11
     ii += 1
     temp1 = argv[ii].split(',')
@@ -916,6 +908,14 @@ if cr['command_arg']       == 1:
     temp1 = argv[ii].split(',')
     a.lat1S = float(temp1[0])
     a.lat1E = float(temp1[1])
+
+    # arg 10
+    if 0:
+      ii += 1
+      temp1 = argv[ii].split(',')
+      a.months = [int(i) for i in temp1]
+      if a.months[0]==-1:
+        a.months = range(1,13)
 
     # arg 13
     ii += 1
