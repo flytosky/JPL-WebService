@@ -157,6 +157,7 @@
         // alert("arglist: " + arglist);
 
         var pres1 = $("#pres1").val();
+        if (isNaN(Number(pres1))) { pres1 = "-9999"; }
         arglist = arglist.concat("&pres1=");
         arglist = arglist.concat(pres1);
 
@@ -176,6 +177,7 @@
         // alert("arglist: " + arglist);
 
         var pres2 = $("#pres2").val();
+        if (isNaN(Number(pres2))) { pres2 = "-9999"; }
         arglist = arglist.concat("&pres2=");
         arglist = arglist.concat(pres2);
 
