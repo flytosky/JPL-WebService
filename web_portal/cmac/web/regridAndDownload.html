@@ -120,7 +120,7 @@
 
 
       $("#action1").click(function(event) {
-        // alert('****** inside scatterPlot2V()!');
+        // alert('****** inside regridAndDownload()!');
         Response = null;
 
         // no data to download yet
@@ -129,10 +129,9 @@
         $("#Response").html("Calculating ...");
         $("#data_url").html("Calculating ...");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
+        // http://cmacws3.jpl.nasa.gov:8090/svc/regridAndDownload?model=gfdl_esm2g&var=zos&pres=N/A&start_time=200401&end_time=200412&lon1=0&lon2=360&dlon=1.0&lat1=-90&lat2=90&dlat=1.0
         // form url string
-        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
-        var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
+        var url = "http://" + window.location.hostname + ":8090/svc/regridAndDownload?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -140,19 +139,19 @@
         model1 = model1.toLowerCase();
 
         var arglist = "";
-        arglist = arglist.concat("model1=");
+        arglist = arglist.concat("model=");
         arglist = arglist.concat(model1);
 
         // alert("arglist: " + arglist);
 
-        var v1 = $("#var1").val();
-        arglist = arglist.concat("&var1=");
+        var variable1 = $("#var1").val();
+        arglist = arglist.concat("&var=");
         arglist = arglist.concat(variable1);
 
         // alert("arglist: " + arglist);
 
         var pres1 = $("#pres1").val();
-        arglist = arglist.concat("&pres1=");
+        arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
 
         var t0 = $("#t0").val();
@@ -199,15 +198,16 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+//zzzz
+        alert("url: " + url);
 
         var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
         var arglistTB = "";
         arglistTB = arglistTB.concat("serviceType=");
         arglistTB = arglistTB.concat("1");
-        arglistTB = arglistTB.concat("&source1=");
+        arglistTB = arglistTB.concat("&source=");
         arglistTB = arglistTB.concat(d1);
-        arglistTB = arglistTB.concat("&var1=");
+        arglistTB = arglistTB.concat("&var=");
         arglistTB = arglistTB.concat(variable1);
         urlTimeBounds = urlTimeBounds + encodeURI(arglistTB);
         // alert("urlTimeBounds: " + urlTimeBounds);
@@ -249,6 +249,7 @@
 
                 if ( lowerT == 0 && upperT ==0 ) {
                   alert("We do not have data for this source and variable configuration.");
+                  //  alert(urlTimeBounds);
                   return;
                 }
 

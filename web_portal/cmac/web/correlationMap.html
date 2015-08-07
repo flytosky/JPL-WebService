@@ -123,8 +123,8 @@
       });
 
 
-      $("#scatterPlot2V").click(function(event) {
-        // alert('****** inside scatterPlot2V()!');
+      $("#correlationMap").click(function(event) {
+        // alert('****** inside correlationMap()!');
         Response = null;
 
         // no data to download yet
@@ -137,7 +137,7 @@
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
-        var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
+        var url = "http://" + window.location.hostname + ":8090/svc/correlationMap?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -150,7 +150,7 @@
 
         // alert("arglist: " + arglist);
 
-        var v1 = $("#var1").val();
+        var variable1 = $("#var1").val();
         arglist = arglist.concat("&var1=");
         arglist = arglist.concat(variable1);
 
@@ -169,7 +169,7 @@
 
         // alert("arglist: " + arglist);
 
-        var v2 = $("#var2").val();
+        var variable2 = $("#var2").val();
         arglist = arglist.concat("&var2=");
         arglist = arglist.concat(variable2);
 
@@ -178,6 +178,10 @@
         var pres2 = $("#pres2").val();
         arglist = arglist.concat("&pres2=");
         arglist = arglist.concat(pres2);
+
+        var pres2 = $("#laggedTime").val();
+        arglist = arglist.concat("&laggedTime=");
+        arglist = arglist.concat(laggedTime);
 
         var t0 = $("#t0").val();
         var t1 = $("#t1").val();
@@ -209,10 +213,6 @@
 
         arglist = arglist.concat("&lat2=");
         arglist = arglist.concat(lat1);
-
-        var nSample = $("#nSample").val();
-        arglist = arglist.concat("&nSample=");
-        arglist = arglist.concat(nSample);
 
         // alert("arglist: " + arglist);
 
@@ -285,6 +285,7 @@
                 // compute the intersection of the two data bounds
                 if (lowerT1 == 0  || upperT1 == 0){ // no data-1
                   alert("We do not have data for the data-1 source and variable configuration.");
+                  alert(urlTimeBounds);
                   return;
                 }
                 else if (lowerT2 == 0  || upperT2 == 0){ // no data-2
@@ -354,6 +355,8 @@
             success: function(data, textStatus, xhr) {
                 Response = data;
                 // alert("data: " + data);
+//zzzz
+                alert(url);
                 if (data.success == false) {
                     // alert(data.error);
                     Response = null;
@@ -422,13 +425,13 @@ This service generates a time-lagged correlation map between two specified varia
 <tr>
 <td colspan="2">
 <center>
-data 1
+data1[t-lag]
 </center>
 </td>
 
 <td colspan="2">
 <center>
-data 2
+data2[t]
 </center>
 </td>
 </tr>
@@ -496,11 +499,11 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 
 <tr>  
 <td></td>
-<td colspan="2"><center>lagged time (month):<input id="laggedTime" value="0"/></center></td><td></td></tr>
+<td colspan="2"><center>lag (month):<input id="laggedTime" value="0"/></center></td><td></td></tr>
 </tr>
 
 <tr>
-<td colspan="2" align="center"><input id="scatterPlot2V" type="submit" value="            Get  Plot            " style="height:28px"/></td>
+<td colspan="2" align="center"><input id="correlationMap" type="submit" value="            Get  Plot            " style="height:28px"/></td>
 <form>
 <td colspan="2" align="center"><input id="download_data" type="button" value="Download Data" style="height:28px"/>
 </td>
