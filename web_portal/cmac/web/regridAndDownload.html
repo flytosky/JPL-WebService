@@ -151,9 +151,8 @@
         // alert("arglist: " + arglist);
 
         var pres1 = $("#pres1").val();
-        if (isNaN(Number(pres1))) {
-            pres1 = "";
-        }
+// zzzz
+        // if (isNaN(Number(pres1))) { pres1 = "-9999"; }
         arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
 
@@ -201,7 +200,8 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+// zzzz
+        alert("url: " + url);
 
         var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
         var arglistTB = "";
