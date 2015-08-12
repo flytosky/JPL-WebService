@@ -54,8 +54,8 @@ output_dir):
                  str(self.laggedTime) + ' ' + \
                  self.start_time + ' ' + self.end_time + ' ' + \
                  self.lon1 + ',' + self.lon2 + ' ' + self.lat1 + ',' + self.lat2 + ' ' + \
-                 #self.months + ' '  + \
                  self.output_dir
+                 #self.months + ' '  + \
 
         print 'inputs: ', inputs
         command = './wrapper ' +  inputs

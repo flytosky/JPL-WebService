@@ -2,13 +2,17 @@
 '''
 execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/randomForest/pythonWrapper')
 
+import os 
+os.chdir('/home/svc/cmac/trunk/services/svc/svc/src/correlationMap')
+execfile('pythonWrapper')
+
 
 '''
 HOME='/home/svc'
 
 cr = {
 #                              1  2   3  4
-    # zzzz
+#
 'import_':              1,   # 0  1   1  0
 # parameters_
 # def_change_labels:     # not working
@@ -20,7 +24,6 @@ cr = {
   # def_getFileName2
   # def_getFileName
   # def_getUnits(self):
-  # def_checkTime
   # def_subsetting():
   # def_loadFile
   # def_corr #
@@ -44,18 +47,17 @@ if cr['import_']       == 1:
   #import math
   import glob
   import re
-  #import pickle
 
   import numpy as np      
   from netCDF4 import Dataset
   import netCDF4 as nC4
+  sys.path.insert(0, '../util')
   import NC_btang_v4 as NC1
 
   import matplotlib 
   matplotlib.use('Agg')  
   import matplotlib.pylab as Mat
   Mat.ioff()
-  #from mpl_toolkits.basemap import NetCDFFile
   from mpl_toolkits.basemap import Basemap
 
 t00 = time.time()
@@ -240,27 +242,6 @@ class SUBSET_REGION():
     self.desDir = os.path.split(self.dataDir)[0] + '/des'  # for deployment
     #self.desDir = '%s/des'%self.scatterDir  # ad hoc fix for summer school
 
-    self.inFile = '' 
-    self.inFile2 = '' 
-#   self.inFileBU = '' 
-#   self.netcdfFile = '' 
-#   self.netcdfDirRemote = '' 
-#   self.pngFile = '' 
-#   self.pdfFile = '' 
-#   self.lockFile = '' 
-#
-#   self.isCoastline = 1 
-#   self.regionName = '' 
-#   self.dataName = '' 
-#   self.dateStr = '' 
-#
-#   self.regionTitle = 'same' 
-#   self.dataTitle = 'same' 
-#   self.dateTitle = 'same' 
-#
-#   self.offset = 0.0 
-#
-
     if 0:
       self.lon1S = -10.5
       self.lon1E = 20.3
@@ -286,41 +267,42 @@ class SUBSET_REGION():
 
 #
     if 1:
-      self.center1 = 'ukmo'
-      self.model1  = 'hadgem2-a'
-      self.varName1='ts'
+      self.nVar = 2
+      self.center = []
+      self.model = []
+      self.varName = []
+      self.pres = []
 
     if 0:
-      self.center2 = 'giss'
-      self.model2  = 'e2-r'
-      #self.varName2='rsdt'
-      self.varName2='ts'
+      self.center.append('gfdl')
+      self.model.append('cm3')
+      self.varName.append('ts')
+      self.pres.append(200*100)
+
+    if 0:
+      self.center.append('gfdl')
+      self.model.append('cm3')
+      self.varName.append('ts')
+      self.pres.append(200*100)
 
     if 1:
-      self.center2 = 'gfdl'
-      #self.model2  = 'esm2g'
-      self.model2  = 'cm3'
-      #self.varName2='rsdt'
-      self.varName2='ta'  # working
-      self.varName2='clw' # not working
-      self.varName2='lai' # not working
+      self.center.append('gfdl')
+      self.model.append('esm2g')
+      self.varName.append('lai')
+      self.pres.append(200*100)
 
-    if 0:
-      self.center2 = 'ukmo'
-      self.model2  = 'hadgem2-a'
-      self.varName2='ts'
-      #self.varName2='cli'
+    if 1:
+      self.center.append('gfdl')
+      self.model.append('esm2g')
+      self.varName.append('zos')
+      self.pres.append(200*100)
 
-    self.nDim = 3
-
-    self.pres1 = 3000
-    self.pres2 = 3000
-
-    self.yearS = 1990
-    self.yearE = 1991
+    self.laggedTime = 1
+    self.yearS = 2004
+    self.yearE = 2004
 
     self.monthS = 1
-    self.monthE = 1
+    self.monthE = 12
 
     self.dayS = 15
     self.dayE = 15
@@ -422,39 +404,6 @@ class SUBSET_REGION():
       data = nc1.variables[self.varName[iVar]]
       self.units.append(data.units)
       nc1.close()
-
-  # def_checkTime
-  # not used yet
-  def checkTime(self, ncFile, varName):
-    # open file
-    nc1 = Dataset(ncFile, 'r')
-
-    # read time
-    data = nc1.variables[varName]
-    dims = data.dimensions
-    timeName = dims[0]
-    time1 = nc1.variables[timeName]
-
-    tS = nC4.num2date(time1[0], time1.units)
-    tE = nC4.num2date(time1[-1], time1.units)
-
-    tNumS = nC4.date2num(datetime.datetime(self.yearS, self.monthS, self.dayS, 0,0,0), time1.units)
-    tNumE = nC4.date2num(datetime.datetime(self.yearE, self.monthE, self.dayE, 0,0,0), time1.units)
-
-    if tNumS<time1[0]:
-      self.yearS = tS.year
-      self.monthS = tS.month
-      self.dayS = tS.day
-      print 'start time changed to: %d-%2d-%2d'%(self.yearS, self.monthS, self.dayS)
-
-
-    if tNumE>time1[-1]:
-      self.yearE = tE.year
-      self.monthE = tE.month
-      self.dayE = tE.day
-      print '  end time changed to: %d-%2d-%2d'%(self.yearE, self.monthE, self.dayE)
-
-    nc1.close()
 
   # def_subsetting():
   def subsetting(self, ncFile1, varName1, ncFile2=None, varName2='DATA1', 
@@ -616,8 +565,8 @@ class SUBSET_REGION():
     ncVar2 = nc2.variables[varName2]
 
     dims1 = ncVar1.dimensions
-    lon1 = nc2.variables[dims1[-1]][:]
-    lat1 = nc2.variables[dims1[-2]][:]
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
 
     dims2 = ncVar2.dimensions
     lon2 = nc2.variables[dims2[-1]][:]
@@ -629,10 +578,10 @@ class SUBSET_REGION():
  
     # loop over time
     monthCount = 0
-    for iMonth in range(nMonth-self.laggedTime):
+    for iMonth in range(self.laggedTime, nMonth):
       monthCount += 1
-      a1 = ncVar1[iMonth]
-      a2 = ncVar2[iMonth+self.laggedTime]
+      a1 = ncVar1[iMonth-self.laggedTime]
+      a2 = ncVar2[iMonth]
 
       # sometimes the 2 data may not have the save shape
       if (a1.shape[-1] != a2.shape[-1]):
@@ -703,8 +652,10 @@ class SUBSET_REGION():
     print yyb.min(), yyb.max(), yyb.mean(), yyb.std()
 
     temp1 = np.sqrt( (xxb-xb*xb)*(yyb-yb*yb) )
-    temp2 = temp1<1e-6
+    temp2 = temp1<1e-10
     temp1[temp2] = 1.0
+
+    temp3 = (xyb - xb*yb)
     corrxy = (xyb - xb*yb)/temp1
     corrxy[temp2] = np.ma.masked
 
@@ -718,8 +669,8 @@ class SUBSET_REGION():
 
     fig1.tight_layout()
     m1 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
-    #temp1 = m1.pcolor(lon1, lat1, corrxy, vmin=min1, vmax=max1)
-    temp1 = m1.pcolor(lon1, lat1, corrxy)
+    temp1 = m1.pcolor(lon1, lat1, corrxy, vmin=-1.0, vmax=1.0)
+    #temp1 = m1.pcolor(lon1, lat1, corrxy)
     temp1 = m1.drawcoastlines()
     Mat.colorbar()
     Mat.title('corrcoef(%s_%s:%s , %s_%s:%s(lag=%d)). # of month: %d'\
@@ -832,6 +783,7 @@ if cr['command_arg']       == 1:
   model1
   var1
   lavel1
+ laggedTime
  months
  lon1,lon2
  lat1,lat2
@@ -854,7 +806,6 @@ if cr['command_arg']       == 1:
       print i
 
     # arg 1
-    nVar = 2
     a.nVar = 2
 
     a.center = []
@@ -862,7 +813,7 @@ if cr['command_arg']       == 1:
     a.varName = []
     a.pres = []
     ii = 0
-    for iVar in range(nVar):
+    for iVar in range(a.nVar):
       # arg 2
       ii += 1
       temp1 = argv[ii].split('_')
@@ -928,7 +879,7 @@ if cr['plot__']       == 1:
   #try: 
   a.inFile = []
   a.inFileNc = []
-  for iVar in range(nVar):
+  for iVar in range(a.nVar):
     if 1: 
       inFile1, inFile1Nc = a.getFileName2(a.center[iVar], a.model[iVar], a.varName[iVar]) 
       a.inFile.append(inFile1)
@@ -941,8 +892,8 @@ if cr['plot__']       == 1:
   a.getUnits()
 
   # subset
-  tempFile1 = a.subsetting(a.inFile[0], a.varName[0], dim=4, lev=a.pres1)
-  tempFile2 = a.subsetting(a.inFile[1], a.varName[1], ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres2)
+  tempFile1 = a.subsetting(a.inFile[0], a.varName[0], dim=4, lev=a.pres[0])
+  tempFile2 = a.subsetting(a.inFile[1], a.varName[1], ncFile2=tempFile1, varNameOut='DATA2', dim=4, lev=a.pres[1])
 
   if 1:
     a.corr(tempFile1,tempFile2)
