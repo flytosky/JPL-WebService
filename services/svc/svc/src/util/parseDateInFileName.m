@@ -7,8 +7,19 @@ function [startTime, stopTime] = parseDateInFileName(fileName)
 % Revision history:
 %   2012/12/03:	Initial version, cz
 %
-dates = sscanf(fileName((end-15):end), '%d-%d.nc');
-startTime.year = floor(dates(1)/100);
-startTime.month = mod(dates(1),100);
-stopTime.year = floor(dates(2)/100);
-stopTime.month = mod(dates(2),100);
+date2 = str2num(fileName((end-8):(end-3)));
+stopTime.year = floor(date2/100);
+stopTime.month = mod(date2,100);
+
+startTime = [];
+if strcmp(fileName(end-9), '-') || strcmp(fileName(end-9), '-')
+  date1 = str2num(fileName((end-15):(end-10)));
+  if ~isempty(date1)
+    startTime.year = floor(date1/100);
+    startTime.month = mod(date1,100);
+  end
+end
+
+if isempty(startTime)
+  startTime = stopTime;
+end
