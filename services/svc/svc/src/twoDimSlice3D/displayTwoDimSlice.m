@@ -87,15 +87,7 @@ for fileI = 1:nFiles
     monthlyData = nan(nLon, nLat, nMonths, 'single');
   end
 
-  v = single(ncread(thisFile, varName));
-  if hasAttribute(thisFile, varName, 'missing_value')
-    missingValue = ncreadatt(thisFile, varName, 'missing_value');
-    v(abs(v - missingValue) < 1) = NaN;
-  end
-  if hasAttribute(thisFile, varName, '_FillValue')
-    missingValue = ncreadatt(thisFile, varName, '_FillValue');
-    v(abs(v - missingValue) < 1) = NaN;
-  end
+  v = ncreadVar(thisFile, varName);
 
   v_units = ncreadatt(thisFile, varName, 'units');
   v_units = adjustUnits(v_units, varName);
