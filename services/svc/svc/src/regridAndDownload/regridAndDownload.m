@@ -19,10 +19,10 @@ else
   status = system(['/bin/ln -s ' inputFile ' ' outputFile_tmp ';']);
 end
 
-if ~isempty(plev)
+if abs(plev(1) - (-999999.0)) < 1
+  movefile(outputFile_tmp, outputFile);
+else
   disp('regridding vertical levels ...');
   status = resampleVerticalGrid(outputFile_tmp, outputFile, varName, plev);
   delete(outputFile_tmp);
-else
-  movefile(outputFile_tmp, outputFile);
 end
