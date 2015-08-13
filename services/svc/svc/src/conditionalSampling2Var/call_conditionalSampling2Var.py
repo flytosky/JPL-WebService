@@ -38,8 +38,8 @@ class call_conditionalSampling2Var:
         self.env_var_plev2 = env_var_plev2	# pressure level for env var if it is 3-d
         self.output_dir = output_dir		# output directory for figure and data file
         self.displayOpt = displayOpt		# display option, if in binary, the last 3 bits = [z y x]
-        availableTimeBnds1 = correctTimeBounds2('2', data_source.replace("_", "/"), var, env_var_source1.replace("_", "/"), env_var, start_time, end_time)
-        availableTimeBnds2 = correctTimeBounds2('2', data_source.replace("_", "/"), var, env_var_source2.replace("_", "/"), env_var, start_time, end_time)
+        availableTimeBnds1 = correctTimeBounds2('2', data_source.replace("_", "/"), var, env_var_source1.replace("_", "/"), env_var1, start_time, end_time)
+        availableTimeBnds2 = correctTimeBounds2('2', data_source.replace("_", "/"), var, env_var_source2.replace("_", "/"), env_var2, start_time, end_time)
         self.start_time = str(max(int(availableTimeBnds1[0]), int(availableTimeBnds2[0])));
         self.end_time = str(min(int(availableTimeBnds1[1]), int(availableTimeBnds2[1])));
 						# z = map scale, y = vertical axis, x = horizontal axis
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     # c1 = call_conditionalSampling('cccma_canesm2', 'ts', '200101', '200212', '0', '360', '-90', '90', '', '', '5,6,7,8', 'cccma_canesm2', 'tos', '294','305','20', '',  './', '0')
     ### c1 = call_conditionalSampling('giss_e2-r', 'clw', '200101', '200212', '0', '360', '-30', '30', '20000', '90000', '5,6,7,8', 'giss_e2-r', 'tos', '294','305','20', '-1',  './', '6')
 
-    c1 = call_conditionalSampling2Var('ncc_noresm', 'cli', '200001', '200202', '0', '360', '-60', '60', '20000', '25000', '3,4,5', 'ncc_noresm', 'tos', '290','303','13', '-999999', 'ncc_noresm', 'wap', '-0.06', '0.06', '6', '50000',  './', '6')
+    c1 = call_conditionalSampling2Var('ncc_noresm', 'cli', '200001', '200202', '0', '360', '-60', '60', '20000', '25000', '3,4,5', 'ncc_noresm', 'tos', '290','303','13', '-999999', 'ncc_noresm', 'wap', '-0.06', '0.06', '6', '50000',  './', '0')
 
     mesg = c1.displayConditionalSampling2Var()
     print 'mesg: ', mesg
