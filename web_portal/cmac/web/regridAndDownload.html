@@ -22,6 +22,7 @@
     window.onload = function() {
       put_data(1);
       put_var(1);
+      select_var1(1);
 
       // no data to download yet
       disable_download_button();
@@ -55,7 +56,7 @@
     {
       var x;
       x=document.getElementById("pres"+ID);
-      //x.value = "500";
+      x.value = "";
       x.disabled=false;
     }
 
@@ -151,7 +152,9 @@
         // alert("arglist: " + arglist);
 
         var pres1 = $("#pres1").val();
-        if (isNaN(Number(pres1))) { pres1 = "-999999"; }
+        alert("pres1: " + pres1);
+        if (pres1=="" || isNaN(Number(pres1))) { pres1 = "-999999"; }
+        alert("pres1: " + pres1);
         arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
 
@@ -199,7 +202,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        // alert("url: " + url);
+        alert("url: " + url);
 
         var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
         var arglistTB = "";
