@@ -151,8 +151,7 @@
         // alert("arglist: " + arglist);
 
         var pres1 = $("#pres1").val();
-// zzzz
-        // if (isNaN(Number(pres1))) { pres1 = "-9999"; }
+        if (isNaN(Number(pres1))) { pres1 = "-999999"; }
         arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
 
@@ -372,10 +371,10 @@ atmosphere pressure level (hPa), or ocean pressure level (dbar)
 -->
 <input list="plev1" id=pres1 size=100>
 <datalist id="plev1">
-<option value="100000,80000,50000,30000,20000,10000">
-<option value="100000,30000,10000">
-<option value="100000,10000">
-<option value="50000,20000">
+<option value="1000,800,500,300,200,100">
+<option value="1000,300,100">
+<option value="1000,100">
+<option value="500,200">
 </datalist>
 </td>
 </tr>
