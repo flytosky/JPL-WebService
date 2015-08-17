@@ -386,7 +386,7 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='820'/>";
+                var html = "<img src='" + data.url + "?" + new Date().getTime() + "' width='820'/>";
                 // alert(html);
                 $("#Image").html(html);
 
