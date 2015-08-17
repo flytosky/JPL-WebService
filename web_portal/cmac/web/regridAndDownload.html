@@ -151,10 +151,27 @@
 
         // alert("arglist: " + arglist);
 
-        var pres1 = $("#pres1").val();
+        var pres10 = $("#pres1").val();
+        var pres1 = "";
+        alert("pres10: " + pres10);
+
+        if (pres10=="") {pres1 = "-999999"; }
+        else {
+          var checkNan = 0;
+          if (isNaN(Number(pres1))) { 
+            var temp1=pres10.split(",");
+            for (var i in temp1) {
+              if (isNaN(Number(temp1[i]))) {
+                checkNan = 1; 
+              }
+            }
+          }
+          if (checkNan==1) { pres1 = "-999999"; }
+          else { pres1 = pres10; }
+        }
+
         alert("pres1: " + pres1);
-        if (pres1=="" || isNaN(Number(pres1))) { pres1 = "-999999"; }
-        alert("pres1: " + pres1);
+
         arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
 
