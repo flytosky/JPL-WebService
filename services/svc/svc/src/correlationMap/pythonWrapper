@@ -656,8 +656,12 @@ class SUBSET_REGION():
     temp1[temp2] = 1.0
 
     temp3 = (xyb - xb*yb)
-    corrxy = (xyb - xb*yb)/temp1
+    corrxy = temp3/temp1
+    corrxy = np.ma.array(corrxy)
     corrxy[temp2] = np.ma.masked
+
+    print 'corrxy: '
+    print corrxy.min(), corrxy.max(), corrxy.mean(), corrxy.std()
 
     # figure
     fig1 = Mat.figure(figsize=(10,16))
