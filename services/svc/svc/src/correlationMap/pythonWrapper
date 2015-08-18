@@ -656,8 +656,7 @@ class SUBSET_REGION():
     temp1[temp2] = 1.0
 
     temp3 = (xyb - xb*yb)
-    corrxy = temp3/temp1
-    corrxy = np.ma.array(corrxy)
+    corrxy = np.ma.array(temp3/temp1)
     corrxy[temp2] = np.ma.masked
 
     print 'corrxy: '
