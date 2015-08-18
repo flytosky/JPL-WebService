@@ -677,9 +677,10 @@ class SUBSET_REGION():
     #temp1 = m1.pcolor(lon1, lat1, corrxy)
     temp1 = m1.drawcoastlines()
     Mat.colorbar()
-    Mat.title('corrcoef(%s_%s:%s , %s_%s:%s(lag=%d)). # of month: %d'\
-        %(a.center[0], a.model[0], a.varName[0], a.center[1], a.model[1], a.varName[1],
+    Mat.title('corrcoef(%s_%s:%s[t-%d] , %s_%s:%s[t]). # of month: %d'\
+        %(a.center[0], a.model[0], a.varName[0], 
          a.laggedTime, 
+         a.center[1], a.model[1], a.varName[1],
          monthCount))
 
     #change_labels(Mat.gca())
