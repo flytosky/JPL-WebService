@@ -153,7 +153,7 @@
 
         var pres10 = $("#pres1").val();
         var pres1 = "";
-        alert("pres10: " + pres10);
+        // alert("pres10: " + pres10);
 
         if (pres10=="") {pres1 = "-999999"; }
         else {
@@ -170,7 +170,7 @@
           else { pres1 = pres10; }
         }
 
-        alert("pres1: " + pres1);
+        // alert("pres1: " + pres1);
 
         arglist = arglist.concat("&plev=");
         arglist = arglist.concat(pres1);
@@ -219,7 +219,7 @@
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
-        alert("url: " + url);
+        // alert("url: " + url);
 
         var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
         var arglistTB = "";
