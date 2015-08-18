@@ -161,14 +161,17 @@
             pres1 = pres10; 
           } else {
             var checkNan = 0;
+            var pres2 = [];
             var temp1=pres10.split(",");
             for (var i in temp1) {
               if (isNaN(Number(temp1[i]))) {
                 checkNan = 1; 
+              } else {
+                pres2.push(Number(temp1[i]));
               }
             }
-            if (checkNan==1) { pres1 = "-999999"; }
-            else { pres1 = pres10; }
+            if (pres2.length>0) { pres1 = pres2.join(); }
+            else { pres1 = "-999999"; }
           }
         }
 
