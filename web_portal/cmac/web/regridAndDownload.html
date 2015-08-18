@@ -157,17 +157,19 @@
 
         if (pres10=="") {pres1 = "-999999"; }
         else {
-          var checkNan = 0;
-          if (isNaN(Number(pres1))) { 
+          if (!(isNaN(Number(pres10)))) { 
+            pres1 = pres10; 
+          } else {
+            var checkNan = 0;
             var temp1=pres10.split(",");
             for (var i in temp1) {
               if (isNaN(Number(temp1[i]))) {
                 checkNan = 1; 
               }
             }
+            if (checkNan==1) { pres1 = "-999999"; }
+            else { pres1 = pres10; }
           }
-          if (checkNan==1) { pres1 = "-999999"; }
-          else { pres1 = pres10; }
         }
 
         // alert("pres1: " + pres1);
