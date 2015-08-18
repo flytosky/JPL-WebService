@@ -94,8 +94,8 @@
     // 
     function select_var1(ID)
     {
-      var var_string;
-      var_string = $("#var"+ID).val();
+      var var_string = $("#var"+ID).val();
+      var data_string = $("#data"+ID).val();
 
       // alert("var_string: " + var_string)
 
@@ -106,6 +106,8 @@
       }
 
       //alert("variable1: " + var_string);
+      $("#startYear").html("start year-month: (earliest: " + dataList[data_string][2][var_string][0]);
+      $("#endYear").html("end year-month: (latest: " + dataList[data_string][2][var_string][1] + ")");
     }
 
     $(document).ready(function(){
@@ -487,8 +489,8 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar)
 </tr>
 
 <tr>
-<td>start year-month:</td><td><input id="t0" value="2004-01" alt="start"/></td>
-<td>end year-month:</td><td><input id="t1" value="2004-12" alt="end"/></td>
+<td id=startYear>start year-month:</td><td><input id="t0" value="2004-01" alt="start"/></td>
+<td id=endYear>end year-month:</td><td><input id="t1" value="2004-12" alt="end"/></td>
 </tr>
 
 
