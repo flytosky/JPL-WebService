@@ -8,7 +8,7 @@
   <script type="text/javascript" src="js/json2.js"></script>
   <script type="text/javascript" src="js/xmisc.js"></script>
 
-  <script src='js2/dataList.js'></script>
+  <script src='js2/dataList1.js'></script>
   <script src='js2/varList.js'></script>
 
   <script type="text/javascript">
@@ -23,6 +23,7 @@
       put_data(1);
       put_var(1);
       select_var1(1);
+      time_range();
 
       // no data to download yet
       disable_download_button();
@@ -104,6 +105,18 @@
 
       //alert("variable1: " + var_string);
     }
+
+    function time_range() {
+      var var_string1 = $("#var"+1).val();
+      var data_string1 = $("#data"+1).val();
+
+      var sTime = dataList[data_string1][2][var_string1][0].toString();
+      var eTime = dataList[data_string1][2][var_string1][1].toString();
+
+      $("#startYear").html("start year-month: (earliest:" + sTime.slice(0,4) + "-" + sTime.slice(4,6) + ")");
+      $("#endYear").html("end year-month: (latest:" + eTime.slice(0,4) + "-" + eTime.slice(4,6) + ")");
+    }
+
 
     $(document).ready(function(){
 
@@ -379,10 +392,10 @@ This service regrids a variable from a dataset according to the lat/lon/plev spe
 </tr>
 
 <tr>
-<td>data source:</td><td><select name="data1", id="data1" onchange="put_var(1)">
+<td>data source:</td><td><select name="data1", id="data1" onchange="put_var(1); time_range()">
 </select></td>
 
-<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var1(1)">
+<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var1(1); time_range()">
 </select>
 </td>
 </tr>
@@ -404,8 +417,8 @@ atmosphere pressure level (hPa), or ocean pressure level (dbar)
 </tr>
 
 <tr>
-<td>start year-month: <input id="t0" value="2004-01" alt="start"/></td>
-<td>end year-month: <input id="t1" value="2004-12" alt="end"/></td>
+<td id=startYear>start year-month:</td><td> <input id="t0" value="2004-01" alt="start"/></td>
+<td id=endYear>end year-month: </td><td><input id="t1" value="2004-12" alt="end"/></td>
 <td colspan=2>
 </td>
 </tr>
