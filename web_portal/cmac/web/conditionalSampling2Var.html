@@ -30,7 +30,7 @@
       select_var(1);
       select_var(2);
       select_var(3);
-      time_range2();
+      time_range3();
 
       disable_download_button();
 
@@ -664,7 +664,28 @@ If the first variable is a three-dimensional variable, the plot will be a colore
 Physical Variable (sampled variable)
 </center>
 </td>
+<td colspan="2" rowspan="4">
+</td>
+</tr>
 
+<tr>
+<td>source:</td>
+<td><select name="data1", id="data1" onchange="put_var(1); time_range3()"></select></td>
+</tr>
+
+<tr>
+<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var(1); time_range3()"> </select> </td>
+</tr>
+
+<td>
+atmosphere pressure range (hPa) <br> or ocean pressure range (dbar):
+</td>
+<td>
+<input id="pres1" value="200, 900" alt="pressure"/>
+</td>
+</tr>
+
+<tr>
 <td colspan="2">
 <center>
 Environmental Variable 1 (sampling variable)
@@ -680,29 +701,18 @@ Environmental Variable 2 (sampling variable)
 
 <tr>
 <td>source:</td>
-<td><select name="data1", id="data1" onchange="put_var(1); time_range()"></select></td>
+<td><select name="data2", id="data2" onchange="put_var(2); time_range3()"></select></td>
 
 <td>source:</td>
-<td><select name="data2", id="data2" onchange="put_var(2); time_range()"></select></td>
-
-<td>source:</td>
-<td><select name="data3", id="data3" onchange="put_var(3); time_range()"></select></td>
+<td><select name="data3", id="data3" onchange="put_var(3); time_range3()"></select></td>
 </tr>
 
 <tr>
-<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var(1); time_range()"> </select> </td>
-<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var(2); time_range()"> </select> </td>
-<td>variable name:</td><td><select name="var3", id="var3" onchange="select_var(3); time_range()"> </select> </td>
+<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var(2); time_range3()"> </select> </td>
+<td>variable name:</td><td><select name="var3", id="var3" onchange="select_var(3); time_range3()"> </select> </td>
 </tr>
 
 <tr>
-<td>
-atmosphere pressure range (hPa) <br> or ocean pressure range (dbar):
-</td>
-<td>
-<input id="pres1" value="200, 900" alt="pressure"/>
-</td>
-
 <td>
 atmosphere pressure level (hPa) <br> or ocean pressure level (dbar):
 </td>
@@ -718,11 +728,8 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar):
 </tr>
 
 <tr>
-<td colspan="2" rowspan="2">
-sampling variable binning specification:
-</td>
-
 <td colspan="2">
+sampling variable binning specification:
 <form>
 default: <input onclick="setDefault(1)" type="radio" name="default1" value="" id="radioDef1" checked>
 customized: <input onclick="setCustomized(1)" type="radio" name="default1" value="" id="radioCus1">
@@ -730,11 +737,13 @@ customized: <input onclick="setCustomized(1)" type="radio" name="default1" value
 </td>
 
 <td colspan="2">
+sampling variable binning specification:
 <form>
 default: <input onclick="setDefault(2)" type="radio" name="default2" value="" id="radioDef2" checked>
 customized: <input onclick="setCustomized(2)" type="radio" name="default2" value="" id="radioCus2">
 </form>
 </td>
+</tr>
 
 <tr>
 <td colspan="2">
@@ -749,7 +758,7 @@ number of bins: <input id="bins1" value="" alt="" size=3/>
 <form> 
 Min: <input id="min2" value="" alt="" size=3/> 
 Max: <input id="max2" value="" alt="" size=3/>
-number of bins: <input id="bins1" value="" alt="" size=3/>
+number of bins: <input id="bins2" value="" alt="" size=3/>
 </form> 
 </td>
 </tr>

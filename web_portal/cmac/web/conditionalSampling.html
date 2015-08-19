@@ -25,8 +25,8 @@
       put_data(2);
       put_var(1);
       put_var(2);
-      select_var1(1);
-      select_var1(2);
+      select_var(1);
+      select_var(2);
       time_range2();
 
       disable_download_button();
@@ -219,7 +219,7 @@
 
         // alert("arglist: " + arglist);
 
-        var v1 = $("#var1").val();
+        var variable1 = $("#var1").val();
         arglist = arglist.concat("&var1=");
         arglist = arglist.concat(variable1);
 
@@ -370,7 +370,7 @@
 
         // alert("arglist: " + arglist);
 
-        var v2 = $("#var2").val();
+        var variable2 = $("#var2").val();
         arglist = arglist.concat("&var2=");
         arglist = arglist.concat(variable2);
 
@@ -672,15 +672,15 @@ Environmental Variable (sampling variable)
 
 <tr>
 <td>source:</td>
-<td><select name="data1", id="data1" onchange="put_var(1); time_range()"></select></td>
+<td><select name="data1", id="data1" onchange="put_var(1); time_range2()"></select></td>
 
 <td>source:</td>
-<td><select name="data2", id="data2" onchange="put_var(2); time_range()"></select></td>
+<td><select name="data2", id="data2" onchange="put_var(2); time_range2()"></select></td>
 </tr>
 
 <tr>
-<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var(1); time_range()"> </select> </td>
-<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var(2); time_range()"> </select> </td>
+<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var(1); time_range2()"> </select> </td>
+<td>variable name:</td><td><select name="var2", id="var2" onchange="select_var(2); time_range2()"> </select> </td>
 </tr>
 
 <tr>
