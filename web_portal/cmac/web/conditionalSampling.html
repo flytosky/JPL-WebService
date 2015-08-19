@@ -28,67 +28,12 @@
       select_var(1);
       select_var(2);
       time_range2();
+      fillMonth();
 
       disable_download_button();
 
       select_all_months();
       setDefault();
-    }
-
-    // select all months in the checkboxes
-    function select_all_months()
-    {
-        document.getElementById('Jan').checked = true;
-        document.getElementById('Feb').checked = true;
-        document.getElementById('Mar').checked = true;
-        document.getElementById('Apr').checked = true;
-        document.getElementById('May').checked = true;
-        document.getElementById('Jun').checked = true;
-        document.getElementById('Jul').checked = true;
-        document.getElementById('Aug').checked = true;
-        document.getElementById('Sep').checked = true;
-        document.getElementById('Oct').checked = true;
-        document.getElementById('Nov').checked = true;
-        document.getElementById('Dec').checked = true;
-    }
-
-    // see if no month is selected
-    function no_month_check()
-    {
-        if (document.getElementById('Jan').checked == false &&
-           document.getElementById('Feb').checked == false &&
-           document.getElementById('Mar').checked == false &&
-           document.getElementById('Apr').checked == false &&
-           document.getElementById('May').checked == false &&
-           document.getElementById('Jun').checked == false &&
-           document.getElementById('Jul').checked == false &&
-           document.getElementById('Aug').checked == false &&
-           document.getElementById('Sep').checked == false &&
-           document.getElementById('Oct').checked == false &&
-           document.getElementById('Nov').checked == false &&
-           document.getElementById('Dec').checked == false) {
-           // alert("No month check!");
-           return true;
-          }
-        else
-           return false;
-    }
-
-    // unselect all months in the checkboxes
-    function reset_months()
-    {
-        document.getElementById('Jan').checked = false;
-        document.getElementById('Feb').checked = false;
-        document.getElementById('Mar').checked = false;
-        document.getElementById('Apr').checked = false;
-        document.getElementById('May').checked = false;
-        document.getElementById('Jun').checked = false;
-        document.getElementById('Jul').checked = false;
-        document.getElementById('Aug').checked = false;
-        document.getElementById('Sep').checked = false;
-        document.getElementById('Oct').checked = false;
-        document.getElementById('Nov').checked = false;
-        document.getElementById('Dec').checked = false;
     }
 
     // disable customized input text boxes
@@ -119,55 +64,6 @@
        y.disabled=false;
        z.value = "";
        z.disabled=false;
-    }
-
-    // select checkboxes based on "months" dropdown
-    function select_months()
-    {
-      var s1=document.getElementById("months");
-      // alert(s1.selectedIndex);
-      // alert(s1.options[s1.selectedIndex].value);
-
-      // disable the download button because of this change
-      disable_download_button();
-
-      // "select none"
-      if (s1.selectedIndex == 1) {
-        reset_months();
-      }
-      // "select all"
-      if (s1.selectedIndex == 0) {
-        select_all_months();
-      }
-      // "summer"
-      if (s1.selectedIndex == 2) {
-        reset_months();
-        document.getElementById('Jun').checked = true;
-        document.getElementById('Jul').checked = true;
-        document.getElementById('Aug').checked = true;
-      }
-      // "autumn"
-      if (s1.selectedIndex == 3) {
-        reset_months();
-        document.getElementById('Sep').checked = true;
-        document.getElementById('Oct').checked = true;
-        document.getElementById('Nov').checked = true;
-      }
-      // "winter"
-      if (s1.selectedIndex == 4) {
-        reset_months();
-        document.getElementById('Dec').checked = true;
-        document.getElementById('Jan').checked = true;
-        document.getElementById('Feb').checked = true;
-      }
-      // "spring"
-      if (s1.selectedIndex == 5) {
-        reset_months();
-        document.getElementById('Mar').checked = true;
-        document.getElementById('Apr').checked = true;
-        document.getElementById('May').checked = true;
-      }
-
     }
 
     $(document).ready(function(){
@@ -298,63 +194,7 @@
 
         // alert("arglist: " + arglist);
 
-
-        var s1 = document.getElementById('months');
-
-        // get months checked by client
-        var month_str = "";
-
-        var mm = document.getElementById('Jan');
-        if (mm.checked == true)
-          month_str = month_str.concat(",1");
-
-        var mm = document.getElementById('Feb');
-        if (mm.checked == true)
-          month_str = month_str.concat(",2");
-
-        var mm = document.getElementById('Mar');
-        if (mm.checked == true)
-          month_str = month_str.concat(",3");
-
-        var mm = document.getElementById('Apr');
-        if (mm.checked == true)
-          month_str = month_str.concat(",4");
-
-        var mm = document.getElementById('May');
-        if (mm.checked == true)
-          month_str = month_str.concat(",5");
-          var mm = document.getElementById('Jun');
-        if (mm.checked == true)
-          month_str = month_str.concat(",6");
-
-        var mm = document.getElementById('Jul');
-        if (mm.checked == true)
-          month_str = month_str.concat(",7");
-
-        var mm = document.getElementById('Aug');
-        if (mm.checked == true)
-          month_str = month_str.concat(",8");
-
-        var mm = document.getElementById('Sep');
-        if (mm.checked == true)
-          month_str = month_str.concat(",9");
-
-        var mm = document.getElementById('Oct');
-        if (mm.checked == true)
-          month_str = month_str.concat(",10");
-
-        var mm = document.getElementById('Nov');
-        if (mm.checked == true)
-          month_str = month_str.concat(",11");
-
-        var mm = document.getElementById('Dec');
-        if (mm.checked == true)
-          month_str = month_str.concat(",12");
-
-        // remove the leading ','
-        month_str = month_str.substr(1);
-        // alert(month_str);
-
+        var month_str = getMonthStr();
         arglist = arglist.concat("&months=");
         arglist = arglist.concat(month_str);
 
@@ -725,43 +565,9 @@ number of bins: <input id="bins1" value="" alt=""/>
 </tr>
 
 <tr>
-<td>select months:</td>
-<td><select name="months" id="months" onchange="select_months()">
-<option id="all">select all</option>
-<option id="none">select none</option>
-<option id="summer">Summer:Jun-Jul-Aug</option>
-<option id="autum">Autumn:Sep-Oct-Nov</option>
-<option id="winter">Winter:Dec-Jan-Feb</option>
-<option id="spring">Spring:Mar-Apr-May</option> </select>
-</td>
-<td>
-</td>
-<td>
+<td id="monthSelect0"></td>
+<td id="monthSelect" colspan="3"></td>
 </tr>
-
-<tr>
-<td>
-<label><input type="checkbox" name="option1" id="Jan" value="Jan" /> Jan<br></label>
-<label><input type="checkbox" name="option1" id="Feb" value="Feb" /> Feb<br></label>
-<label><input type="checkbox" name="option1" id="Mar" value="Mar" /> Mar<br></label>
-</td>
-<td>
-<label><input type="checkbox" name="option1" id="Apr" value="Apr" /> Apr<br></label>
-<label><input type="checkbox" name="option1" id="May" value="May" /> May<br></label>
-<label><input type="checkbox" name="option1" id="Jun" value="Jun" /> Jun<br></label>
-</td>
-<td>
-<label><input type="checkbox" name="option1" id="Jul" value="Jul" /> Jul<br></label>
-<label><input type="checkbox" name="option1" id="Aug" value="Aug" /> Aug<br></label>
-<label><input type="checkbox" name="option1" id="Sep" value="Sep" /> Sep<br></label>
-</td>
-<td>
-<label><input type="checkbox" name="option1" id="Oct" value="Oct" /> Oct<br></label>
-<label><input type="checkbox" name="option1" id="Nov" value="Nov" /> Nov<br></label>
-<label><input type="checkbox" name="option1" id="Dec" value="Dec" /> Dec<br></label>
-</td>
-</tr>
-
 
 <tr>
 <td>start lat (deg):</td><td><input id="lat0" value="-90"/></td>
