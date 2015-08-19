@@ -251,7 +251,7 @@ function getMonthStr() {
         for (var i=0; i<monthList.length; i++) {
           var mm = document.getElementById(monthList[i]);
           if (mm.checked == true) {
-            month_str += ","+i+1;
+            month_str += ","+(i+1);
           }
         }
         month_str = month_str.substr(1);

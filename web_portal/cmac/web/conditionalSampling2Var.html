@@ -105,7 +105,7 @@
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/conditionalSampling?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/conditionalSamp?";
-        var url = "http://" + window.location.hostname + ":8090/svc/conditionalSampling?";
+        var url = "http://" + window.location.hostname + ":8090/svc/conditionalSampling2Var?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -118,7 +118,7 @@
 
         // alert("arglist: " + arglist);
 
-        var v1 = $("#var1").val();
+        var variable1 = $("#var1").val();
         arglist = arglist.concat("&var1=");
         arglist = arglist.concat(variable1);
 
@@ -213,27 +213,56 @@
 
         // alert("arglist: " + arglist);
 
-        var v2 = $("#var2").val();
+        var variable2 = $("#var2").val();
         arglist = arglist.concat("&var2=");
         arglist = arglist.concat(variable2);
 
+        var d3 = $("#data3").val();
+        var model3 = d3.replace("/", "_");
+        model3 = model3.toLowerCase();
+
+        arglist = arglist.concat("&model3=");
+        arglist = arglist.concat(model3);
+
         // alert("arglist: " + arglist);
 
-        var plev = $("#pres2").val();
-        if (plev == "N/A")
-          plev = "-1";
+        var variable3 = $("#var3").val();
+        arglist = arglist.concat("&var3=");
+        arglist = arglist.concat(variable3);
+
+        // alert("arglist: " + arglist);
+
+        var plev1 = $("#pres2").val();
+        if (plev1 == "N/A")
+          plev1 = "-1";
 
         // when variable is the 3D Ocean Salinity or Ocean Temperature
         if (variable2 == 'ot' || variable2 == 'os') {
-          plev = plev * 10000;  // convert from dbar on GUI
+          plev1 = plev1 * 10000;  // convert from dbar on GUI
         } 
         // when variable2 is 3D atmosphere var
         else {
-          plev = plev * 100;  // convert from hPa on GUI
+          plev1 = plev1 * 100;  // convert from hPa on GUI
         }
 
-        arglist = arglist.concat("&env_var_plev=");
-        arglist = arglist.concat(plev);
+        arglist = arglist.concat("&env_var_plev1=");
+        arglist = arglist.concat(plev1);
+
+        var plev2 = $("#pres3").val();
+        if (plev2 == "N/A")
+          plev2 = "-1";
+
+        // when variable is the 3D Ocean Salinity or Ocean Temperature
+        if (variable2 == 'ot' || variable2 == 'os') {
+          plev2 = plev2 * 10000;  // convert from dbar on GUI
+        } 
+        // when variable2 is 3D atmosphere var
+        else {
+          plev2 = plev2 * 100;  // convert from hPa on GUI
+        }
+
+        arglist = arglist.concat("&env_var_plev2=");
+        arglist = arglist.concat(plev2);
 
         // alert("arglist: " + arglist);
 
@@ -241,7 +270,7 @@
 
         var binMin1, binMax1, numBins1;
 
-        if (binstate == true) { // default
+        if (binstate1 == true) { // default
           binMin1 = "-1";
           binMax1 = "-1";
           numBins1 = "-1";
@@ -258,6 +287,28 @@
         arglist = arglist.concat(binMax1);
         arglist = arglist.concat("&bin_n1=");
         arglist = arglist.concat(numBins1);
+
+        var binstate2 = document.getElementById('radioDef2').checked;
+
+        var binMin2, binMax2, numBins2;
+
+        if (binstate2 == true) { // default
+          binMin2 = "-1";
+          binMax2 = "-1";
+          numBins2 = "-1";
+        }
+        else { // customized
+          binMin2 = $("#min2").val();
+          binMax2 = $("#max2").val();
+          numBins2 = $("#bins2").val();
+        }
+
+        arglist = arglist.concat("&bin_min2=");
+        arglist = arglist.concat(binMin2);
+        arglist = arglist.concat("&bin_max2=");
+        arglist = arglist.concat(binMax2);
+        arglist = arglist.concat("&bin_n2=");
+        arglist = arglist.concat(numBins2);
 
         // alert("arglist: " + arglist);
 
