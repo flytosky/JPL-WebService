@@ -107,4 +107,32 @@
       //$("#endYear").html("end year-month: (latest:" + eTime + ")");
     }
 
+    function time_range3() {
+      var var_string1 = $("#var"+1).val();
+      var var_string2 = $("#var"+2).val();
+      var var_string3 = $("#var"+3).val();
+      var data_string1 = $("#data"+1).val();
+      var data_string2 = $("#data"+2).val();
+      var data_string3 = $("#data"+3).val();
+
+      var sTime = Math.max( 
+           Number(dataList[data_string1][2][var_string1][0]),
+           Number(dataList[data_string2][2][var_string2][0]),
+           Number(dataList[data_string3][2][var_string3][0]) 
+           ).toString();
+      var eTime = Math.min(
+           Number(dataList[data_string1][2][var_string1][1]),
+           Number(dataList[data_string2][2][var_string2][1]),
+           Number(dataList[data_string3][2][var_string3][1]) 
+           ).toString();
+
+      //sTime = sTime.toString();
+      //eTime = eTime.toString();
+
+      $("#startYear").html("start year-month: (earliest:" + sTime.slice(0,4) + "-" + sTime.slice(4,6) + ")");
+      $("#endYear").html("end year-month: (latest:" + eTime.slice(0,4) + "-" + eTime.slice(4,6) + ")");
+      //$("#startYear").html("start year-month: (earliest:" + sTime + ")");
+      //$("#endYear").html("end year-month: (latest:" + eTime + ")");
+    }
+
 
