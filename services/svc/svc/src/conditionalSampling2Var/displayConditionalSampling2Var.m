@@ -83,9 +83,15 @@ for fileI = 1:nFiles
       if nBinB(ii) <= 0
         largeScaleValueBinB{ii} = generateBinB(largeScaleVarData{ii}.data(:), 20);
       elseif nBinB(ii) == 1
-        largeScaleValueBinB{ii} = generateBinB(largeScaleVarData{ii}.data(:), nBinB(ii)-1);
+        largeScaleValueBinB{ii} = generateBinB(largeScaleVarData{ii}.data(:), largeScaleValueBinB{1});
       elseif nBinB(ii) == 2
         largeScaleValueBinB{ii} = linspace(largeScaleValueBinB{ii}(1), largeScaleValueBin{ii}(2), 10 + 1);
+      elseif nBinB(ii) == 3
+        if largeScaleValueBin{ii}(3) <= 0
+          largeScaleValueBinB{ii} = generateBinB(largeScaleVarData{ii}.data(:), 20);  
+        else
+          largeScaleValueBinB{ii} = linspace(largeScaleValueBinB{ii}(1), largeScaleValueBin{ii}(2), largeScaleValueBin{ii}(3) + 1);
+        end
       end
       nBinB(ii) = length(largeScaleValueBinB{ii});
     end
@@ -218,13 +224,17 @@ end
 
 [z_valid, y_valid, x_valid] = subsetValidData(z, y, x);
 
-contourf(x_valid, y_valid, z_valid, 15, 'linecolor', 'none');
+gFilter = gaussianFilter(5, 1.5);
+contourf(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(z_valid, 2)), 15, 'linecolor', 'none');
 hold on;
-%[c2, h2] = contour(x_valid, y_valid, n_sorted_valid', 500*(1:10));
-[c2, h2] = contour(x_valid, y_valid, n_sorted_valid');
+[c2, h2] = contour(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(n_sorted_valid,2)'));
 set(h2, 'linecolor', [1, 0.0, 0.2], 'linewidth', 1);
+set(h2, 'levellistmode', 'manual');
+l_list = round(get(h2, 'levellist')/10)*10;
+set(h2, 'levellistmode', 'manual');
+set(h2, 'levellist', l_list);
+clabel(c2, h2, l_list(1:2:end), 'fontsize', 12, 'fontweight', 'bold', 'color', [0, 0, 0], 'rotation', 0);
 set(h2,'ShowText','on','TextStep',get(h2,'LevelStep')*2)
-%clabel(c2, h2, 500*(1:5), 'fontsize', 12, 'fontweight', 'bold', 'color', [0, 0, 0]);
 
 if ~isempty(find(isnan(v_sorted_m(:))))
   cmap = colormap();
@@ -253,27 +263,15 @@ title(titleStr, 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 % adding title for color bar
 
-if dataIsTwoDim
-  data.dimNames = {[largeScaleVarName 'Bin']};
-  data.nDim = 1;
-  data.dimSize = [nBins];
-  data.dimVars = {binCenterValues};
-  data.var = v_sorted_m;
-  data.varName = varName;
-  data.dimVarUnits = {largeScaleVarData.v_units};
-  data.varUnits = v_units;
-  data.varLongName = long_name;
-else
-  data.dimNames = {[largeScaleVarName1 'Bin'], [largeScaleVarName2 'Bin']};
-  data.nDim = 2;
-  data.dimSize = nBins;
-  data.dimVars = binCenterValues;
-  data.var = v_sorted_m;
-  data.varName = varName;
-  data.dimVarUnits = {largeScaleVarData{1}.v_units, largeScaleVarData{2}.v_units};
-  data.varUnits = v_units;
-  data.varLongName = long_name;
-end
+data.dimNames = {[largeScaleVarName1 'Bin'], [largeScaleVarName2 'Bin']};
+data.nDim = 2;
+data.dimSize = nBins;
+data.dimVars = binCenterValues;
+data.var = v_sorted_m;
+data.varName = varName;
+data.dimVarUnits = {largeScaleVarData{1}.v_units, largeScaleVarData{2}.v_units};
+data.varUnits = v_units;
+data.varLongName = long_name;
 
 status = 0;
 
