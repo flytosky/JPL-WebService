@@ -19,6 +19,35 @@
     var variable2 = "";
 
 
+    function setDlOriginal() {}
+    /* Waiting for the feedback
+    function setDlOriginal() {
+      var check1 = document.getElementById('dlOriginal').checked;
+      var ids = [
+                   'lon1', 
+                   'lon2',
+                   'dlon',
+                   'lat1', 
+                   'lat2',
+                   'dlat',
+                   'dlat',
+                  ];
+      var temp1;
+      if (check1) {
+        for (i in ids) {
+          temp1 = document.getElementById(i]);
+          temp1.disabled = true;
+          temp1.value = "N/A" ;
+        }
+      } else {
+        for (i in ids) {
+            temp1 = document.getElementById(i]);
+            temp1.disabled = true;
+            temp1.value = "N/A" ;
+          }
+          
+*/
+
     // called on load or reload
     window.onload = function() {
       put_data(1);
@@ -76,28 +105,11 @@
 
         // alert("arglist: " + arglist);
 
-        var pres10 = $("#pres1").val();
-        var pres1 = "";
-        // alert("pres10: " + pres10);
-
-        if (pres10=="") {pres1 = "-999999"; }
-        else {
-          if (!(isNaN(Number(pres10)))) { 
-            pres1 = pres10; 
-          } else {
-            var checkNan = 0;
-            var pres2 = [];
-            var temp1=pres10.split(",");
-            for (var i in temp1) {
-              if (isNaN(Number(temp1[i]))) {
-                checkNan = 1; 
-              } else {
-                pres2.push(Number(temp1[i]));
-              }
-            }
-            if (pres2.length>0) { pres1 = pres2.join(); }
-            else { pres1 = "-999999"; }
-          }
+        if (document.getElementById("dlOriginal").checked) {
+          pres1 = "-999999";
+        } else {
+          var pres10 = $("#pres1").val();
+          var pres1 = parse_pres(pres10);
         }
 
         // alert("pres1: " + pres1);
@@ -119,13 +131,21 @@
 
         // alert("arglist: " + arglist);
 
-        var lon0 = $("#lon0").val();
-        var lon1 = $("#lon1").val();
-        var dlon = $("#dlon").val();
-        var lat0 = $("#lat0").val();
-        var lat1 = $("#lat1").val();
-        var dlat = $("#dlat").val();
-
+        if (document.getElementById("dlOriginal").checked) {
+          var lon0 = "-999999";
+          var lon1 = "-999999";
+          var dlon = "-999999";
+          var lat0 = "-999999";
+          var lat1 = "-999999";
+          var dlat = "-999999";
+        } else {
+          var lon0 = $("#lon0").val();
+          var lon1 = $("#lon1").val();
+          var dlon = $("#dlon").val();
+          var lat0 = $("#lat0").val();
+          var lat1 = $("#lat1").val();
+          var dlat = $("#dlat").val();
+        }
         arglist = arglist.concat("&lon1=");
         arglist = arglist.concat(lon0);
 
@@ -304,10 +324,14 @@ This service regrids a variable from a dataset according to the lat/lon/plev spe
 </tr>
 
 <tr>
-<td>data source:</td>
-<td><select name="data1", id="data1" onchange="put_var(1); time_range()"></select></td>
+<td>
+download the original: <input onclick="setDlOriginal()" type="checkbox" id="dlOriginal">
+</td>
 
-<td>variable name:</td><td><select name="var1", id="var1" onchange="select_var(1); time_range()"> </select> </td>
+<td>data source: <select name="data1", id="data1" onchange="put_var(1); time_range()"></select></td>
+
+<td colspan=2>variable name:<select name="var1", id="var1" onchange="select_var(1); time_range()"> </select> 
+</td>
 </tr>
 
 <tr>

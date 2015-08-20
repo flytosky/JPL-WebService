@@ -18,6 +18,7 @@
     var variable1 = "";
     var variable2 = "";
 
+    var naValue = "-999999";
 
     // called on load or reload
     window.onload = function() {
@@ -36,16 +37,17 @@
       disable_download_button();
 
       select_all_months();
-      setDefault();
+      setDefault(1);
+      setDefault(2);
     }
 
     // disable customized input text boxes
     function setDefault(ID)
     {
        // alert("in setDefault() ... ");
-       x=document.getElementById("min"+ID);
-       y=document.getElementById("max"+ID);
-       z=document.getElementById("bins"+ID);
+       var x=document.getElementById("min"+ID);
+       var y=document.getElementById("max"+ID);
+       var z=document.getElementById("bins"+ID);
        x.value = "N/A";
        x.disabled=true;
        y.value = "N/A";
@@ -58,9 +60,9 @@
     function setCustomized(ID)
     {
        // alert("in setCustomized() ... ");
-       x=document.getElementById("min"+ID);
-       y=document.getElementById("max"+ID);
-       z=document.getElementById("bins"+ID);
+       var x=document.getElementById("min"+ID);
+       var y=document.getElementById("max"+ID);
+       var z=document.getElementById("bins"+ID);
        x.value = "";
        x.disabled=false;
        y.value = "";
@@ -156,23 +158,24 @@
 
         // alert("arglist: " + arglist);
 
-
         var press_range = $("#pres1").val();
         // alert("press_range: " + press_range);
+        var pres12 = parse_pres(press_range);
+
         var pres1;
         var pres2;
-        if (press_range != 'N/A') {
-          // split the range into two pressures
-          var splitty = press_range.split(",");
-          if (splitty.length != 2) {
+        if (pres12 === naValue) {
+          pres1 = naValue;
+          pres2 = naValue;
+        } else {
+          split12 = pres12.split(",");
+          if (split12.length != 2) {
             alert("pressure level range needs to be two values separated by comma.");
             return; 
-          }
-          else {
-            pres1 = splitty[0];
-            pres2 = splitty[1];
-            // alert("variable1: " + variable1);
-         
+          } else {
+            pres1 = split12[0];
+            pres2 = split12[1];
+        
             // when variable is the 3D Ocean Salinity or Ocean Temperature
             if (variable1 == 'ot' || variable1 == 'os') {
               pres1 = pres1 * 10000;  // convert from dbar on GUI
@@ -185,10 +188,7 @@
             }
           }
         }
-        else {
-          pres1 = "-1";
-          pres2 = "-1";
-        }
+        alert("pres1, pres2: " + pres1 + ", " + pres2);
 
         arglist = arglist.concat("&pres1=");
         arglist = arglist.concat(pres1);
@@ -233,32 +233,33 @@
         // alert("arglist: " + arglist);
 
         var plev1 = $("#pres2").val();
-        if (plev1 == "N/A")
-          plev1 = "-1";
+        plev1 = parse_pres(plev1);
 
-        // when variable is the 3D Ocean Salinity or Ocean Temperature
-        if (variable2 == 'ot' || variable2 == 'os') {
-          plev1 = plev1 * 10000;  // convert from dbar on GUI
-        } 
-        // when variable2 is 3D atmosphere var
-        else {
-          plev1 = plev1 * 100;  // convert from hPa on GUI
+        if (plev1>0) {
+          // when variable is the 3D Ocean Salinity or Ocean Temperature
+          if (variable2 == 'ot' || variable2 == 'os') {
+            plev1 = plev1 * 10000;  // convert from dbar on GUI
+          } 
+          // when variable2 is 3D atmosphere var
+          else {
+            plev1 = plev1 * 100;  // convert from hPa on GUI
+          }
         }
 
         arglist = arglist.concat("&env_var_plev1=");
         arglist = arglist.concat(plev1);
 
         var plev2 = $("#pres3").val();
-        if (plev2 == "N/A")
-          plev2 = "-1";
-
-        // when variable is the 3D Ocean Salinity or Ocean Temperature
-        if (variable2 == 'ot' || variable2 == 'os') {
-          plev2 = plev2 * 10000;  // convert from dbar on GUI
-        } 
-        // when variable2 is 3D atmosphere var
-        else {
-          plev2 = plev2 * 100;  // convert from hPa on GUI
+        plev2 = parse_pres(plev2);
+        if (plev2>0) {
+          // when variable is the 3D Ocean Salinity or Ocean Temperature
+          if (variable3 == 'ot' || variable3 == 'os') {
+            plev2 = plev2 * 10000;  // convert from dbar on GUI
+          } 
+          // when variable2 is 3D atmosphere var
+          else {
+            plev2 = plev2 * 100;  // convert from hPa on GUI
+          }
         }
 
         arglist = arglist.concat("&env_var_plev2=");
@@ -271,9 +272,9 @@
         var binMin1, binMax1, numBins1;
 
         if (binstate1 == true) { // default
-          binMin1 = "-1";
-          binMax1 = "-1";
-          numBins1 = "-1";
+          binMin1 = "-999999";
+          binMax1 = "-999999";
+          numBins1 = "-999999";
         }
         else { // customized
           binMin1 = $("#min1").val();
@@ -293,9 +294,9 @@
         var binMin2, binMax2, numBins2;
 
         if (binstate2 == true) { // default
-          binMin2 = "-1";
-          binMax2 = "-1";
-          numBins2 = "-1";
+          binMin2 = "-999999";
+          binMax2 = "-999999";
+          numBins2 = "-999999";
         }
         else { // customized
           binMin2 = $("#min2").val();
@@ -583,24 +584,18 @@ Environmental Variable 1 (sampling variable)
 </center>
 </td>
 
-<td colspan="2">
-<center>
-Environmental Variable 2 (sampling variable)
-</center>
+<td colspan="2" rowspan="6">
 </td>
+
 </tr>
 
 <tr>
 <td>source:</td>
 <td><select name="data2", id="data2" onchange="put_var(2); time_range3()"></select></td>
-
-<td>source:</td>
-<td><select name="data3", id="data3" onchange="put_var(3); time_range3()"></select></td>
 </tr>
 
 <tr>
 <td>variable name:</td><td><select name="var2", id="var2" onchange="select_var(2); time_range3()"> </select> </td>
-<td>variable name:</td><td><select name="var3", id="var3" onchange="select_var(3); time_range3()"> </select> </td>
 </tr>
 
 <tr>
@@ -610,12 +605,6 @@ atmosphere pressure level (hPa) <br> or ocean pressure level (dbar):
 <td>
 <input id="pres2" value="500" alt="pressure"/>
 </td>
-<td>
-atmosphere pressure level (hPa) <br> or ocean pressure level (dbar):
-</td>
-<td>
-<input id="pres3" value="500" alt="pressure"/>
-</td>
 </tr>
 
 <tr>
@@ -624,14 +613,6 @@ sampling variable binning specification:
 <form>
 default: <input onclick="setDefault(1)" type="radio" name="default1" value="" id="radioDef1" checked>
 customized: <input onclick="setCustomized(1)" type="radio" name="default1" value="" id="radioCus1">
-</form>
-</td>
-
-<td colspan="2">
-sampling variable binning specification:
-<form>
-default: <input onclick="setDefault(2)" type="radio" name="default2" value="" id="radioDef2" checked>
-customized: <input onclick="setCustomized(2)" type="radio" name="default2" value="" id="radioCus2">
 </form>
 </td>
 </tr>
@@ -644,7 +625,45 @@ Max: <input id="max1" value="" alt="" size=3/>
 number of bins: <input id="bins1" value="" alt="" size=3/>
 </form> 
 </td>
+</tr>
 
+<tr>
+<td colspan="2">
+<center>
+Environmental Variable 2 (sampling variable)
+</center>
+</td>
+</tr>
+
+<tr>
+<td>source:</td>
+<td><select name="data3", id="data3" onchange="put_var(3); time_range3()"></select></td>
+</tr>
+
+<tr>
+<td>variable name:</td><td><select name="var3", id="var3" onchange="select_var(3); time_range3()"> </select> </td>
+</tr>
+
+<tr>
+<td>
+atmosphere pressure level (hPa) <br> or ocean pressure level (dbar):
+</td>
+<td>
+<input id="pres3" value="500" alt="pressure"/>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+sampling variable binning specification:
+<form>
+default: <input onclick="setDefault(2)" type="radio" name="default2" value="" id="radioDef2" checked>
+customized: <input onclick="setCustomized(2)" type="radio" name="default2" value="" id="radioCus2">
+</form>
+</td>
+</tr>
+
+<tr>
 <td colspan="2">
 <form> 
 Min: <input id="min2" value="" alt="" size=3/> 
@@ -653,7 +672,6 @@ number of bins: <input id="bins2" value="" alt="" size=3/>
 </form> 
 </td>
 </tr>
-
 
 <tr>
 <td id=startYear>start year-month:</td><td> <input id="t0" value="2004-01" alt="start"/></td>
@@ -674,7 +692,6 @@ number of bins: <input id="bins2" value="" alt="" size=3/>
 <td>start lon (deg):</td><td><input id="lon0" value="0"/></td>
 <td>end lon (deg):</td><td><input id="lon1" value="360"/></td>
 </tr>
-
 
 <tr>
 <td colspan="1" rowspan="3">
@@ -701,8 +718,6 @@ display option:
 </form>
 </td>
 </tr>
-
-
 
 <tr>
 <td colspan="2" align="center"><input id="conditionalSamp" type="submit" value="            Get  Plot            " style="height:28px"/></td>
