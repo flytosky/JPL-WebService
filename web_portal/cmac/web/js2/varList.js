@@ -29,8 +29,8 @@ var varList = {
 "hus":      ["Specific Humidity",                                 "", 3, ""],   
 "cli":      ["Cloud Ice Water Content",                           "", 3, ""],         
 "clw":      ["Cloud Liquid Water Content",                        "", 3, ""],            
-"ot":       ["Ocean Temperature",                                 "", 3, ""],   
-"os":       ["Ocean Salinity",                                    "", 3, ""],
+"ot":       ["Ocean Temperature",                            "ocean", 3, ""],   
+"os":       ["Ocean Salinity",                               "ocean", 3, ""],
 "wap":      ["Vertical Wind Velocity",                            "", 3, ""],        
 "hur":      ["Relative Humidity",                                 "", 3, ""],   
 };
