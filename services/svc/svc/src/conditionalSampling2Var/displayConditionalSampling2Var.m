@@ -224,10 +224,27 @@ end
 
 [z_valid, y_valid, x_valid] = subsetValidData(z, y, x);
 
-gFilter = gaussianFilter(5, 1.5);
-contourf(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(z_valid, 2)), 15, 'linecolor', 'none');
-hold on;
-[c2, h2] = contour(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(n_sorted_valid,2)'));
+gFilter = gaussianFilter(3, 1);
+
+badDataFrac = sum(sum(~isfinite(z_valid)))/length(z_valid(:));
+if badDataFrac > 0.2
+  imagesc(x_valid, -y_valid, z_valid);
+  hold on;
+  [c2, h2] = contour(interpGrid(x_valid, 2), interpGrid(-y_valid,2), filter2(gFilter, interp2(n_sorted_valid,2)'));
+  caxis([min(z_valid(:)), max(z_valid(:))]);
+  set(gca, 'yticklabel', num2str(-get(gca, 'ytick')'));
+else
+  if badDataFrac < 0.02
+    if badDataFrac < 0.005
+      gFilter = gaussianFilter(5, 1.5);
+    end
+    contourf(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(z_valid, 2)), 15, 'linecolor', 'none');
+  else
+    contourf(interpGrid(x_valid, 2), interpGrid(y_valid,2), interp2(z_valid, 2), 15, 'linecolor', 'none');
+  end
+  hold on;
+  [c2, h2] = contour(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(n_sorted_valid,2)'));
+end
 set(h2, 'linecolor', [1, 0.0, 0.2], 'linewidth', 1);
 set(h2, 'levellistmode', 'manual');
 l_list = round(get(h2, 'levellist')/10)*10;
@@ -263,7 +280,11 @@ title(titleStr, 'fontsize', 13, 'fontweight', 'bold');
 print(gcf, figFile, '-djpeg');
 % adding title for color bar
 
-data.dimNames = {[largeScaleVarName1 'Bin'], [largeScaleVarName2 'Bin']};
+if strcmp(largeScaleVarName1, largeScaleVarName2)
+  data.dimNames = {[largeScaleVarName1 'Bin1'], [largeScaleVarName2 'Bin2']};
+else
+  data.dimNames = {[largeScaleVarName1 'Bin'], [largeScaleVarName2 'Bin']};
+end
 data.nDim = 2;
 data.dimSize = nBins;
 data.dimVars = binCenterValues;
