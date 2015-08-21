@@ -5,7 +5,7 @@ function status = regridAndDownload(inputFile, outputFile, varName, lon, lat, pl
 %
 status = -1;
 
-if nargin < 4
+if nargin < 4 | (isempty(lon) & isempty(lat) & isempty(plev))
   status = system(['/bin/ln -s ' inputFile ' ' outputFile ';']);
   return;
 end
@@ -19,7 +19,7 @@ else
   status = system(['/bin/ln -s ' inputFile ' ' outputFile_tmp ';']);
 end
 
-if abs(plev(1) - (-999999.0)) < 1
+if isempty(plev)
   movefile(outputFile_tmp, outputFile);
 else
   disp('regridding vertical levels ...');
