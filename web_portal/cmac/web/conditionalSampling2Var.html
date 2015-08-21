@@ -160,6 +160,7 @@
 
         var press_range = $("#pres1").val();
         // alert("press_range: " + press_range);
+
         var pres12 = parse_pres(press_range);
 
         var pres1;
@@ -188,7 +189,7 @@
             }
           }
         }
-        alert("pres1, pres2: " + pres1 + ", " + pres2);
+        //alert("pres1, pres2: " + pres1 + ", " + pres2);
 
         arglist = arglist.concat("&pres1=");
         arglist = arglist.concat(pres1);
@@ -272,9 +273,9 @@
         var binMin1, binMax1, numBins1;
 
         if (binstate1 == true) { // default
-          binMin1 = "-999999";
-          binMax1 = "-999999";
-          numBins1 = "-999999";
+          binMin1 = naValue;
+          binMax1 = naValue;
+          numBins1 = naValue;
         }
         else { // customized
           binMin1 = $("#min1").val();
@@ -294,9 +295,9 @@
         var binMin2, binMax2, numBins2;
 
         if (binstate2 == true) { // default
-          binMin2 = "-999999";
-          binMax2 = "-999999";
-          numBins2 = "-999999";
+          binMin2 = naValue;
+          binMax2 = naValue;
+          numBins2 = naValue;
         }
         else { // customized
           binMin2 = $("#min2").val();
