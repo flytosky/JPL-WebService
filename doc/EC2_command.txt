@@ -84,7 +84,7 @@ How to copy data from cmacws3 to the EC2 data partition
 . rsync -avz ./cmip5 -e "ssh -i climate-default.pem" ubuntu@ec2-54-153-87-10.us-west-1.compute.amazonaws.com:/mnt/xvdf/data_2015
   (the cmip5 subdir will be copied to /mnt/xvdf/data_2015)
 
-
-
+. rsync -avzL -e ssh --delete ./cmip5 -e "ssh -i climate-default.pem" ubuntu@ec2-54-153-87-10.us-west-1.compute.amazonaws.com:/mnt/xvdf/data_2015
+  (delete the files already deleted on the source; sync links)
 
 
