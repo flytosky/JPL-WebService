@@ -1604,7 +1604,7 @@ def displayConditionalSamp():
 @app.route('/svc/conditionalSampling2Var', methods=["GET"])
 @crossdomain(origin='*')
 def displayConditionalSamp2Var():
-    """Run displayConditionalSamp"""
+    """Run displayConditionalSamp2Var"""
     executionStartTime = int(time.time())
     # status and message
     success = True
