@@ -626,6 +626,12 @@ class SUBSET_REGION():
         xxb += a1*a1
         yyb += a2*a2
         
+      print 'a2: '
+      print a2.min(), a2.max(), a2.mean(), a2.std()
+
+      print 'yb: '
+      print yb.min(), yb.max(), yb.mean(), yb.std()
+
     nc1.close()
     nc2.close()
 
