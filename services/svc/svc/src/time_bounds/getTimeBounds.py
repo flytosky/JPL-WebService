@@ -43,6 +43,7 @@ def getRootDir():
     print 'failed to read data.cfg.'
     return None
 
+  print 'failed to get data.cfg.'
   return None
 
 dir00 = getRootDir()
@@ -69,7 +70,8 @@ def getTimeBounds(serviceType, dataSource, varName):
 
   subdirs1 = ['regridded', 'break', '.']
   #subdirs2 = ['regridded', 'original', '.']
-  subdirs2 = ['regridded',  '.']
+  #subdirs2 = ['regridded',  '.']
+  subdirs2 = ['regridded', 'break', '.']
 
   if serviceType=='1':
     subdirs = subdirs1
