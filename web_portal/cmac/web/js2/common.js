@@ -93,7 +93,7 @@ temp1 += '    variable name:\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '  <div class="col-sm-8 left1">\n';
 temp1 += '    <select name="var' + ID +'", id="var' + ID;
-temp1 += '" onchange="select_var(' + ID + '); time_range' + numTB + ')"> </select>\n';
+temp1 += '" onchange="select_var(' + ID + '); time_range' + numTB + '()"> </select>\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '</div> <!-- row -->\n';
 
@@ -105,7 +105,7 @@ temp1 += '  <div class="col-sm-8 left1">\n';
 temp1 += '    <input id="pres' + ID + '" value="' + pressDf + '" alt="pressure"/>\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '</div> <!-- row -->\n';
-// alert(temp1);
+alert(temp1);
 return temp1;
 }
 
