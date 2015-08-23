@@ -3,6 +3,7 @@
 // enable_download data button
 // disable_pressure level box for 2D var
 // put_data__
+// data_block_str__
 // put_var__
 // is3D__
 // select_var__
@@ -65,6 +66,47 @@ function put_data(ID){
       og.appendChild(new Option(key,key));
     }
   }
+}
+
+// data_block_str__
+function data_block_str(ID, numTB, dataTitle, isRange, pressDf){
+var temp1= '';
+temp1 += '<div class="row ">\n'
+temp1 += '<div class="col-sm-12 center1 subtitle1">\n';
+temp1 += dataTitle + '\n';
+temp1 += '</div>\n';
+temp1 += '</div> <!-- row --> \n';
+
+temp1 += '<div class="row">\n';
+temp1 += ' <div class="col-sm-4 right1">\n';
+temp1 += '   source:' + '\n';
+temp1 += '  </div> <!-- col-sm-6 -->\n';
+temp1 += '  <div class="col-sm-8 left1">\n';
+temp1 += '    <select name="data' + ID + '", id="data' + ID;
+temp1 += '" onchange="put_var(' + ID + '); time_range' + numTB + '()"></select>\n';
+temp1 += '  </div> <!-- col-sm-6 level2-->\n';
+temp1 += '</div> <!-- row -->\n';
+
+temp1 += '<div class="row">\n';
+temp1 += '  <div class="col-sm-4 right1">\n';
+temp1 += '    variable name:\n';
+temp1 += '  </div> <!-- col-sm-6 level2-->\n';
+temp1 += '  <div class="col-sm-8 left1">\n';
+temp1 += '    <select name="var' + ID +'", id="var' + ID;
+temp1 += '" onchange="select_var(' + ID + '); time_range' + numTB + ')"> </select>\n';
+temp1 += '  </div> <!-- col-sm-6 level2-->\n';
+temp1 += '</div> <!-- row -->\n';
+
+temp1 += '<div class="row">\n';
+temp1 += '  <div class="col-sm-4 right1">\n';
+temp1 += '    pressure ' + isRange + '(atmosphere hPa) <br> or (ocean dbar):\n';
+temp1 += '  </div> <!-- col-sm-6 level2-->\n';
+temp1 += '  <div class="col-sm-8 left1">\n';
+temp1 += '    <input id="pres' + ID + '" value="' + pressDf + '" alt="pressure"/>\n';
+temp1 += '  </div> <!-- col-sm-6 level2-->\n';
+temp1 += '</div> <!-- row -->\n';
+// alert(temp1);
+return temp1;
 }
 
 // put_var__
@@ -186,12 +228,13 @@ function fillMonth() {
 <option id="spring">Spring:Mar-Apr-May</option> </select>';
   $("#monthSelect0").html(temp1); 
 
-  temp1 = ""; 
+  temp1 = '<form role="form">'; 
   for (var i=0; i<monthList.length; i++) {
     temp1 +=
-        '<input type="checkbox" id="' + monthList[i] + '" value="' + monthList[i] + '"/>' 
+        '<label"><input type="checkbox" id="' + monthList[i] + '" value="' + monthList[i] + '"/></label>' 
           +  monthList[i] + " ";
   }
+  temp1 += '</form>';
   $("#monthSelect").html(temp1); 
 }
 
