@@ -1,0 +1,22 @@
+  .center1 {text-align: center;}
+  .right1 {text-align: right;}
+  /*.left1 {text-align: left; margin-left: 50px;}*/
+  .left1 {text-align: left;}
+  .middle1 {vertical-align: middle;}
+  .row1 {margin: 0 auto;}
+
+  .subtitle1 {color: DarkBlue; font-weight: bold; }
+
+  /*.color-head {background-color: Aqua;} */
+  .color-head {background-color: #A6C0CE  ;} /*A6C0CE  ABD8C0 */
+  .color0 {background-color: Azure;}
+  .color1 {background-color: Beige;}
+  .color2 {background-color: YellowGreen;}
+  .color3 {background-color: SpringGreen;}
+  .color4 {background-color: Turquoise;}
+
+@media screen and (max-width: 768px) {
+.right1 {text-align: left;}
+}
+
+
