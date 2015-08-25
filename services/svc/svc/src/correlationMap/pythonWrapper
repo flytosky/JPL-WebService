@@ -695,6 +695,33 @@ class SUBSET_REGION():
 
     print 'figFile: %s'%figFile
 
+    # save corr data
+    if 1:
+      # lon1 and lon2 sometimes differ.
+      if len(lon1) < len(lon2):
+        lon12 = lon1
+      else: 
+        lon12 = lon2
+
+      if len(lat1) < len(lat2):
+        lat12 = lat1
+      else: 
+        lat12 = lat2
+
+      sys.path.append('../util')
+      corrxya = corrxy.filled(-9999.0)
+
+      fn = '%s/data.nc'%self.outDir
+      import NC_btang_v4 as NC1
+
+      NC1.save2nc(corrxya, ncfile=fn, name='corr', 
+        newfile=1,
+        format='NETCDF3_CLASSIC',
+        missing_value=-9999.0,
+        axisorder='yx', axislib=NC1.axislib0, axisarray=[lat12, lon12])
+
+      print 'dataFile: %s'%fn
+
   # def_saveData(self):
   def saveData(self, tempFile1, tempFile2):
     fn = '%s/data_compare.nc'%self.outDir
