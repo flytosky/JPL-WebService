@@ -88,3 +88,38 @@ How to copy data from cmacws3 to the EC2 data partition
   (delete the files already deleted on the source; sync links)
 
 
+Steps to debug directly inside the Docker env:
+
+  ssh -i climate-default.pem ubuntu@ec2-54-153-87-10.us-west-1.compute.amazonaws.com
+
+1.  docker images
+    You can see the docker image list. Choose one which you want to log in.
+
+2.  docker run -it <Repository name>
+    e.g. run -it -v /mnt/xvdf/data/cmip5/:/media/sdb/cmip5/ -p 9002:9002 -p 9003:9003 -p 9033:9033 -p 9034:9034 -p 9038:9038 flytosky/workshop
+
+3. Once you start a docker instance, use the command line below:
+  cd /media/cmu/JPLWorkshop-Frontend-9033/public/html
+  
+  You can change the jpl frontend codes here. All your html and js codes are under this directory.
+
+4. If you want to change the jpl backend, use the command line below:
+  cd /media/sdb/
+
+  You can change the jpl backend codes here. All your backend codes are under this directory.
+
+5. When you want to run the jpl's server, go to the directory below:
+   cd /media/sdb/trunk/services/svc
+
+
+   python run.py
+
+6. After you finish everything and want to push the modified codes, OPEN A NEW TERNIMAL AND LOG ONTO THE EC2 AGAIN.
+   1) docker ps
+   find the docker instance that you want to push
+
+   2) docker push -m <Message> <Container ID> <Repository Name>
+   e.g. docker push -m "change the jpl's codes: regid service html file has been changed" f15d5c301a0a flytosky/workshop
+    
+   3) docker push flytosky/workshop
+
