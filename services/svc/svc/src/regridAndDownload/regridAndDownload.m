@@ -5,8 +5,6 @@ function status = regridAndDownload(inputFile, outputFile, varName, lon, lat, pl
 %
 status = -1;
 
-keyboard;
-
 if nargin < 4 | (isempty(lon) & isempty(lat) & isempty(plev))
   status = system(['/bin/ln -s ' inputFile ' ' outputFile ';']);
   return;
