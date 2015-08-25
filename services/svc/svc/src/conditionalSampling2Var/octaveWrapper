@@ -109,4 +109,4 @@ printf("dataFile: %s\n", dataFile)
 printf("dataFilePath: %s\n", dataFilePath)
 
 status = -1;
-displayConditionalSampling2Var(dataFileFullPath, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange,  largeScaleDataFileFullPath1, largeScaleVarName1, largeScaleValueBinB1, largeScalePlev1, largeScaleDataFileFullPath2, largeScaleVarName2, largeScaleValueBinB2, largeScalePlev2, dataFilePath, figFile, displayOpt);
+displayConditionalSampling2Var(dataFileFullPath, varName, startTime, stopTime, lonRange, latRange, monthIdx, plevRange,  largeScaleDataFileFullPath1, largeScaleVarName1, largeScaleValueBinB1, largeScalePlev1, largeScaleDataFileFullPath2, largeScaleVarName2, largeScaleValueBinB2, largeScalePlev2, dataFilePath, figFilePath, displayOpt);
