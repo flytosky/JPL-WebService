@@ -5,6 +5,8 @@ function status = regridAndDownload(inputFile, outputFile, varName, lon, lat, pl
 %
 status = -1;
 
+keyboard;
+
 if nargin < 4 | (isempty(lon) & isempty(lat) & isempty(plev))
   status = system(['/bin/ln -s ' inputFile ' ' outputFile ';']);
   return;
@@ -12,11 +14,19 @@ end
 
 outputFile_tmp = [outputFile(1:(end-3)) '_tmp.nc'];
 
+if exist(outputFile_tmp)
+  delete(outputFile_tmp);
+end
+
 if ~isempty(lon) && ~isempty(lat)
   disp('regridding longitude and latitude ...');
   status = regridLonAndLat(inputFile, outputFile_tmp, varName, lon, lat);
 else
   status = system(['/bin/ln -s ' inputFile ' ' outputFile_tmp ';']);
+end
+
+if exist(outputFile)
+  delete(outputFile);
 end
 
 if isempty(plev)

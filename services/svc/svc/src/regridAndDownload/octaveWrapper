@@ -32,7 +32,7 @@ lat = 2*(-45:45);
 if narg > 4
   lon_grid = str2num(arg_list{5});
   printf ("longitude grid (min, max, resolution): (%d, %d, %d) \n", lon_grid(1), lon_grid(2), lon_grid(3));
-  if isNA(lon)
+  if isNA(lon_grid)
     lon = [];
   else
     lon = lon_grid(1):lon_grid(3):lon_grid(2);
@@ -42,7 +42,7 @@ end
 if narg > 5
   lat_grid = str2num(arg_list{6});
   printf ("latitude grid (min, max, resolution): (%d, %d, %d) \n", lat_grid(1), lat_grid(2), lat_grid(3));
-  if isNA(lat)
+  if isNA(lat_grid)
     lat = [];
   else
     lat = lat_grid(1):lat_grid(3):lat_grid(2);
