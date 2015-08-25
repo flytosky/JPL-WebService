@@ -146,7 +146,19 @@ function select_var(ID)
 
 
 // time_range__
+// this is identical to time_range1()
 function time_range() {
+  var var_string1 = $("#var"+1).val();
+  var data_string1 = $("#data"+1).val();
+
+  var sTime = dataList[data_string1][2][var_string1][0].toString();
+  var eTime = dataList[data_string1][2][var_string1][1].toString();
+
+  $("#startYear").html("start year-month: (earliest:" + sTime.slice(0,4) + "-" + sTime.slice(4,6) + ")");
+  $("#endYear").html("end year-month: (latest:" + eTime.slice(0,4) + "-" + eTime.slice(4,6) + ")");
+}
+
+function time_range1() {
   var var_string1 = $("#var"+1).val();
   var data_string1 = $("#data"+1).val();
 
@@ -345,7 +357,8 @@ function parse_pres(pres10) {
       var checkNan = 0;
       var pres2 = [];
       var temp1=pres10.split(",");
-      for (var i in temp1) {
+      //for (var i in temp1) {
+      for (var i=0; i<temp1.length; i++) {
         if (isNaN(Number(temp1[i]))) {
           checkNan = 1; 
         } else {
