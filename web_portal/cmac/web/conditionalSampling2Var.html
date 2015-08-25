@@ -374,6 +374,10 @@
         arglist = arglist.concat("&displayOpt=");
         arglist = arglist.concat(dispOptString);
 
+        var purpose = $("#purpose").val();
+        arglist = arglist.concat("&purpose=");
+        arglist = arglist.concat(purpose);
+
         // alert("arglist: " + arglist);
 
         // url = url + encodeURIComponent(arglist);
@@ -730,8 +734,21 @@ Data Subsetting
 </div> <!-- row -->
 </div> <!-- color2 -->
 
-<div class="color4">
+<div class="color3">
 <div class="row">
+  <div class="col-sm-4 right1">
+    Execution purpose:
+  </div> <!-- col -->
+  <div class="col-sm-8 left1">
+    <form>
+    <textarea name="purpose" id="purpose" rows="4" cols="50"> </textarea>
+    </form>
+  </div> <!-- col -->
+</div> <!-- row -->
+</div> <!-- color2 -->
+
+<div class="color4">
+<div class="row ">
   <div class="col-sm-6 center1">
     <input id="conditionalSamp" type="submit" value="            Get  Plot            " style="height:28px"/>
   </div>
@@ -741,7 +758,7 @@ Data Subsetting
     </form>
   </div>
 </div> <!-- row -->
-</div> <!-- color4 -->
+</div> <!-- color -->
 
 <div class="row" center1>
   <div id="Image">Image Here</div>
