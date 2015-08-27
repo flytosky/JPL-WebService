@@ -191,6 +191,10 @@ For a detailed description of the datasets, please click here.
 <img src="images/service.jpeg" alt="service" height="60" width="60">
 <a href="/cmac/web/conditionalSampling2Var.html">Conditional Sampling for Two Variables Service</a>.
 </p>
+<p>
+<img src="images/service.jpeg" alt="service" height="60" width="60">
+<a href="/cmac/web/datasetTable.html">Data Set Search Service</a>.
+</p>
 <ol>
 
 <?php require_once("./footer.php") ?>
