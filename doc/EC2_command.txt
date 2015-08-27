@@ -98,6 +98,9 @@ Steps to debug directly inside the Docker env:
 2.  docker run -it <Repository name>
     e.g. run -it -v /mnt/xvdf/data/cmip5/:/media/sdb/cmip5/ -p 9002:9002 -p 9003:9003 -p 9033:9033 -p 9034:9034 -p 9038:9038 flytosky/workshop
 
+    or:
+    docker attach f46a996923a3
+
 3. Once you start a docker instance, use the command line below:
   cd /media/cmu/JPLWorkshop-Frontend-9033/public/html
   
@@ -105,14 +108,16 @@ Steps to debug directly inside the Docker env:
 
 4. If you want to change the jpl backend, use the command line below:
   cd /media/sdb/
+  The JPL service app level code is here:
+  /media/sdb/trunk/services/svc/svc/src
 
   You can change the jpl backend codes here. All your backend codes are under this directory.
 
 5. When you want to run the jpl's server, go to the directory below:
+   screen -r jpl
+   you either see python run.py running, or you go to
    cd /media/sdb/trunk/services/svc
-
-
-   python run.py
+   to run python run.py
 
 6. After you finish everything and want to push the modified codes, OPEN A NEW TERNIMAL AND LOG ONTO THE EC2 AGAIN.
    1) docker ps
