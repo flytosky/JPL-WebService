@@ -102,6 +102,7 @@ end
 dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' regridStr '.nc'];
 dataFilePath = [outputDir '/' dataFile];
 
+if nFile > 1
 % Let us concatenate all the outpout files
 cmd = ['/usr/bin/ncrcat ']
 for ii = 1:nFile
@@ -116,6 +117,11 @@ end
 system(cmd);
 for ii = 1:nFile
   delete(outFiles{ii});
+end
+else
+  if ~strcmp(outFiles{1}, dataFilePath)
+    movefile(outFiles{1}, dataFilePath);
+  end
 end
 
 printf("dataFile: %s\n", dataFile)
