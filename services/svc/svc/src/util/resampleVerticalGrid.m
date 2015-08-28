@@ -71,7 +71,7 @@ for varI = 1:length(varInfo)
     % to save time. Interpolation is done using log scale
     K = computeInterpKernel(log(plev_orig(:)), log(plev(:)), 'linear');
     for tI = 1:nT
-      data_regrided(:,:,:,tI) = reshape(reshape(data(:,:,:,tI), nLon*nLat, nP_orig)*K', nLon, nLat, nP);
+      data_regrided(:,:,:,tI) = reshape(matrixMultiplicationWithNan(reshape(data(:,:,:,tI), nLon*nLat, nP_orig),K'), nLon, nLat, nP);
     end
     ncwrite(file_out, varName, data_regrided);
     status = 0;
