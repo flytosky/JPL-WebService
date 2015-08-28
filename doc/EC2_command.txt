@@ -97,7 +97,7 @@ Steps to debug directly inside the Docker env:
     You can see the docker image list. Choose one which you want to log in.
 
 2.  docker run -it <Repository name>
-    e.g. run -it -v /mnt/xvdf/data/cmip5/:/media/sdb/cmip5/ -p 9002:9002 -p 9003:9003 -p 9033:9033 -p 9034:9034 -p 9038:9038 flytosky/workshop
+    docker run -it -v /mnt/xvdf/data_2015/cmip5/:/media/sdb/cmip5/ -p 9002:9002 -p 9003:9003 -p 9033:9033 -p 9034:9034 -p 9038:9038 flytosky/workshopplus
 
     or:
     docker attach f46a996923a3
