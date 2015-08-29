@@ -243,7 +243,7 @@ function fillMonth() {
   temp1 = '<form role="form">'; 
   for (var i=0; i<monthList.length; i++) {
     temp1 +=
-        '<label"><input type="checkbox" id="' + monthList[i] + '" value="' + monthList[i] + '"/></label>' 
+        '<label"><input type="checkbox" id="' + monthList[i] + '" value="' + monthList[i] + '" checked/></label>' 
           +  monthList[i] + " ";
   }
   temp1 += '</form>';
