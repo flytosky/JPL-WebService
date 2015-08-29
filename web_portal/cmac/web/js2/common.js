@@ -71,8 +71,26 @@ function put_data(ID){
       var og = document.createElement("OPTGROUP");
       og.setAttribute('label', dataList[key][0]);
       list1.add(og);
+
     } else {
-      og.appendChild(new Option(key,key));
+      var toAdd = true;
+
+      // whether the dataset has only 2D or only 3D variables
+      if   ( (typeof isOnly2d !== 'undefined') 
+          || (typeof isOnly3d !== 'undefined') ) {
+        var dims = "";
+        var varList2 = dataList[key][1];  
+        for(var i=0; i<varList2.length; i++)   
+          dims += String(varList[ varList2[i] ][2]);
+
+        if (typeof isOnly2d !== 'undefined') 
+          if (dims.indexOf('2')==-1) toAdd = false;
+        if (typeof isOnly3d !== 'undefined') 
+          if (dims.indexOf('3')==-1) toAdd = false;
+      }
+  
+      // add to the option group
+      if (toAdd) og.appendChild(new Option(key,key));
     }
   }
 }
