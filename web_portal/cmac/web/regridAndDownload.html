@@ -139,6 +139,16 @@
         } else {
           var pres10 = $("#pres1").val();
           var pres1 = parse_pres(pres10);
+
+          // time 100
+          if (pres1 !== "-999999" ) {
+            var presSp = pres1.split(",");
+            var pres1a = "";
+            for (var i=0; i<presSp.length; i++) {
+              pres1a += String( Number(presSp[i])*100 ) + ",";
+            }
+            pres1 = pres1a.substring(0,pres1a.length-1);
+          }
         }
 
         // alert("pres1: " + pres1);
