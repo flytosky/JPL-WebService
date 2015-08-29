@@ -39,22 +39,27 @@ function enable_download_button()
 // disable_pres1__
 function disable_pres1(ID)
 {
-  var x;
-  x=document.getElementById("pres"+ID);
-  x.value = "N/A";
-  x.disabled=true;
+  if (typeof isPressure1 !== 'undefined') {
+    var x;
+    x=document.getElementById("pres"+ID);
+    x.value = "N/A";
+    x.disabled=true;
+  }
 }
 
 // enable pressure level box for 3D var
 function enable_pres1(ID)
 {
-  if (typeof pressDf1 !== 'undefined') var pressDf0 = pressDf1;
-  else var pressDf0 = "500";
+  if (typeof isPressure1 !== 'undefined') {
 
-  var x;
-  x=document.getElementById("pres"+ID);
-  x.value = pressDf0;
-  x.disabled=false;
+    if (typeof pressDf1 !== 'undefined') var pressDf0 = pressDf1;
+    else var pressDf0 = "500";
+
+    var x;
+    x=document.getElementById("pres"+ID);
+    x.value = pressDf0;
+    x.disabled=false;
+  }
 }
 
 // put_data__
