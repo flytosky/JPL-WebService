@@ -1,7 +1,7 @@
 // The following is for the code navigation purpose.
 //
 // enable_download data button
-// disable_pressure level box for 2D var
+// disable_pres1__
 // put_data__
 // data_block_str__
 // put_var__
@@ -36,6 +36,7 @@ function enable_download_button()
 }
 
 // disable pressure level box for 2D var
+// disable_pres1__
 function disable_pres1(ID)
 {
   var x;
@@ -47,9 +48,12 @@ function disable_pres1(ID)
 // enable pressure level box for 3D var
 function enable_pres1(ID)
 {
+  if (typeof pressDf1 !== 'undefined') var pressDf0 = pressDf1;
+  else var pressDf0 = "500";
+
   var x;
   x=document.getElementById("pres"+ID);
-  x.value = "500";
+  x.value = pressDf0;
   x.disabled=false;
 }
 
