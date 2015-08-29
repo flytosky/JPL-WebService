@@ -17,11 +17,11 @@
 
   <!-- cmac related -->
   <link rel="stylesheet" href="common.css">
-  <script src='js2/dataList2.js'></script>
+  <script src='js2/dataList1.js'></script>
   <script src='js2/varList.js'></script>
   <script src='js2/common.js'></script>
 
-  <title>Two Dimensional Map</title>
+  <title>2D zonal mean</title>
 
   <script>
 
@@ -31,6 +31,10 @@
 
     var naValue = "-999999";
 
+    
+    var isOnly2d = true;
+    
+
     // called on load or reload
     window.onload = function() {
       
@@ -39,7 +43,6 @@
       select_var(1);
       time_range1();
       fillMonth();
-
       disable_download_button();
 
       
@@ -60,23 +63,6 @@
         window.location.assign(durl);
       });
 
-      $("#webify_data").click(function(event) {
-        var durl = $("#data_url").val();
-        var wurl = "http://cmacws3.jpl.nasa.gov:18080/data/output/twoDimMap/"; // where webify dir is
-        // find where the last "/" is to truncate the nc file name
-        var ll = durl.lastIndexOf("/");
-        // alert(ll);
-        durl = durl.substring(0, ll);
-        // find where the last "/" is in the new string
-        ll = durl.lastIndexOf("/");
-        // alert(ll);
-        // get rid of the prepend url for data download
-        // so only the random_string in the subdir is left
-        var random_string = durl.substring(ll+1);
-        // alert(random_string);
-        // prepend the webification url to the randow_string
-        window.location = wurl.concat(random_string);
-      });
 
       $("#action1").click(function(event) {
 	Response = null;
@@ -96,17 +82,15 @@
         $("#data_url").html("Calculating ...");
         $("#Image").html("");
 
-        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
+        // sample url: http://cmacws.jpl.nasa.gov:8090/svc/twoDimZonalMean?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lat1=-29&lat2=29&months=1,2,4,5,6,10,12
 
         // form url string
-        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/twoDimMap?";
-        var url = "http://" + window.location.hostname + ":8090/svc/twoDimMap?";
+        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/twoDimZonalMean?";
+        var url = "http://" + window.location.hostname + ":8090/svc/twoDimZonalMean?";
         // alert(url);
 
         var d1 = $("#data1").val();
         var model1 = d1.replace("/", "_");
-        // alert(model1);
-        // alert(d1);
 
         var arglist = "";
         arglist = arglist.concat("model=");
@@ -128,16 +112,8 @@
         arglist = arglist.concat("&end_time=");
         arglist = arglist.concat(t1);
 
-        var lon0 = $("#lon0").val();
-        var lon1 = $("#lon1").val();
         var lat0 = $("#lat0").val();
         var lat1 = $("#lat1").val();
-
-        arglist = arglist.concat("&lon1=");
-        arglist = arglist.concat(lon0);
-
-        arglist = arglist.concat("&lon2=");
-        arglist = arglist.concat(lon1);
 
         arglist = arglist.concat("&lat1=");
         arglist = arglist.concat(lat0);
@@ -207,16 +183,12 @@
         // alert("arglist: " + arglist);
 
         arglist = arglist.concat("&scale=");
-        var z = document.getElementById("radioLin").checked;
-        // alert(z);
-        if (z == true)
+        var y = document.getElementById("radioLin").checked;
+        // alert(y);
+        if (y == true)
           arglist = arglist.concat('0');
         else
-          arglist = arglist.concat('4');
-
-        var purpose = $("#purpose").val();
-        arglist = arglist.concat("&purpose=");
-        arglist = arglist.concat(purpose);
+          arglist = arglist.concat('2');
 
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
@@ -307,6 +279,7 @@
             }
         });
 
+
         $.ajax({
             type: "GET",
             url: url,
@@ -337,10 +310,11 @@
                 // post dataUrl to textarea and enable download button
                 $("#data_url").html(data.dataUrl);
                 enable_download_button();
+
             },
             error: function(xhr, textStatus, errorThrown) {
 		$("#Response").html("error!");
-		$("#data_url").html("error!");
+                $("#data_url").html("error!");
                 // alert("xhr.status: "+xhr.status);
                 // alert("error status: "+textStatus);
             },
@@ -363,8 +337,8 @@
 <div class="container-fluid">
 <div class="row center1">
 <div class="col-sm-8 col-sm-offset-2 col-xs-12 color-head">
-<h3>Service: 2-D Variable Map</h3>
-This service generates a map of a 2-dimensional variable with time averaging and spatial subsetting. <br>Select a data source (model or observation), a variable name, a time range, and a spatial range (lat-lon box) below.
+<h3>Service: 2-D Variable Zonal Mean</h3>
+This service generates a graph of a 2-dimensional variable's zonal mean with time averaing. <br>Select a data source (model or observation), a variable name, and a time range below.
 </div> <!-- col-sm -->
 <div class="col-sm-offset-2">
 </div> <!-- col-sm -->
@@ -396,14 +370,8 @@ Variable
   </div> <!-- col-sm-6 level2-->
 </div> <!-- row -->
 
-<div class="row">
-  <div class="col-sm-4 right1">
-    pressure  (atmosphere hPa) <br> or (ocean dbar):
-  </div> <!-- col-sm-6 level2-->
-  <div class="col-sm-8 left1">
-    <input id="pres1" value="500"  alt="pressure"/ size=7>
-  </div> <!-- col-sm-6 level2-->
-</div> <!-- row -->
+ 
+
 </div> <!-- color0 -->
  
 
@@ -522,12 +490,6 @@ Data Subsetting
     <form>
       <input id="download_data" type="button" value="Download Data" style="height:28px"/>
     </form>
-  </div>
-</div> <!-- row -->
-
-<div class="row">
-  <div class="col-sm-12 center1">
-    <input id="webify_data" type="button" value="Webify Data" style="height:28px"/>
   </div>
 </div> <!-- row -->
 

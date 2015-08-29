@@ -118,11 +118,28 @@ function put_var(ID) {
 
   data_string =  document.getElementById("data"+ID).value;
   var varList2 = dataList[data_string][1];  
-  for (var i=0; i<varList2.length; i++) {
-    var k = varList2[i];
-    list1.add(new Option(varList[k][0],k));
+
+  if (typeof isOnly2d === 'undefined') {
+    // list all 2D/3D variables
+    for (var i=0; i<varList2.length; i++) {
+      var k = varList2[i];
+      list1.add(new Option(varList[k][0],k));
+    }
+
+  } else {
+    // list only 2D variables
+    for (var i=0; i<varList2.length; i++) {
+      var k = varList2[i];
+      if (varList[k][2]==2) list1.add(new Option(varList[k][0],k));
+    }
   }
 
+  var nVar = list1.options.length;
+  if (nVar==0) {
+    alert(data_string + " has no suitable variable.");
+    document.getElementById("data"+ID).options[0].selected = true; 
+    put_var(ID);
+  }
 }
 
 // is3D__
@@ -135,12 +152,14 @@ function is3D(ID)
 // select_var__
 function select_var(ID)
 {
-  var var_string = $("#var"+ID).val();
+  if (typeof isOnly2d === "undefined") {
+    var var_string = $("#var"+ID).val();
 
-  if (is3D(ID)) {
-    enable_pres1(ID);
-  } else {
-    disable_pres1(ID);
+    if (is3D(ID)) {
+      enable_pres1(ID);
+    } else {
+      disable_pres1(ID);
+    }
   }
 }
 
