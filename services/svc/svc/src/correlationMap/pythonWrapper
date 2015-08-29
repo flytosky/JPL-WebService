@@ -673,7 +673,7 @@ class SUBSET_REGION():
     Mat.clf()
 
     # plot correlation map
-    Mat.subplot(3,1,1)
+    Mat.subplot(1,1,1)
     #fig1.tight_layout()
 
     fig1.tight_layout()
