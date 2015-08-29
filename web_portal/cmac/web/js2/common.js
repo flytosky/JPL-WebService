@@ -119,18 +119,25 @@ function put_var(ID) {
   data_string =  document.getElementById("data"+ID).value;
   var varList2 = dataList[data_string][1];  
 
-  if (typeof isOnly2d === 'undefined') {
-    // list all 2D/3D variables
-    for (var i=0; i<varList2.length; i++) {
-      var k = varList2[i];
-      list1.add(new Option(varList[k][0],k));
-    }
-
-  } else {
+  if (typeof isOnly2d !== 'undefined') {
     // list only 2D variables
     for (var i=0; i<varList2.length; i++) {
       var k = varList2[i];
       if (varList[k][2]==2) list1.add(new Option(varList[k][0],k));
+    }
+
+  } else if (typeof isOnly3d !== 'undefined') {
+    // list only 3D variables
+    for (var i=0; i<varList2.length; i++) {
+      var k = varList2[i];
+      if (varList[k][2]==3) list1.add(new Option(varList[k][0],k));
+    }
+
+  } else {
+    // list all 2D/3D variables
+    for (var i=0; i<varList2.length; i++) {
+      var k = varList2[i];
+      list1.add(new Option(varList[k][0],k));
     }
   }
 
