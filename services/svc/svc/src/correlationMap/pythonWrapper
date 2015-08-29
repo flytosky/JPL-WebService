@@ -669,7 +669,8 @@ class SUBSET_REGION():
     print corrxy.min(), corrxy.max(), corrxy.mean(), corrxy.std()
 
     # figure
-    fig1 = Mat.figure(figsize=(10,16))
+    #fig1 = Mat.figure(figsize=(10,16))  # too long. It is for 3-panels
+    fig1 = Mat.figure(figsize=(10,5))
     Mat.clf()
 
     # plot correlation map
