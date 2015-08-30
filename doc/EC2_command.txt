@@ -120,6 +120,9 @@ Steps to debug directly inside the Docker env:
    cd /media/sdb/trunk/services/svc
    to run python run.py
 
+   use ctrl-a-d to leave a screen
+   close the terminal to leave a docker attachment
+
 6. After you finish everything and want to push the modified codes, OPEN A NEW TERNIMAL AND LOG ONTO THE EC2 AGAIN.
    1) docker ps
    find the docker instance that you want to push
