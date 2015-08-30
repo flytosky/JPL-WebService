@@ -63,7 +63,7 @@ for ii = 1:(nVar -1)
   ncwrite(file_out, varList{ii}, ncread(file_in, varList{ii}));
 end
 
-status = obs4MIPs_write_plev(file_out, plev);
+status = write_plev(file_out, plev);
 
 data = single(ncread(file_in, varName));
 
