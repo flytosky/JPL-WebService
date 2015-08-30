@@ -12,6 +12,8 @@ formula_str = regexprep(formula_str, '\([A-z,\,]*\)', '');
 formula_str = strrep(formula_str, '*', ' * ');
 formula_str = strrep(formula_str, '+', ' + ');
 formula_str = strrep(formula_str, '=', ' = ');
+formula_str = strrep(formula_str, '  ', ' ');
+formula_str = removeTrailingNullChar(formula_str);
 
 % Now the operators and variables are separated by spaces, parse it
 terms = strchop(formula_str, ' ');

@@ -13,6 +13,7 @@ outFileInfo.Format = inFileInfo.Format;
 outFileInfo.Groups = inFileInfo.Groups;
 outFileInfo.Attributes = inFileInfo.Attributes;
 
+no_bnds = false;
 dimNames = {'time', 'bnds'};
 nDims = length(dimNames);
 
@@ -21,8 +22,12 @@ for ii = 1:nDims
   if length(idx) == 1
     outFileInfo.Dimensions(ii) = inFileInfo.Dimensions(idx(1));
   else
-    warning(['!!! missing dimension info: ' dimNames{ii} ]);
-    keyboard;
+    if ii == nDims
+      nDims = nDims - 1; 
+      no_bnds = true;
+    else
+      error(['!!! missing dimension info: ' dimNames{ii} ]);
+    end
   end
 end
 
@@ -41,7 +46,11 @@ else
   verDimExist = false;
 end
 
-varList = {'time', 'time_bnds', varName};
+if no_bnds
+  varList = {'time', varName};
+else
+  varList = {'time', 'time_bnds', varName};
+end
 nVar = length(varList);
 
 for ii = 1:nVar
@@ -63,11 +72,16 @@ end
 
 ncwriteschema(outputFile, outFileInfo);
 ncwrite(outputFile, 'time', ncread(inputFile, 'time'));
-ncwrite(outputFile, 'time_bnds', ncread(inputFile, 'time_bnds'));
-obs4MIPs_write_lon_and_bnds(outputFile, lon);
-obs4MIPs_write_lat_and_bnds(outputFile, lat);
+if no_bnds
+  write_lon(outputFile, lon);
+  write_lat(outputFile, lat);
+else
+  ncwrite(outputFile, 'time_bnds', ncread(inputFile, 'time_bnds'));
+  obs4MIPs_write_lon_and_bnds(outputFile, lon);
+  obs4MIPs_write_lat_and_bnds(outputFile, lat);
+end
 if  verDimExist
-  obs4MIPs_write_plev(outputFile, ncread(inputFile, 'plev'));
+  write_plev(outputFile, ncread(inputFile, 'plev'));
 end
 
 data = ncread(inputFile, varName);

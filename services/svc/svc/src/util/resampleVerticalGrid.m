@@ -15,6 +15,7 @@ outFileInfo.Format = inFileInfo.Format;
 outFileInfo.Groups = inFileInfo.Groups;
 outFileInfo.Attributes = inFileInfo.Attributes;
 
+no_bnds = false;
 dimNames = {'time', 'lon', 'lat', 'bnds'};
 nDims = length(dimNames);
 
@@ -23,15 +24,23 @@ for ii = 1:nDims
   if length(idx) == 1
     outFileInfo.Dimensions(ii) = inFileInfo.Dimensions(idx(1));
   else
-    warning(['!!! missing dimension info: ' dimNames{ii} ]);
-    keyboard;
+    if ii == nDims
+      nDims = nDims - 1; 
+      no_bnds = true;
+    else
+      error(['!!! missing dimension info: ' dimNames{ii} ]);
+    end
   end
 end
 
 nP = length(plev);
 outFileInfo.Dimensions(nDims+1) = struct('Name', 'plev', 'Length', nP, 'Unlimited', false);
 
-varList = {'lon', 'lat', 'time', 'lon_bnds', 'lat_bnds', 'time_bnds', varName};
+if no_bnds
+  varList = {'lon', 'lat', 'time', varName};
+else
+  varList = {'lon', 'lat', 'time', 'lon_bnds', 'lat_bnds', 'time_bnds', varName};
+end
 
 nVar = length(varList);
 
@@ -40,7 +49,7 @@ for ii = 1:nVar
   if length(idx) == 1
     outFileInfo.Variables(ii) = rmfield(inFileInfo.Variables(idx(1)), 'Checksum'); % "checksum is not implemented for netcdf-3
   else
-    warning(['!!! missing variable: ' varList{ii} ]);
+    error(['!!! missing variable: ' varList{ii} ]);
     keyboard;
   end
   if strcmp(varList{ii}, varName)
@@ -89,7 +98,7 @@ end
 
 % We  now get the information regarding the vertical coordinate,i.e. sigma or hybrid sigma coordinate
 formula_str = lookupValue(varInfo(levelVarIdx).Attributes, 'formula');
-standard_name = lookupValue(varInfo(levelVarIdx).Attributes, 'standard_name');
+standard_name = removeTrailingNullChar(lookupValue(varInfo(levelVarIdx).Attributes, 'standard_name'));
 terms = lookupValue(varInfo(levelVarIdx).Attributes, 'formula_terms');
 if isempty(formula_str)
   warning('No formula is found!');

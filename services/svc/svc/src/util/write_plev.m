@@ -1,4 +1,4 @@
-function [status, idx] = obs4MIPs_write_plev(file, plev)
+function [status, idx] = write_plev(file, plev)
 %
 % This function write pressure levels into file and add the relevant attributes
 % according to CMIP5 convention
@@ -9,16 +9,6 @@ status = 0;
 if ~isempty(find(plev < 0))
   status = -1;
   error('*** negative pressure level exists!');
-end
-
-
-% Make sure that the pressure levels decrease monotonically.
-[plev_descent, idx] = sort(plev, 'descend');
-
-if norm(plev_descent - plev) > 0
-  status = 1;
-  warning('!!! pressure level does not monotonically decrease!');
-  plev = plev_descent;
 end
 
 nP = length(plev);
@@ -32,4 +22,3 @@ ncwriteatt(file, 'plev', 'positive', 'down');
 ncwriteatt(file, 'plev', 'units', 'Pa');
 
 ncwrite(file, 'plev', plev);
-
