@@ -30,6 +30,9 @@
 
     var naValue = "-999999";
 
+    var pressDf1 = "200,900";
+    var pressDf2 = "500";
+
     // called on load or reload
     window.onload = function() {
       var str1 = data_block_str(1, 2, "Physical Variable (sampled variable)", 
@@ -476,7 +479,7 @@
                 // $("#Response").html("<pre>"+text+"</pre>");
                 $("#Response").html(text);
 
-                var html = "<img src='"+data.url+"' width='820'/>";
+                var html = "<img src='" + data.url + "' width='820'/>";
                 // alert(html);
                 $("#Image").html(html);
 

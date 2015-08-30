@@ -39,27 +39,41 @@ function enable_download_button()
 // disable_pres1__
 function disable_pres1(ID)
 {
-  if (typeof isPressure1 !== 'undefined') {
+  // if isPressure1 is defined, there is no pressure widget 
+  try {
     var x;
     x=document.getElementById("pres"+ID);
     x.value = "N/A";
     x.disabled=true;
   }
+  catch(err) {}
 }
 
 // enable pressure level box for 3D var
 function enable_pres1(ID)
 {
-  if (typeof isPressure1 !== 'undefined') {
+  // there can be no pressure widget, so there is a error catch here.
+  try {
+    var pressDf0;
+    try { 
+      pressDf0 = eval("pressDf"+ID); 
+    } catch(err) {
+      pressDf0 = "500";
+    }
 
-    if (typeof pressDf1 !== 'undefined') var pressDf0 = pressDf1;
-    else var pressDf0 = "500";
-
-    var x;
-    x=document.getElementById("pres"+ID);
+    var x=document.getElementById("pres"+ID);
     x.value = pressDf0;
     x.disabled=false;
-  }
+  } catch(err) {}
+/*  try {
+    if ( eval("typeof pressDf"+ID) !== 'undefined') var pressDf0 = eval("pressDf"+ID);
+    else var pressDf0 = "500";
+
+    var x=document.getElementById("pres"+ID);
+    x.value = pressDf0;
+    x.disabled=false;
+  } catch(err) {}
+*/
 }
 
 // put_data__
@@ -186,15 +200,17 @@ function is3D(ID)
 // select_var__
 function select_var(ID)
 {
-  if (typeof isOnly2d === "undefined") {
-    var var_string = $("#var"+ID).val();
-
+  // if there isOnly2d is defined, there is no pressure widget.
+  try {
+    //var var_string = $("#var"+ID).val();
+    //alert(is3D(ID));
     if (is3D(ID)) {
       enable_pres1(ID);
     } else {
       disable_pres1(ID);
     }
   }
+  catch(err) {}
 }
 
 
