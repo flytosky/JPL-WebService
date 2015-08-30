@@ -91,7 +91,7 @@ How to copy data from cmacws3 to the EC2 data partition
 
 Steps to debug directly inside the Docker env:
 
-  ssh -i climate-default.pem ubuntu@ec2-54-153-87-10.us-west-1.compute.amazonaws.com
+  ssh -i climate-default.pem ubuntu@ec2-52-8-232-191.us-west-1.compute.amazonaws.com
 
 1.  docker images
     You can see the docker image list. Choose one which you want to log in.
@@ -100,6 +100,7 @@ Steps to debug directly inside the Docker env:
     docker run -it -v /mnt/xvdf/data_2015/cmip5/:/media/sdb/cmip5/ -p 9002:9002 -p 9003:9003 -p 9033:9033 -p 9034:9034 -p 9038:9038 flytosky/workshopplus
 
     or:
+    docker ps
     docker attach f46a996923a3
 
 3. Once you start a docker instance, use the command line below:
