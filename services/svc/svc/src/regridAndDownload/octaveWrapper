@@ -101,7 +101,7 @@ end
 dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' regridStr '.nc'];
 % if original grid, we will use "original" in the data file name
 if isempty(lon) & isempty(lat) & isempty(plev) 
-  dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_orignal.nc'];
+  dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_original.nc'];
 else
   dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' regridStr '.nc'];
 end
