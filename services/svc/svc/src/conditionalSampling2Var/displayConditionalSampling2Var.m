@@ -232,6 +232,7 @@ if badDataFrac > 0.2
   hold on;
   [c2, h2] = contour(interpGrid(x_valid, 2), interpGrid(-y_valid,2), filter2(gFilter, interp2(n_sorted_valid,2)'));
   caxis([min(z_valid(:)), max(z_valid(:))]);
+  ylim([min(interpGrid(-y_valid, 2)), max(interpGrid(-y_valid, 2))]);
   set(gca, 'yticklabel', num2str(-get(gca, 'ytick')'));
 else
   if badDataFrac < 0.02
@@ -244,7 +245,9 @@ else
   end
   hold on;
   [c2, h2] = contour(interpGrid(x_valid, 2), interpGrid(y_valid,2), filter2(gFilter, interp2(n_sorted_valid,2)'));
+  ylim([min(interpGrid(y_valid, 2)), max(interpGrid(y_valid, 2))]);
 end
+xlim([min(interpGrid(x_valid, 2)), max(interpGrid(x_valid, 2))]);
 set(h2, 'linecolor', [1, 0.0, 0.2], 'linewidth', 1);
 set(h2, 'levellistmode', 'manual');
 l_list = round(get(h2, 'levellist')/10)*10;
