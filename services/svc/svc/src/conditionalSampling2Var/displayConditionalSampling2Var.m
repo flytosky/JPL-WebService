@@ -77,6 +77,8 @@ for fileI = 1:nFiles
     largeScaleVarData{1} = readAndRegridTwoDimData(largeScaleDataFile1, largeScaleVarName1, startTime, stopTime, lon, lat, largeScalePlev1);
     largeScaleVarData{2} = readAndRegridTwoDimData(largeScaleDataFile2, largeScaleVarName2, startTime, stopTime, lon, lat, largeScalePlev2);
 
+    largeScaleVarNames = {largeScaleVarName1, largeScaleVarName1};
+
     nBinB = [length(largeScaleValueBinB1), length(largeScaleValueBinB2)];
     largeScaleValueBinB = {largeScaleValueBinB1, largeScaleValueBinB2};
     for ii = 1:2
@@ -196,7 +198,11 @@ titleStr = [long_name ', sorted by ' largeScaleVarData{1}.name ' and ' largeScal
 
 for ii = 1:2
 if isfield(largeScaleVarData{ii}, 'plev')
-  labelStr{ii} = [largeScaleVarData{ii}.name ' at ' num2str(round(mean(largeScaleVarData{ii}.plev)/100)) 'hPa (' largeScaleVarData{ii}.units ')' ]
+  if (~strcmp(largeScaleVarNames{ii}, 'ot') & ~strcmp(largeScaleVarNames{ii}, 'os'))
+    labelStr{ii} = [largeScaleVarData{ii}.name ' at ' num2str(round(mean(largeScaleVarData{ii}.plev)/100)) 'hPa (' largeScaleVarData{ii}.units ')' ]
+  else
+    labelStr{ii} = [largeScaleVarData{ii}.name ' at ' num2str(round(mean(largeScaleVarData{ii}.plev)/10000)) 'dbar (' largeScaleVarData{ii}.units ')' ]
+  end
 else
   labelStr{ii} = [largeScaleVarData{ii}.name '(' largeScaleVarData{ii}.units ')' ];
 end
