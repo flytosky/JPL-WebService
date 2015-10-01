@@ -39,7 +39,7 @@ largeScaleSourceName = lower(arg_list{9});
 
 % large scale variable name as specified by the CMIP5 standard output document.
 % e.g. tos for SST, omega500 for up draft etct
-largeScaleVarName = lower(arg_list{10});
+largeScaleVarName = arg_list{10};
 
 % Boundary values of bins for sorting the large scale variable, expected to
 % be monotonically increasing

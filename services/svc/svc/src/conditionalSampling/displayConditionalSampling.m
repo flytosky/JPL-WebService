@@ -202,7 +202,11 @@ v_sorted_std = sqrt((v2_sorted_m - v_sorted_m.^2) ./ (n_sorted_valid - 1));
 titleStr = [long_name ', sorted by ' largeScaleVarData.name ', ' date2Str(startTime, '/') '-' date2Str(stopTime, '/')];
 
 if isfield(largeScaleVarData, 'plev')
-  xlabelStr = [largeScaleVarData.name ' at ' num2str(round(mean(largeScaleVarData.plev)/100)) 'hPa (' largeScaleVarData.units ')' ]
+  if (~strcmp(largeScaleVarName, 'ot') & ~strcmp(largeScaleVarName, 'os'))
+    xlabelStr = [largeScaleVarData.name ' at ' num2str(round(mean(largeScaleVarData.plev)/100)) 'hPa (' largeScaleVarData.units ')' ]
+  else
+    xlabelStr = [largeScaleVarData.name ' at ' num2str(round(mean(largeScaleVarData.plev)/10000)) 'dbar (' largeScaleVarData.units ')' ]
+  end
 else
   xlabelStr = [largeScaleVarData.name '(' largeScaleVarData.units ')' ];
 end
@@ -263,22 +267,26 @@ else
   set(gca, 'fontweight', 'bold');
   currYTick = get(gca, 'ytick')';
   currYTick(currYTick ~= 0) = - currYTick(currYTick ~= 0);
-  if y_opt
-    set(gca, 'yticklabel', num2str(10.^(currYTick-2))); % Pa -> hPa
+  if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
+    if y_opt
+      set(gca, 'yticklabel', num2str(10.^(currYTick-2))); % Pa -> hPa
+    else
+      set(gca, 'yticklabel', num2str(currYTick/100)); % Pa -> hPa
+    end
+    ylabel('Pressure level (hPa)');
   else
-    set(gca, 'yticklabel', num2str(currYTick/100)); % Pa -> hPa
+    if y_opt
+      set(gca, 'yticklabel', num2str(10.^(currYTick-4))); % Pa -> dbar
+    else
+      set(gca, 'yticklabel', num2str(currYTick/10000)); % Pa -> dbar
+    end
+    ylabel('Pressure level (dbar)');
   end
   if x_opt
     currXTick = get(gca, 'xtick')';
     set(gca, 'xticklabel', num2str(10.^(currXTick))); % 
   end
   xlabel(xlabelStr);
-  if (~strcmp(varName, 'ot') & ~strcmp(varName, 'os'))
-        ylabel('Pressure level (hPa)');
-  else
-        ylabel('Pressure level (dbar)');
-  end
-  
   cb = colorbar('southoutside');
   if z_opt
     set(cb, 'xticklabel', num2str(10.^(get(cb, 'xtick')'),3));
