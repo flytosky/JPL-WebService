@@ -114,7 +114,7 @@ deltaYear = 1+floor(nYears/12);
 
 figure(1);
 clf;
-plot(1:nMonths, monthlyData, 's-', 'linewidth', 2);
+plot(1:nMonths, dataForDisplay, 's-', 'linewidth', 2);
 xlabel('Year')
 set(gca, 'fontweight', 'bold');
 set(gca, 'xtick', [(2-startTime.month):12*deltaYear:nMonths]);
