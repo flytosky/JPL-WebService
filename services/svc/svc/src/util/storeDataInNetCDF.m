@@ -40,6 +40,7 @@ switch lower(opt)
     clear thisSchema;
     thisSchema.Name = '/';
     thisSchema.Format = 'classic';
+
     for ii = 1:nDim
       thisSchema.Dimensions(ii).Name = data.dimNames{ii};
       thisSchema.Dimensions(ii).Length = data.dimSize(ii);

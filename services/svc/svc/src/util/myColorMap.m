@@ -34,6 +34,9 @@ if prod(clim) < 0
       normF_neg = max([1,zeroColorIdx]);
       scale_factor_neg = ((zeroColorIdx-1):-1:0)'/normF_neg;
       scale_factor_pos = (1:(64-zeroColorIdx))'/normF_pos;
+    case {'jet', 'hsv', 'hot', 'cool', 'summer', 'winter', 'spring', 'autumn', 'gray', 'bone', 'copper', 'pink', 'prism', 'flag'}
+      cmap = colormap(lower(opt)); 
+      return;
     otherwise,
       zeroColorIdx = ceil((0 - clim(1))/(clim(2) - clim(1))*64);
       normF_pos = max([1, 64-zeroColorIdx]);
@@ -42,11 +45,14 @@ if prod(clim) < 0
       scale_factor_pos = sqrt((1:(64-zeroColorIdx))'/normF_pos);
   end
 
-
   cmap(1:zeroColorIdx,:) = scale_factor_neg*color_neg + (1-scale_factor_neg)*color_0 + (scale_factor_neg .* (1 - scale_factor_neg)) * color_blend;
   cmap((zeroColorIdx+1):64,:) = scale_factor_pos*color_pos + (1-scale_factor_pos)*color_0 + (scale_factor_pos .* (1 - scale_factor_pos)) * color_blend;
 else
-  cmap = [ 0         0    0.5625
+  switch lower(opt)
+    case {'jet', 'hsv', 'hot', 'cool', 'summer', 'winter', 'spring', 'autumn', 'gray', 'bone', 'copper', 'pink', 'prism', 'flag'}
+      cmap = colormap(lower(opt)); 
+    otherwise,
+cmap = [ 0         0    0.5625
          0         0    0.6250
          0         0    0.6875
          0         0    0.7500
@@ -111,6 +117,7 @@ else
     0.5625         0         0
     0.5000         0         0
 ];
+end
 
 if clim(1) > 0
   cmap = lin2log(cmap, clim);
