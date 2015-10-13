@@ -7,67 +7,54 @@ arg_list = argv();
 printf ("%s:\n", program_name());
 
 narg = length(arg_list);
+for ii = 1:narg
+  printf("%s\n", arg_list{ii})
+end
 
-if narg < 2
+if narg < 9
   error('Insufficient argument, need a model and a variable name!'); 
-end
-sourceName = lower(arg_list{1});
-varName = arg_list{2};
-
-startTime = struct('year', 1980, 'month', 1);
-stopTime = struct('year', 2004, 'month', 12);
-
-if narg > 2
-  startTimeStr = arg_list{3};
-  startTime = struct('year', str2num(startTimeStr(1:4)), 'month', str2num(startTimeStr(5:6)));
+elseif mod(narg-4, 5)
+  error('Missing or extra argument!');
 end
 
-if narg > 3
-  stopTimeStr = arg_list{4};
-  stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
+nVars = (narg - 4)/5;
+
+dataInfo = [];
+for ii = 1:nVars
+  dataInfo(ii).sourceName = lower(arg_list{(ii-1)*5+1});
+  dataInfo(ii).varName = arg_list{(ii-1)*5+2};
+  dataInfo(ii).plev = str2num(arg_list{(ii-1)*5+3});
+  dataInfo(ii).lonRange = str2num(arg_list{(ii-1)*5+4});
+  dataInfo(ii).latRange = str2num(arg_list{(ii-1)*5+5});
 end
 
-lonRange = [0, 360];
+startTimeStr = arg_list{5*nVars + 1};
+startTime = struct('year', str2num(startTimeStr(1:4)), 'month', str2num(startTimeStr(5:6)));
 
-if narg > 4
-  lonRange = str2num(arg_list{5});
+stopTimeStr = arg_list{5*nVars + 2};
+stopTime = struct('year', str2num(stopTimeStr(1:4)), 'month', str2num(stopTimeStr(5:6)));
+
+output_dir = arg_list{5*nVars+3};
+displayOpt = str2num(arg_list{5*nVars + 4});
+
+figFile = [];
+for ii = 1:nVars
+  dataInfo(ii).dataFile = getDataFilePaths(dataInfo(ii).sourceName, dataInfo(ii).varName, startTime, stopTime);
+  lonStr = ['lon' num2str(dataInfo(ii).lonRange(1)) '-' num2str(dataInfo(ii).lonRange(2)) 'deg'];
+  latStr = ['lat' num2str(dataInfo(ii).latRange(1)) '-' num2str(dataInfo(ii).latRange(2)) 'deg'];
+  if ii == 1
+    figFile = [dataInfo(ii).sourceName '_' dataInfo(ii).varName '_' lonStr '_' latStr];
+  else
+    figFile = [figFile ':' dataInfo(ii).sourceName '_' dataInfo(ii).varName '_' lonStr '_' latStr];
+  end
 end
+dataFile = [figFile '_' date2Str(startTime) '-' date2Str(stopTime) '.nc'];
+figFile = [figFile '_' date2Str(startTime) '-' date2Str(stopTime) '.jpeg'];
 
-latRange = 90*[-1,1];
-
-if narg > 5
-  latRange = str2num(arg_list{6});
-end
-
-if narg > 6
-  output_dir = arg_list{7};
-end
-
-printf("%s", arg_list{1})
-printf("%s", arg_list{2})
-printf("%s", arg_list{3})
-printf("%s", arg_list{4})
-printf("%s", arg_list{5})
-printf("%s", arg_list{6})
-printf("%s", arg_list{7})
-if narg > 7
-  displayOpt = str2num(arg_list{8});
-  printf("%s", arg_list{8})
-else
-  displayOpt = 0;
-end
-
-dataFileFullPath = getDataFilePaths(sourceName, varName, startTime, stopTime);
-
-lonStr = ['lon' num2str(lonRange(1)) '_' num2str(lonRange(2)) 'deg'];
-latStr = ['lat' num2str(latRange(1)) '_' num2str(latRange(2)) 'deg'];
-
-figFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.jpeg'];
-dataFile = [sourceName '_' varName '_' date2Str(startTime) '_' date2Str(stopTime) '_' lonStr '_' latStr  '.nc'];
 figFilePath = [output_dir '/' figFile];
 dataFilePath = [output_dir '/' dataFile];
 printf("figFile: %s\n", figFile)
 printf("figFilePath: %s\n", figFilePath)
 printf("dataFile: %s\n", dataFile)
 printf("dataFilePath: %s\n", dataFilePath)
-displayTimeSeriesTwoDim(dataFileFullPath, figFilePath, varName, startTime, stopTime, lonRange, latRange, dataFilePath, displayOpt);
+displayTimeSeries(dataInfo, startTime, stopTime, figFilePath, dataFilePath, displayOpt);
