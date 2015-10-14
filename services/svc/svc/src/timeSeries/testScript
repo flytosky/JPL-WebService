@@ -3,4 +3,5 @@
 #./octaveWrapper ncc_noresm ts 199001 199612 '0 100' '0 20' /tmp/ 3
 #./octaveWrapper nasa_modis lst_night -999999 '0 100' '0 20' 200901 200912 /tmp/ 0
 #./octaveWrapper ncc_noresm ts -999999 '120 140' '-20 20' ncc_noresm ta 70000 '240 260' '-20 20' 199001 200312 /tmp/ 0
-./octaveWrapper ncc_noresm ta 50000 '120 140' '-20 20' ncc_noresm ta 70000 '240 260' '-20 20' 199001 200312 /tmp/ 0
+#./octaveWrapper ncc_noresm ta 50000 '120 140' '-20 20' ncc_noresm ta 70000 '240 260' '-20 20' 199001 200312 /tmp/ 0
+./octaveWrapper ncc_noresm ta 50000 '100 140' '-20 20' ncc_noresm ta 70000 '240 260' '-20 20' 199001 200312 /tmp/ 0
