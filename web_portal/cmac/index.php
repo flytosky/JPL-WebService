@@ -1,66 +1,74 @@
 <?php require_once("./header.php") ?>
 
 <h1>
-Web Services for Climate Data Analysis
+Climate Model Diagnostic Analyzer
 </h1>
-<h3>
-Summer School 2014, JPL Center for Climate Sciences
-</h3>
+<h4>
+2015 JPL Center for Climate Sciences Summer School: 
+Using Satellite Observations to Advance Climate Models
+</h4>
 
 <br />
 
-<img src="http://climatesciences.jpl.nasa.gov/system/pages/images/16/medium/8703587212_446f000243_z.jpg" alt="NASA Earth missions, 2013" >
+<img src="images/satellite.jpg" alt="NASA Earth missions" height="290" width="400" />
+<img src="images/cm.jpg" alt="Climate Model" height="290" width="400" />
 
 <ol>
 
 <h3><li>Introduction</h3>
 <p>
-These web-based tools provide web services for multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs. 
+Climate Model Diagnostic Analyzer (CMDA) is a repository of web services for 
+multi-aspect physics-based and phenomenon-oriented climate model performance evaluation and diagnosis 
+through the comprehensive and synergistic use of multiple observational data, reanalysis data, and model outputs. 
+This repository is specially customized to support the 2015 JPL Center for Climate Sciences Summer School.
+The theme of the summer school is Using Satellite Observations to Advance Climate Models.
+This repository provides datasets and analysis tools for the students to use for their group research projects. 
 </p>
-</li>
-
-<h3><li>Service summary</h3> 
-
 <p>
-These web-based tools let users display, analyze, and download earth science data interactively. These tools help scientists quickly examine data to identify specific features, e.g. trends, geographical distributions, etc., and determine whether a further study is needed. All of the tools are designed and implemented to be general so that data from models, observation, and reanalysis are processed and displayed in a unified way to facilitate fair comparisons. The services prepare and display data as a colored map or an X-Y plot and allow users to download the analyzed data. Basic visual capabilities include 1) displaying two-dimensional variable as a map, zonal mean, and time series 2) displaying three-dimensional variable’s zonal mean, a two-dimensional slice at a specific altitude, and a vertical profile. General analysis can be done using the difference, scatter plot, and conditional sampling services. All the tools support display options for using linear or logarithmic scales and allow users to specify a temporal range and months in a year. The source/input datasets for these tools are CMIP5 model outputs, Obs4MIP observational datasets, and ECMWF reanalysis datasets, are stored in the tool server, and are selectable by a user through the web services.  
+These web services let users display, analyze, and download Earth science data interactively. 
+These tools help scientists quickly examine data to identify specific features, e.g. trends, geographical distributions, etc., 
+and determine whether a further study is needed. All of the tools are designed and implemented to be general 
+so that data from models, observation, and reanalysis are processed and displayed in a unified way to facilitate 
+fair comparisons. The services prepare and display analyzed data, and allow users to download the analyzed output data at the end. 
+
 </p>
 </li>
 
-<h3><li>Service descriptions</h3> 
+<h3><li>CMDA Service Descriptions</h3> 
 <ol type="a">
-<h4><li> Two dimensional variable services</h4>
-<ol type="i">
+<h4><li> Two-dimensional variable services</h4>
+<ul>
 <li>
-Map of two-dimensional variable
+Map:
 This services displays a two dimensional variable as a colored longitude and latitude map with values represented by a color scheme. Longitude and latitude ranges can be specified to magnify a specific region.
 </li>
 <li>
-Two dimensional variable zonal mean
+Zonal mean:
 This service plots the zonal mean value of a two-dimensional variable as a function of the latitude in terms of an X-Y plot.
 </li>
 <li> 
-Two dimensional variable time series
+Time series:
 This service displays the average of a two-dimensional variable over the specific region as function of time as an X-Y plot. 
 </li>
-</ol>
+</ul>
 </li>
-<h4><li> Three dimensional variable services</h4>
-<ol type="i">
+<h4><li> Three-dimensional variable services</h4>
+<ul>
 <li>
 Map of a two dimensional slice: 
 This service displays a two-dimensional slice of a three-dimensional variable at a specific altitude as a colored longitude and latitude map with values represented by a color scheme.
 </li>
 <li>
 Zonal mean:
-Zonal mean of the specified three-dimensional variable is computed and displayed as a colored altitude-latitude map.
+This service computes and displays the zonal mean of the specified three-dimensional variable as a colored altitude-latitude map.
 </li>
 <li>
 Vertical profile:
-Compute the area weighted average of a three-dimensional variable over the specified region and display the average as function of pressure level (altitude) as an X-Y plot.
+This service computes the area weighted average of a three-dimensional variable over the specified region and display the average as function of pressure level (altitude) as an X-Y plot.
 </li>
-</ol>
-<h4><li> General services</h4>
-<ol type="i">
+</ul>
+<h4><li> Multivariable diagnostic services</h4>
+<ul>
 <li>
 Difference of two variables:
 This service displays the differences between the two variables, which can be either a two dimensional variable or a slice of a three-dimensional variable at a specified altitude as colored longitude and latitude maps
@@ -70,16 +78,32 @@ Scatter and histogram plots of two variables:
 This service displays the scatter plot (X-Y plot) between two specified variables and the histograms of the two variables. The number of samples can be specified and the correlation is computed. The two variables can be either a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude.
 </li>
 <li>
-Conditional sampling:
+Conditional sampling with one variable:
 This service lets user to sort a physical quantity of two or dimensions according to the values of another variable (environmental condition, e.g. SST) which may be a two-dimensional variable or a slice of a three-dimensional variable at a specific altitude. For a two dimensional quantity, the plot is displayed an X-Y plot, and for a two-dimensional quantity, plot is displayed as a colored-map.
 </li>
-</ol>
+<li>
+Conditional sampling with two variables:
+This service sorts one variable called sampled variable by the values of two variables called sampling variables and displays the averaged value of the sampled variable in color as a function of the bin value of the two sampling variables in X-Y axis. There are overlaid contours which show the number of samples in each of the two sampling variable bin.
+</li>
+<li>
+Time-lagged correlation map:
+This service generates a time-lagged correlation map between two specified variables. The two variables can be either a two-dimensional variable or a slice of a three-dimensional variable at a specific pressure level.
+</li>
+<li>
+Regrid and download:
+This service regrids a variable from a dataset according to the lat/lon/plev specified by the user, and mades the regridded data downloadable by the user. 
+</li>
+<li>
+Dataset search:
+This service searches datasets available in the server with models/instruments and variables as search criteria. The datasets found to meet the search criteria are displayed with its time coverage, variable long name and variable units. 
+</li>
+</ul>
 </li>
 </ol>
 
 </li>
 
-<h3><li>Tips for using these tools</h3>
+<h3><li>Tips for using CMDA Services</h3>
 <ul>
 <li>
 To study climatology, a longer temporal range should be used to average out some short-term variations. 
@@ -127,74 +151,20 @@ Download analyzed data for future usage.
 
 </li>
 
-<h3><li>Datasets supported by these tools</h3>
-
-<p>
-Most of our observational data are provided by the NASA/Obs4MIPs project, where the observational data sets are published on the Earth System Grid Federation (http://esg-datanode.jpl.nasa.gov) using the same format as the CMIP5 model data sets to facilitate a direct comparison between the observation and model. 
-Currently, the web services are implemented assuming that model data sets conform to the requirements of the Coupled Model Intercomparison Project Phase 5 (CMIP5) and the observational data sets conform to the Observations for Model Intercomparison Project (Obs4MIPs) standard. The reanalysis data are prepared by applying an editing script to the original reanalysis data downloaded from reanalysis centers to meet a few basic CMIP5 requirements. The analysis tools treat the data sets uniformly between model outputs, observational data and reanalysis data to facilitate a fair comparison.
-</p>
-
-<p>
-<a href="DataSetDescription.htm">
-For a detailed description of the datasets, please click here.
-</a>
-</p>
-
+<h3><li>Datasets supported by CMDA</h3>
+<ul>
+<li> CMDA provides observational datasets, reanalysis datasets, and climate model outputs.
+<li> Model outputs are obtained from the Coupled Model Intercomparison Project Phase 5 (CMIP5) project. The model datasets conform to the requirements of CMIP5 data standard. 
+<li> Most of our observational data are provided by the NASA/Obs4MIPs project, where the observational data sets are published on the Earth System Grid Federation (http://esg-datanode.jpl.nasa.gov) using the same format as the CMIP5 model data sets to facilitate a direct comparison between the observation and model. 
+<li> Reanalysis data are obtained from ECMWF and are prepared by applying an editing script to the original reanalysis data downloaded from ECMWF to meet a few basic CMIP5 requirements. 
+<li> The CMDA analysis tools treat the datasets uniformly among model outputs, observational data and reanalysis data to facilitate a fair comparison.
+</ul>
 </li>
 
+<h3> <li><a href="./cmda_services.php">CMDA Analytics Services</a></li>
+</h3>
 
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/twoDimMap.html">2D Variable Map Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/twoDimZonalMean.html">2D Variable Zonal Mean Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/twoDimTimeSeries.html">2D Variable Time Series Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/twoDimSlice3D.html">3D Variable 2D Slice Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/threeDimZonalMean.html">3D Variable Zonal Mean Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/threeDimVarVertical.html">3D Variable Average Vertical Profile Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/scatterPlot2Vars.html">Scatter and Histogram Plots of Two Variables Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/diffPlot2Vars.html">Difference Plot of Two Variables Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/conditionalSampling.html">Conditional Sampling Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/regridAndDownload.html">Regrid And Download Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/correlationMap.html">Correlation Map Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/conditionalSampling2Var.html">Conditional Sampling for Two Variables Service</a>.
-</p>
-<p>
-<img src="images/service.jpeg" alt="service" height="60" width="60">
-<a href="/cmac/web/datasetTable.html">Data Set Search Service</a>.
-</p>
-<ol>
+<h3> <li><a href="./group_research_topics.php">Group Research Topics</a></li>
+</h3>
 
 <?php require_once("./footer.php") ?>
