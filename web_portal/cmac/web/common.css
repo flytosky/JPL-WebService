@@ -16,6 +16,7 @@
   .color1 {background-color: #D8D8D8;}   /* SpringGreen*/
   .color0 {background-color: #F8F8F8;}   /* Turquoise*/
 
+
 @media screen and (max-width: 768px) {
 .right1 {text-align: left;}
 }
