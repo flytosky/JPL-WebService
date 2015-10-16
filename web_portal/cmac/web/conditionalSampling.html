@@ -31,7 +31,10 @@
     var naValue = "-999999";
 
     var pressDf1 = "200,900";
+    var pressDf1o = "0,2000";
     var pressDf2 = "500";
+
+    var rangeStr1 = "range ";
 
     // called on load or reload
     window.onload = function() {
@@ -123,8 +126,8 @@
 
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/conditionalSampling?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
-        // var url = "http://cmacws.jpl.nasa.gov:8090/svc/conditionalSamp?";
         var url = "http://" + window.location.hostname + ":8090/svc/conditionalSampling?";
+        var url = "http://" + window.location.hostname + ":8890/svc/conditionalSampling?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -330,7 +333,8 @@
         // url = url + arglist;
         // alert("url: " + url);
 
-        var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/two_time_bounds?";
+        //var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/two_time_bounds?";
+        var urlTimeBounds = "http://" + window.location.hostname + ":8890/svc/two_time_bounds?";
         var arglistTB = "";
         arglistTB = arglistTB.concat("serviceType=");
         arglistTB = arglistTB.concat("1");

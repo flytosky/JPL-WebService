@@ -115,7 +115,8 @@
 
         // http://cmacws3.jpl.nasa.gov:8090/svc/regridAndDownload?model=gfdl_esm2g&var=zos&pres=N/A&start_time=200401&end_time=200412&lon1=0&lon2=360&dlon=1.0&lat1=-90&lat2=90&dlat=1.0
         // form url string
-        var url = "http://" + window.location.hostname + ":8090/svc/regridAndDownload?";
+        // var url = "http://" + window.location.hostname + ":8090/svc/regridAndDownload?";
+        var url = "http://" + window.location.hostname + ":8890/svc/regridAndDownload?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -214,7 +215,8 @@
         // url = url + arglist;
         // alert("url: " + url);
 
-        var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
+        //var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
+        var urlTimeBounds = "http://" + window.location.hostname + ":8890/svc/time_bounds?";
         var arglistTB = "";
         arglistTB = arglistTB.concat("serviceType=");
         arglistTB = arglistTB.concat("1");

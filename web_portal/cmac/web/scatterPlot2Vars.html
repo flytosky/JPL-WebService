@@ -77,7 +77,7 @@
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?model1=ukmo_hadgem2-a&var1=ts&pres1=200&model2=ukmo_hadgem2-a&var2=clt&pres2=200&start_time=199001&end_time=199512&lon1=0&lon2=100&lat1=-29&lat2=29
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/scatterPlot2V?";
-        var url = "http://" + window.location.hostname + ":8090/svc/scatterPlot2V?";
+        var url = "http://" + window.location.hostname + ":8890/svc/scatterPlot2V?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -153,6 +153,10 @@
         var nSample = $("#nSample").val();
         arglist = arglist.concat("&nSample=");
         arglist = arglist.concat(nSample);
+        
+        var purpose = $("#purpose").val();
+        arglist = arglist.concat("&purpose=");
+        arglist = arglist.concat(purpose);
 
         // alert("arglist: " + arglist);
 
@@ -161,7 +165,7 @@
         // url = url + arglist;
         // alert("url: " + url);
 
-        var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/two_time_bounds?";
+        var urlTimeBounds = "http://" + window.location.hostname + ":8890/svc/two_time_bounds?";
         var arglistTB = "";
         arglistTB = arglistTB.concat("serviceType=");
         arglistTB = arglistTB.concat("2");
@@ -371,7 +375,7 @@ Variable 1
    model:
   </div> <!-- col-sm-6 -->
   <div class="col-sm-8 left1">
-    <select name="data1"  id="data1" onchange="put_var(1); time_range2()"></select>;
+    <select name="data1"  id="data1" onchange="put_var(1); select_var(1); time_range2()"></select>;
   </div> <!-- col-sm-6 level2-->
 </div> <!-- row -->
 
@@ -385,8 +389,8 @@ Variable 1
 </div> <!-- row -->
 
 <div class="row">
-  <div class="col-sm-4 right1">
-    pressure  (atmosphere hPa) <br> or (ocean dbar):
+  <div class="col-sm-4 right1" id="pressureLabel1">
+    pressure:
   </div> <!-- col-sm-6 level2-->
   <div class="col-sm-8 left1">
     <input id="pres1" value="500"  alt="pressure"/ size=7>
@@ -408,7 +412,7 @@ Variable 2
    model:
   </div> <!-- col-sm-6 -->
   <div class="col-sm-8 left1">
-    <select name="data2"  id="data2" onchange="put_var(2); time_range2()"></select>;
+    <select name="data2"  id="data2" onchange="put_var(2); select_var(2); time_range2()"></select>;
   </div> <!-- col-sm-6 level2-->
 </div> <!-- row -->
 
@@ -422,8 +426,8 @@ Variable 2
 </div> <!-- row -->
 
 <div class="row">
-  <div class="col-sm-4 right1">
-    pressure  (atmosphere hPa) <br> or (ocean dbar):
+  <div class="col-sm-4 right1" id="pressureLabel2">
+    pressure:
   </div> <!-- col-sm-6 level2-->
   <div class="col-sm-8 left1">
     <input id="pres2" value="500"  alt="pressure"/ size=7>

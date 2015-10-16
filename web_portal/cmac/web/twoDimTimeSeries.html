@@ -75,7 +75,7 @@
 
         // form url string
         // var url = "http://cmacws.jpl.nasa.gov:8090/svc/timeSeries2D?";
-        var url = "http://" + window.location.hostname + ":8090/svc/timeSeries2D?";
+        var url = "http://" + window.location.hostname + ":8890/svc/timeSeries2D?";
         // alert("url: " + url);
 
         var d1 = $("#data1").val();
@@ -134,12 +134,16 @@
         else
           arglist = arglist.concat('2');
 
+        var purpose = $("#purpose").val();
+        arglist = arglist.concat("&purpose=");
+        arglist = arglist.concat(purpose);
+
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
         // alert("url: " + url);
 
-        var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
+        var urlTimeBounds = "http://" + window.location.hostname + ":8890/svc/time_bounds?";
         var arglistTB = "";
         arglistTB = arglistTB.concat("serviceType=");
         arglistTB = arglistTB.concat("1");

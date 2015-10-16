@@ -34,6 +34,8 @@
 
     
     var pressDf1 = "200,900";
+    var pressDf1o = "0,2000";
+    var rangeStr1 = "range ";
     
     
 
@@ -93,7 +95,7 @@
         // sample url: http://cmacws.jpl.nasa.gov:8090/svc/threeDimZonalMean?model=ukmo_hadgem2-a&var=ts&start_time=199001&end_time=199512&lat1=-29&lat2=29&pres1=90&pres2=20months=1,2,4,5,6,10,12
 
         // form url string
-        var url = "http://" + window.location.hostname + ":8090/svc/threeDimZonalMean?";
+        var url = "http://" + window.location.hostname + ":8890/svc/threeDimZonalMean?";
         // alert(url);
 
         var d1 = $("#data1").val();
@@ -241,12 +243,16 @@
 
         arglist = arglist.concat(scale1_str);
 
+        var purpose = $("#purpose").val();
+        arglist = arglist.concat("&purpose=");
+        arglist = arglist.concat(purpose);
+
         // url = url + encodeURIComponent(arglist);
         url = url + encodeURI(arglist);
         // url = url + arglist;
         // alert("url: " + url);
 
-        var urlTimeBounds = "http://" + window.location.hostname + ":8090/svc/time_bounds?";
+        var urlTimeBounds = "http://" + window.location.hostname + ":8890/svc/time_bounds?";
         var arglistTB = "";
         arglistTB = arglistTB.concat("serviceType=");
         arglistTB = arglistTB.concat("1");
@@ -405,7 +411,7 @@ Variable
    model:
   </div> <!-- col-sm-6 -->
   <div class="col-sm-8 left1">
-    <select name="data1"  id="data1" onchange="put_var(1); time_range1()"></select>;
+    <select name="data1"  id="data1" onchange="put_var(1); select_var(1); time_range1()"></select>;
   </div> <!-- col-sm-6 level2-->
 </div> <!-- row -->
 
@@ -420,11 +426,11 @@ Variable
 
 
 <div class="row">
-  <div class="col-sm-4 right1">
-    pressure range (atmosphere hPa) <br> or (ocean dbar):
+  <div class="col-sm-4 right1" id="pressureLabel1">
+    pressure:
   </div> <!-- col-sm-6 level2-->
   <div class="col-sm-8 left1">
-    <input id="pres1" value="200,900"  alt="pressure"/ size=7>
+    <input id="pres1" value="0,2000"  alt="pressure"/ size=7>
   </div> <!-- col-sm-6 level2-->
 </div> <!-- row -->
  
