@@ -237,11 +237,15 @@ class SUBSET_REGION():
     ### self.desDir = '/home/bytang/projects/cmac/des/original'
     #self.desDir = '/home/svc/cmac/des/original'
 
-    # zzzz
     #self.desDir = '/home/bytang/projects/cmac/tmp/des'  # for Benyang's testing
     self.desDir = os.path.split(self.dataDir)[0] + '/des'  # for deployment
     #self.desDir = '%s/des'%self.scatterDir  # ad hoc fix for summer school
+    # this is an ad hoc solution
+    # zzzz
+    self.ferretCmd = '/home/sflops/install/bin/ferret'
 
+    print self.desDir
+    print self.ferretCmd
     if 0:
       self.lon1S = -10.5
       self.lon1E = 20.3
@@ -919,6 +923,7 @@ if cr['plot__']       == 1:
   a.inFileNc = []
   for iVar in range(a.nVar):
     if 1: 
+      print a.center[iVar], a.model[iVar], a.varName[iVar]
       inFile1, inFile1Nc = a.getFileName2(a.center[iVar], a.model[iVar], a.varName[iVar]) 
       a.inFile.append(inFile1)
       a.inFileNc.append(inFile1Nc)
