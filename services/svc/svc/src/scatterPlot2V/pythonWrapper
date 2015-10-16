@@ -247,6 +247,10 @@ class SUBSET_REGION():
     self.desDir = os.path.split(self.dataDir)[0] + '/des'  # for deployment
     self.desDir = '%s/des'%self.scatterDir  # ad hoc fix for summer school
 
+    self.desDir = '/mnt/hgfs/cmacws/data1/data/des'
+    print self.desDir
+    print self.ferretCmd
+
     self.inFile = '' 
     self.inFile2 = '' 
 #   self.inFileBU = '' 
@@ -1028,129 +1032,146 @@ class SUBSET_REGION():
       aa1 = aa1.ravel()
       aa2 = aa2.ravel()
 
-      # calc hist
-      hist1, bins1 = np.histogram(aa1, bins=nBin1)
-      hist2, bins2 = np.histogram(aa2, bins=nBin1)
+      if len(aa1)>5:
+        # calc hist
+        hist1, bins1 = np.histogram(aa1, bins=nBin1)
+        hist2, bins2 = np.histogram(aa2, bins=nBin1)
 
-      histAll1.append(hist1)
-      histAll2.append(hist2)
+        histAll1.append(hist1)
+        histAll2.append(hist2)
 
-      bins1 = (bins1[1:] + bins1[:-1]) / 2.0
-      bins2 = (bins2[1:] + bins2[:-1]) / 2.0
+        bins1 = (bins1[1:] + bins1[:-1]) / 2.0
+        bins2 = (bins2[1:] + bins2[:-1]) / 2.0
 
-      binsAll1.append(bins1)
-      binsAll2.append(bins2)
+        binsAll1.append(bins1)
+        binsAll2.append(bins2)
 
-      # only use a subset for scatter plot
-      if len(aa1) > nSampleM:
-        ind2 = np.random.permutation(len(aa1))[:nSampleM]
-        aaa1 = aa1[ind2]
-        aaa2 = aa2[ind2]
-      else:
-        aaa1 = aa1
-        aaa2 = aa2
+        # only use a subset for scatter plot
+        if len(aa1) > nSampleM:
+          ind2 = np.random.permutation(len(aa1))[:nSampleM]
+          aaa1 = aa1[ind2]
+          aaa2 = aa2[ind2]
+        else:
+          aaa1 = aa1
+          aaa2 = aa2
 
-      dataAll1.append(aaa1)
-      dataAll2.append(aaa2)
+        dataAll1.append(aaa1)
+        dataAll2.append(aaa2)
         
     nc1.close()
     nc2.close()
 
-    # concatenate data  for scatter plot
-    aaa1 = np.concatenate( dataAll1, axis=0 )
-    aaa2 = np.concatenate( dataAll2, axis=0 )
+    isNoData = 0
+    if len(dataAll1)==0: isNoData=1;
 
-    # clip ends
-    if self.varName1==self.varName2:
-      aaa12 = np.concatenate( (aaa1, aaa2), axis=0 )
-      min1, max1 = clipEnd(aaa12, np.ones( (len(aaa12),)), self.clipL, self.clipR)
-      min2, max2 = min1, max1
+    if isNoData==0:
+      # concatenate data  for scatter plot
+      aaa1 = np.concatenate( dataAll1, axis=0 )
+      aaa2 = np.concatenate( dataAll2, axis=0 )
 
-    else:
-      min1, max1 = clipEnd(aaa1, np.ones( (len(aaa1),)), self.clipL, self.clipR)
-      min2, max2 = clipEnd(aaa2, np.ones( (len(aaa2),)), self.clipL, self.clipR)
+      # clip ends
+      if self.varName1==self.varName2:
+        aaa12 = np.concatenate( (aaa1, aaa2), axis=0 )
+        min1, max1 = clipEnd(aaa12, np.ones( (len(aaa12),)), self.clipL, self.clipR)
+        min2, max2 = min1, max1
 
-    dd = (max1-min1)*0.02
-    min1a = min1 - dd
-    max1a = max1 + dd
+      else:
+        min1, max1 = clipEnd(aaa1, np.ones( (len(aaa1),)), self.clipL, self.clipR)
+        min2, max2 = clipEnd(aaa2, np.ones( (len(aaa2),)), self.clipL, self.clipR)
 
-    dd = (max2-min2)*0.02
-    min2a = min2 - dd
-    max2a = max2 + dd
+      dd = (max1-min1)*0.02
+      min1a = min1 - dd
+      max1a = max1 + dd
+
+      dd = (max2-min2)*0.02
+      min2a = min2 - dd
+      max2a = max2 + dd
 
     # figure
-    fig1 = Mat.figure(figsize=(10,25))
-    Mat.clf()
+    if isNoData==1:
+      fig1 = Mat.figure(figsize=(10,8))
+      Mat.clf()
+      Mat.subplot(1,1,1)
+      Mat.text(\
+      .5, \
+      .5, \
+      'There is no valid data.', \
+      size=20, \
+      ha='center')
 
-    # plot scatter plot
-    Mat.subplot(3,1,1)
-    #fig1.tight_layout()
+    else:
+      fig1 = Mat.figure(figsize=(10,25))
+      Mat.clf()
 
-    Mat.scatter(aaa1, aaa2)
-    Mat.ylim(min2a,max2a)
-    Mat.xlim(min1a,max1a)
-    if self.varName1==self.varName2:
-      Mat.hold('on')
-      Mat.plot([min1, max1], [min1, max1], 'r-')
-      Mat.hold('off')
+      # plot scatter plot
+      Mat.subplot(3,1,1)
+      #fig1.tight_layout()
 
-    Mat.xlabel('%s_%s:%s (%s)'%(self.center1, self.model1, self.varName1, self.units1))
-    Mat.ylabel('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
+      Mat.scatter(aaa1, aaa2)
+      Mat.ylim(min2a,max2a)
+      Mat.xlim(min1a,max1a)
+      if self.varName1==self.varName2:
+        Mat.hold('on')
+        Mat.plot([min1, max1], [min1, max1], 'r-')
+        Mat.hold('off')
 
-    # corr
-    corr1 = np.corrcoef(aaa1,aaa2) 
-    print 'corr1:  ',
-    print corr1.shape
-    print corr1
-    #Mat.title('corr coef = %.4f'%(corr1[0,1]))
-    Mat.title('corr coef = %.4f.  Period: %d/%02d-%d/%02d.  Number of random points: %d'%(corr1[0,1], 
-        self.yearS, self.monthS,
-        self.yearE, self.monthE,
-        self.nSample, 
-        ))
+      Mat.xlabel('%s_%s:%s (%s)'%(self.center1, self.model1, self.varName1, self.units1))
+      Mat.ylabel('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
 
-    # concatenate data for histogram
-    hist1 = np.concatenate( histAll1, axis=0 ).astype('f')
-    hist2 = np.concatenate( histAll2, axis=0 ).astype('f')
-    center1 = np.concatenate( binsAll1, axis=0 )
-    center2 = np.concatenate( binsAll2, axis=0 )
+      # corr
+      corr1 = np.corrcoef(aaa1,aaa2) 
+      print 'corr1:  ',
+      print corr1.shape
+      print corr1
+      #Mat.title('corr coef = %.4f'%(corr1[0,1]))
+      Mat.title('corr coef = %.4f.  Period: %d/%02d-%d/%02d.  Number of random points: %d'%(corr1[0,1], 
+          self.yearS, self.monthS,
+          self.yearE, self.monthE,
+          self.nSample, 
+          ))
 
-    bins12 = nBin
+      # concatenate data for histogram
+      hist1 = np.concatenate( histAll1, axis=0 ).astype('f')
+      hist2 = np.concatenate( histAll2, axis=0 ).astype('f')
+      center1 = np.concatenate( binsAll1, axis=0 )
+      center2 = np.concatenate( binsAll2, axis=0 )
 
-    # histogram 1
-    axes2 = Mat.subplot(3,1,2)
-    n1, bins1a, patches1 = Mat.hist(center1, bins=bins12, range=(min1,max1), 
-                weights=hist1/hist1.sum(),
-                color='red', histtype='bar', rwidth=0.8)
-    Mat.ylabel('probability density distribution')
-    #Mat.title('%s_%s:%s'%(self.center1, self.model1, self.varName1))
-    Mat.title('%s_%s:%s. Histogram(%d/%02d - %d/%02d)'%(self.center1, self.model1, 
-        self.varName1, 
-        self.yearS, self.monthS,
-        self.yearE, self.monthE,
-        ))
-    if self.varName1==self.varName2:
-      pass
-      #Mat.ylim(0, histMax*1.1)
+      bins12 = nBin
 
-    # histogram 2
-    axes3 = Mat.subplot(3,1,3)
-    n2, bins2a, patches2 = Mat.hist(center2, bins=bins12, range=(min2,max2),
-                weights=hist2/hist2.sum(),
-                color='blue', histtype='bar', rwidth=0.8)
-    Mat.ylabel('probability density distribution')
-    #Mat.title('%s_%s:%s'%(self.center2, self.model2, self.varName2))
-    Mat.title('%s_%s:%s. Histogram(%d/%02d - %d/%02d)'%(self.center2, self.model2, 
-        self.varName2, 
-        self.yearS, self.monthS,
-        self.yearE, self.monthE,
-        ))
-    if self.varName1==self.varName2:
-      histMax = max(n1.max(), n2.max())
-      Mat.ylim(0, histMax*1.1)
+      # histogram 1
+      axes2 = Mat.subplot(3,1,2)
+      n1, bins1a, patches1 = Mat.hist(center1, bins=bins12, range=(min1,max1), 
+                  weights=hist1/hist1.sum(),
+                  color='red', histtype='bar', rwidth=0.8)
+      Mat.ylabel('probability density distribution')
+      #Mat.title('%s_%s:%s'%(self.center1, self.model1, self.varName1))
+      Mat.title('%s_%s:%s. Histogram(%d/%02d - %d/%02d)'%(self.center1, self.model1, 
+          self.varName1, 
+          self.yearS, self.monthS,
+          self.yearE, self.monthE,
+          ))
+      if self.varName1==self.varName2:
+        pass
+        #Mat.ylim(0, histMax*1.1)
 
-      Mat.axes(axes2)
-      Mat.ylim(0, histMax*1.1)
+      # histogram 2
+      axes3 = Mat.subplot(3,1,3)
+      n2, bins2a, patches2 = Mat.hist(center2, bins=bins12, range=(min2,max2),
+                  weights=hist2/hist2.sum(),
+                  color='blue', histtype='bar', rwidth=0.8)
+      Mat.ylabel('probability density distribution')
+      #Mat.title('%s_%s:%s'%(self.center2, self.model2, self.varName2))
+      Mat.title('%s_%s:%s. Histogram(%d/%02d - %d/%02d)'%(self.center2, self.model2, 
+          self.varName2, 
+          self.yearS, self.monthS,
+          self.yearE, self.monthE,
+          ))
+      if self.varName1==self.varName2:
+        histMax = max(n1.max(), n2.max())
+        Mat.ylim(0, histMax*1.1)
+
+        Mat.axes(axes2)
+        Mat.ylim(0, histMax*1.1)
 
     # output png file
     figFile = '%s/scatter.png'%self.outDir
@@ -1210,13 +1231,26 @@ class SUBSET_REGION():
     fig1 = Mat.figure(figsize=(10,16))
     Mat.clf()
 
-    Mat.subplot(3,1,1)
+    ax1 = Mat.subplot(3,1,1)
     fig1.tight_layout()
     m1 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
     temp1 = m1.pcolor(lon1, lat1, data1, vmin=min1, vmax=max1)
-    temp1 = m1.drawcoastlines()
-    #change_labels(Mat.gca())
     Mat.colorbar()
+
+    temp1 = m1.drawcoastlines()
+
+    try: temp2 = data1.count()
+    except: temp2 = 1
+    if temp2==0:
+      Mat.text(\
+            .5, \
+            .5, \
+            'There is no valid data.', \
+            size=20, \
+            transform=ax1.transAxes, \
+            ha='center')
+      
+    #change_labels(Mat.gca())
     Mat.title('%s_%s:%s (%s).  mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
         self.varName1, self.units1,
         self.yearS, self.monthS,
@@ -1224,7 +1258,7 @@ class SUBSET_REGION():
         ))
 
     # plot 2
-    Mat.subplot(3,1,2)
+    ax1 = Mat.subplot(3,1,2)
     m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
     temp1 = m2.pcolor(lon2, lat2, data2, vmin=min2, vmax=max2)
     temp1 = m2.drawcoastlines()
@@ -1237,6 +1271,17 @@ class SUBSET_REGION():
         self.yearE, self.monthE,
         ))
 
+    try: temp2 = data1.count()
+    except: temp2 = 1
+    if temp2==0:
+      Mat.text(\
+            .5, \
+            .5, \
+            'There is no valid data.', \
+            size=20, \
+            transform=ax1.transAxes, \
+            ha='center')
+ 
     # plot diff
     #if self.varName1==self.varName2:
     if 1:
@@ -1249,7 +1294,19 @@ class SUBSET_REGION():
       min3 = data1.min() 
       max3 = data1.max() 
       
-      if (max2-min2)/(max3-min3)>1.0e-6:
+      try: temp2 = data1.count()
+      except: temp2 = 1
+      try: temp3 = data1.count()
+      except: temp3 = 1
+      if (temp3==0) or (temp3==0):
+        Mat.text(\
+              .5, \
+              .5, \
+              'No valid data to calculate the difference.', \
+              size=20, \
+              transform=ax1.transAxes, \
+              ha='center')
+      elif (max2-min2)/(max3-min3)>1.0e-6:
         temp1 = m2.pcolor(lon2, lat2, data2-data1 )
       else:
         Mat.axes(ax1)
@@ -1264,7 +1321,7 @@ class SUBSET_REGION():
       temp1 = m2.drawcoastlines()
       #change_labels(Mat.gca())
       Mat.colorbar()
-      Mat.title('the difference: (%s_%s:%s) - (%s_%s:%s)'\
+      Mat.title('the difference of the means: (%s_%s:%s) - (%s_%s:%s)'\
         %(a.center2, a.model2, a.varName2, a.center1, a.model1, a.varName1))
 
     Mat.subplots_adjust(hspace=0.15)
