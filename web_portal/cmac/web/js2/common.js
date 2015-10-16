@@ -52,14 +52,37 @@ function disable_pres1(ID)
 // enable pressure level box for 3D var
 function enable_pres1(ID)
 {
+  var var_string = $("#var"+ID).val();
+  var oceanStr = "";
+
+  try { 
+    var rangeStr0 = eval("rangeStr"+ID); 
+  } catch(err) { 
+    var rangeStr0 = "";
+  }
+
+  try {
+    var y=document.getElementById("pressureLabel"+ID);
+  //alert(y.value);
+    y.innerHTML = "atmospheric pressure " + rangeStr0 + "(hPa):";
+  } catch(err) {}
+
+  if (varList[var_string][1]==="ocean") {
+    oceanStr = "o";
+    try {
+    y.innerHTML = "ocean pressure " + rangeStr0 + "(dbar):";
+    } catch(err) {}
+  } 
+
   // there can be no pressure widget, so there is a error catch here.
   try {
     var pressDf0;
     try { 
-      pressDf0 = eval("pressDf"+ID); 
+      pressDf0 = eval("pressDf"+ID+oceanStr); 
     } catch(err) {
       pressDf0 = "500";
     }
+
 
     var x=document.getElementById("pres"+ID);
     x.value = pressDf0;
@@ -124,7 +147,7 @@ temp1 += '   source:' + '\n';
 temp1 += '  </div> <!-- col-sm-6 -->\n';
 temp1 += '  <div class="col-sm-8 left1">\n';
 temp1 += '    <select name="data' + ID + '", id="data' + ID;
-temp1 += '" onchange="put_var(' + ID + '); time_range' + numTB + '()"></select>\n';
+temp1 += '" onchange="put_var(' + ID + '); select_var(' + ID + ');time_range' + numTB + '()"></select>\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '</div> <!-- row -->\n';
 
@@ -134,13 +157,14 @@ temp1 += '    variable name:\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '  <div class="col-sm-8 left1">\n';
 temp1 += '    <select name="var' + ID +'", id="var' + ID;
-temp1 += '" onchange="select_var(' + ID + '); time_range' + numTB + '()"> </select>\n';
+temp1 += '" onchange="select_var(' + ID + '); select_var(' + ID + '); time_range' + numTB + '()"> </select>\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '</div> <!-- row -->\n';
 
 temp1 += '<div class="row">\n';
-temp1 += '  <div class="col-sm-4 right1">\n';
-temp1 += '    pressure ' + isRange + '(atmosphere hPa) <br> or (ocean dbar):\n';
+temp1 += '  <div class="col-sm-4 right1" id="pressureLabel' + ID + '">\n';
+//temp1 += '    pressure ' + isRange + '(atmosphere hPa) <br> or (ocean dbar):\n';
+temp1 += '    pressure ' + isRange +':\n';
 temp1 += '  </div> <!-- col-sm-6 level2-->\n';
 temp1 += '  <div class="col-sm-8 left1">\n';
 temp1 += '    <input id="pres' + ID + '" value="' + pressDf + '" alt="pressure"/>\n';
